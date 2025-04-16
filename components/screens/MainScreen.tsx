@@ -1,46 +1,19 @@
-import { useNavigation } from 'expo-router';
-import { useLayoutEffect } from 'react';
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-} from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 
-export default function MainPage() {
-  const navigation = useNavigation();
-
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerTitle: () => (
-        <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#DAA520' }}>
-          Home
-        </Text>
-      ),
-      headerLeft: () => (
-        <TouchableOpacity onPress={() => navigation.goBack()} style={{ paddingHorizontal: 10 }}>
-          <Ionicons name="arrow-back" size={24} color="#DAA520" />
-        </TouchableOpacity>
-      ),
-    });
-  }, [navigation]);
-
+export default function MainScreen() {
   return (
     <ScrollView style={styles.container}>
-      {/* Header 内容 */}
+      {/* Header */}
       <View style={styles.header}>
         <View style={styles.profileContainer}>
           <TouchableOpacity
             style={styles.ageContainer}
-            // onPress={() => navigation.navigate('(me)/profile')}
             onPress={() => router.push('/(me)/profile')}
           >
             <Image
-              source={require('../assets/images/profile.png')}
+              source={require('@/assets/images/profile.png')}
               style={styles.profileImage}
             />
             <Text style={styles.ageRange}>3-7</Text>
@@ -51,7 +24,7 @@ export default function MainPage() {
       {/* Banner */}
       <View style={styles.banner}>
         <Image
-          source={require('../assets/images/banner-image.png')}
+          source={require('../../assets/images/banner-image.png')}
           style={styles.bannerImage}
         />
         <View style={styles.bannerTextContainer}>
@@ -62,22 +35,18 @@ export default function MainPage() {
 
       {/* Categories */}
       <View style={styles.categories}>
-        <TouchableOpacity
-          style={styles.category}
-        //   onPress={() => navigation.navigate('chat')}
-          onPress={() => router.push('/chat')}
-        >
-        <Text style={styles.categoryText}>AI</Text>
+        <TouchableOpacity style={styles.category} onPress={() => router.push('/chat')}>
+          <Text style={styles.categoryText}>AI</Text>
         </TouchableOpacity>
+
         <TouchableOpacity style={styles.category}>
           <Text style={styles.categoryText}>Storytelling</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-            style={styles.category}
-            onPress={() => router.push('/(tabs)/eduPage')}
-            >
-            <Text style={styles.categoryText}>Educational Activities</Text>
-            </TouchableOpacity>
+
+        <TouchableOpacity style={styles.category} onPress={() => router.push('/(tabs)/eduPage')}>
+          <Text style={styles.categoryText}>Educational Activities</Text>
+        </TouchableOpacity>
+
         <TouchableOpacity style={styles.category}>
           <Text style={styles.categoryText}>Digital</Text>
         </TouchableOpacity>
@@ -89,21 +58,23 @@ export default function MainPage() {
         <View style={styles.books}>
           <TouchableOpacity style={styles.book}>
             <Image
-              source={require('../assets/images/book1.png')}
+              source={require('@/assets/images/book1.png')}
               style={styles.bookImage}
             />
             <Text style={styles.bookTitle}>Alex's Super Medicine</Text>
           </TouchableOpacity>
+
           <TouchableOpacity style={styles.book}>
             <Image
-              source={require('../assets/images/book2.png')}
+              source={require('@/assets/images/book2.png')}
               style={styles.bookImage}
             />
             <Text style={styles.bookTitle}>Brave Bora</Text>
           </TouchableOpacity>
+
           <TouchableOpacity style={styles.book}>
             <Image
-              source={require('../assets/images/book3.png')}
+              source={require('@/assets/images/book3.png')}
               style={styles.bookImage}
             />
             <Text style={styles.bookTitle}>Sam's Treasures</Text>
@@ -115,13 +86,9 @@ export default function MainPage() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
+  container: { flex: 1, backgroundColor: '#fff' },
   header: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
     padding: 16,
   },

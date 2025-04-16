@@ -11,133 +11,62 @@ import {
   TextInput,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useTheme } from '../components/ThemeContext';
-import { supabase } from '../utils/Supabase';
+import { useTheme } from '@/components/ThemeContext';
+import { supabase } from '@/utils/Supabase';
 import { Ionicons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import 'react-native-get-random-values';
 import { v4 as uuidv4 } from 'uuid';
-import ParentPinModal from '../components/ParentPinModal';
+import ParentPinModal from '@/components/ParentPinModal';
+import { useT } from '@/utils/useT';
+import AvatarUploader from '@/components/AvatarUploader';
+import { ActivityIndicator } from 'react-native';
+import * as FileSystem from 'expo-file-system';
+import { Buffer } from 'buffer';
 
-export default function MePage() {
-  const router = useRouter();
-  const { theme, toggleTheme } = useTheme();
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
-  const [inputPin, setInputPin] = useState('');
-  const [showPinInput, setShowPinInput] = useState(false);
-  const [pinAttempts, setPinAttempts] = useState(0);
-  const [isLocked, setIsLocked] = useState(false);
-  const [showPinModal, setShowPinModal] = useState(false);
 
-  const [userId, setUserId] = useState<string | null>(null);
-  useEffect(() => {
-    const getUserId = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        setUserId(session.user.id);
-      } else {
-        Alert.alert('❌ 无法获取用户 Session');
-      }
-    };
-    getUserId();
-  }, []);
+export default function MeSreen() {
+    const router = useRouter();
+    const { theme, toggleTheme } = useTheme();
+    const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+    const [inputPin, setInputPin] = useState('');
+    const [showPinInput, setShowPinInput] = useState(false);
+    const [pinAttempts, setPinAttempts] = useState(0);
+    const [isLocked, setIsLocked] = useState(false);
+    const [showPinModal, setShowPinModal] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const t = useT();
+    const [modalVisible, setModalVisible] = useState(false);
 
-  useEffect(() => {
-    const fetchAvatar = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+    const [userId, setUserId] = useState<string | null>(null);
+    useEffect(() => {
+        const getUserId = async () => {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session) {
+            setUserId(session.user.id);
+        } else {
+            Alert.alert('Unable to Obtain User Session');
+        }
+        };
+        getUserId();
+    }, []);
 
-      const { data, error } = await supabase
-        .from('users')
-        .select('avatar_url')
-        .eq('user_id', user.id)
-        .maybeSingle();
-
-      if (error) {
-        console.error('fail to get avatar:', error.message);
-      } else {
-        setAvatarUrl(data?.avatar_url || null);
-      }
-    };
-
-    fetchAvatar();
-  }, []);
-
-  const uploadAvatar = async () => {
-    const userResponse = await supabase.auth.getUser();
-    const user = userResponse.data.user;
-    if (!user) {
-      Alert.alert('未登录，无法上传头像');
-      return;
-    }
-    const { granted } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (!granted) {
-      Alert.alert('需要访问相册权限');
-      return;
-    }
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      quality: 0.7,
-    });
-    if (!result.canceled && result.assets.length > 0) {
-      const image = result.assets[0];
-      const fileExt = image.uri.split('.').pop() || 'jpg';
-      const filePath = `${user.id}/${uuidv4()}.${fileExt}`;
-      const response = await fetch(image.uri);
-      const blob = await response.blob();
-
-      const { error: uploadError } = await supabase.storage
-        .from('avatars')
-        .upload(filePath, blob, {
-          upsert: true,
-          contentType: blob.type,
-        });
-
-      if (uploadError) {
-        console.error('上传失败:', uploadError.message);
-        Alert.alert('上传失败，请重试');
-        return;
-      }
-
-      const { data: publicUrlData } = supabase.storage.from('avatars').getPublicUrl(filePath);
-      const publicUrl = publicUrlData.publicUrl;
-
-      const { error: updateError } = await supabase
-        .from('users')
-        .update({ avatar_url: publicUrl })
-        .eq('user_id', user.id);
-
-      if (updateError) {
-        console.error('更新头像失败:', updateError.message);
-        Alert.alert('头像链接保存失败');
-      } else {
-        setAvatarUrl(publicUrl);
-        Alert.alert('✅ 头像上传成功！');
-      }
-    }
-  };
 
   const settings = [
     { title: 'Profile', path: '/(me)/profile' },
     { title: 'Language', path: '/(me)/language' },
-    { title: 'Eye Protection Mode', path: '/(me)/eye-protect' },
     { title: 'Notifications', path: '/(me)/notification' },
     { title: 'Security', path: '/(me)/security' },
     { title: 'Set Parent Pin', path: '', onPress: () => setShowPinModal(true)},
     { title: 'Parent Mode', path: '', onPress: () => !isLocked && setShowPinInput(true) },
-    { title: 'Account Management', path: '/(me)/account-management' },
-    { title: 'About Us', path: '/(me)/about' },
-    { title: 'Contact Us', path: '/(me)/contact' },
   ];
 
   const privacy = [
-    { title: 'Privacy policy', path: '/(me)/privacy' },
-    { title: 'Information collection list', path: '/(me)/info-list' },
-    { title: 'Help & Feedback', path: '/(me)/help' },
     { title: 'About', path: '/(me)/about' },
+    { title: 'Help & Feedback', path: '/(me)/help' },
+    { title: 'Privacy Policy', path: '/(me)/privacy' },
     { title: 'Terms of Service', path: '/(me)/terms' },
-    { title: 'User Agreement', path: '/(me)/user-agreement' },
-    { title: 'Privacy Settings', path: '/(me)/privacy-settings' },
+    { title: 'Information Collection', path: '/(me)/info-list' },
   ];
 
   const renderItem = (item: { title: string; path?: string; onPress?: () => void }, index: number) => (
@@ -163,16 +92,17 @@ export default function MePage() {
 
     const { data, error } = await supabase
       .from('users')
-      .select('parent_pin')
+      .select('pin_code')
       .eq('user_id', user.id)
       .single();
 
-    if (error) {
+    console.log('Supabase query results:', { data, error });
+    if (error || !data) {
       Alert.alert('error', 'Unable to retrieve PIN information');
       return;
     }
 
-    if (inputPin === data?.parent_pin) {
+    if (inputPin === data?.pin_code) {
       await supabase
         .from('users')
         .update({ is_parent_mode: true })
@@ -181,7 +111,7 @@ export default function MePage() {
       setShowPinInput(false);
       setInputPin('');
       setPinAttempts(0);
-      router.push('/parent-main-page');
+      router.push('/(parent)/parent-main-page');
     } else {
       const attempts = pinAttempts + 1;
       setPinAttempts(attempts);
@@ -196,16 +126,8 @@ export default function MePage() {
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={uploadAvatar}>
-          {avatarUrl ? (
-            <Image source={{ uri: avatarUrl }} style={styles.avatarImage} />
-          ) : (
-            <View style={styles.avatarPlaceholder}>
-              <Text style={styles.avatarIcon}>👤</Text>
-            </View>
-          )}
-        </TouchableOpacity>
+      <View style={styles.avatarSection}>
+        <AvatarUploader />
       </View>
 
       <View style={styles.section}>{settings.map(renderItem)}</View>
@@ -278,25 +200,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 40,
   },
-  avatarImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    resizeMode: 'cover',
-    backgroundColor: '#ccc',
-  },
-  avatarPlaceholder: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    backgroundColor: '#ccc',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  avatarIcon: {
-    fontSize: 50,
-    color: '#fff',
-  },
   section: {
     backgroundColor: '#fff',
     marginBottom: 10,
@@ -358,5 +261,18 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333',
     marginLeft: 8,
+  },
+  avatarImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    resizeMode: 'cover',
+    backgroundColor: '#ccc',
+    marginTop: 30,
+  },
+  avatarSection: {
+    marginTop: 20,
+    alignItems: 'center',
+    marginBottom: 20,
   },
 });

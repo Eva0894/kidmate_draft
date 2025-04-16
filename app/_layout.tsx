@@ -4,17 +4,19 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import AppProviders from '../components/AppProviders'; 
 import { StyleSheet } from 'react-native';
 import { Stack } from 'expo-router';
-
+import { LanguageProvider } from '../components/LanguageProvider';
 
 export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <AppProviders>
-          <SafeAreaView style={styles.safeArea} edges={['top', 'right', 'left']}>
-            <Slot />
-          </SafeAreaView>
-        </AppProviders>
+        <LanguageProvider>
+          <AppProviders>
+            <SafeAreaView style={styles.safeArea} edges={['top', 'right', 'left']}>
+              <Slot />
+            </SafeAreaView>
+          </AppProviders>
+        </LanguageProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

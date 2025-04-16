@@ -1,126 +1,175 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Linking } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  TextInput,
+} from 'react-native';
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
 const categories = [
   {
-    title: 'Reading',
-    description: 'Basics of reading starting with the ABCs.',
-    image: require('../../assets/images/game.jpg'),//change
-    url: 'https://www.starfall.com/h/'
+    title: 'Art',
+    image: require('../../assets/images/art.png'),
   },
   {
-    title: 'Math',
-    description: 'Learn counting, shapes, addition and subtraction while having fun.',
-    image: require('../../assets/images/game.jpg'),//change
-    url: 'https://www.funbrain.com/pre-k'
+    title: 'Sport',
+    image: require('../../assets/images/sport.png'),
   },
   {
-    title: 'Shape and Color',
-    description: 'Recognize colors and shapes.',
-    image: require('../../assets/images/game.jpg'),//change
-    url: 'https://pbskids.org/games/shapes/'
-  },
-  {
-    title: 'Language',
-    description: 'Learn basic words and spelling.',
-    image: require('../../assets/images/game.jpg'),//change
-    url: 'https://learn.khanacademy.org/khan-academy-kids/'
+    title: 'Emotion',
+    image: require('../../assets/images/art.png'),
   },
 ];
 
-export default function EarlyLearningPage() {
+const recentBooks = [
+  {
+    title: "Alex's Super Medicine",
+    image: require('../../assets/images/art.png'),
+    progress: 0.8,
+  },
+  {
+    title: 'Brave Bora',
+    image: require('../../assets/images/art.png'),
+    progress: 1,
+    favorite: true,
+  },
+  {
+    title: "Sam's Treasures",
+    image: require('../../assets/images/art.png'),
+    progress: 0.6,
+  },
+];
+
+export default function CoursePage() {
   const navigation = useNavigation();
 
   return (
-    
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.header}>Enlightenment Courses</Text>
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-            <Text style={styles.backText}>← back</Text>
-      </TouchableOpacity>
-      {categories.map((cat, index) => (
-        <TouchableOpacity key={index} style={styles.card} onPress={() => Linking.openURL(cat.url)}>
-          <Image source={cat.image} style={styles.image} />
-          <View style={styles.textWrap}>
-            <Text style={styles.title}>{cat.title}</Text>
-            <Text style={styles.description}>{cat.description}</Text>
+    <ScrollView style={styles.container}>
+      <View style={styles.header}>
+        <Ionicons name="person-circle" size={36} color="#DDAA00" />
+        <Text style={styles.timer}>30mins</Text>
+        <Ionicons name="search" size={24} color="#DDAA00" style={styles.icon} />
+        <MaterialCommunityIcons name="cube-outline" size={24} color="#DDAA00" style={styles.icon} />
+      </View>
+
+      <Text style={styles.sectionTitle}>Course</Text>
+      <Image
+        source={require('../../assets/images/banner.png')}
+        style={styles.banner}
+        resizeMode="cover"
+      />
+
+      <Text style={styles.sectionTitle}>Classification</Text>
+      <View style={styles.categoryRow}>
+        {categories.map((cat, index) => (
+          <View key={index} style={styles.categoryItem}>
+            <Image source={cat.image} style={styles.categoryImage} />
+            <Text style={styles.categoryTitle}>{cat.title}</Text>
           </View>
-        </TouchableOpacity>
-      ))}
+        ))}
+      </View>
+
+      <Text style={styles.sectionTitle}>Recent</Text>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        {recentBooks.map((book, index) => (
+          <View key={index} style={styles.bookItem}>
+            <Image source={book.image} style={styles.bookImage} />
+            <Text style={styles.bookTitle}>{book.title}</Text>
+            <View style={styles.progressBarContainer}>
+              <View style={[styles.progressBar, { width: `${book.progress * 100}%` }]} />
+            </View>
+            {book.favorite && <Ionicons name="star" size={18} color="#f9c400" style={styles.starIcon} />}
+          </View>
+        ))}
+      </ScrollView>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    flex: 1,
     backgroundColor: '#fff',
-    paddingBottom: 50,
+    paddingHorizontal: 16,
   },
   header: {
-    fontSize: 28,
-    color: '#ffcc00',
-    marginTop: 80,
-    marginBottom: 20,
-    fontWeight: '800',
-    fontFamily: 'Cochin',
-    textShadowColor: '#444',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 3,
-  },
-  card: {
     flexDirection: 'row',
-    backgroundColor: '#FFF6E0',
-    borderRadius: 12,
-    padding: 12,
-    marginBottom: 16,
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 4,
-    elevation: 2,
+    justifyContent: 'space-between',
+    paddingVertical: 12,
   },
-  image: {
-    width: 60,
-    height: 60,
-    borderRadius: 8,
-    marginRight: 12,
+  icon: {
+    marginHorizontal: 8,
   },
-  textWrap: {
-    flex: 1,
-  },
-  title: {
-    fontSize: 25,
-    color: 'skyblue',
-    marginTop: 20,
-    marginBottom: 20,
-    fontWeight: '800',
-    fontFamily: 'cin',
-    textShadowColor: '#444',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 3,
-  },
-  description: {
+  timer: {
     fontSize: 18,
-    color: '#ccc',
-    marginTop: 4,
-
-  },
-  backButton: {
-    position: 'absolute',
-    top: 10,
-    left: 10,
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    backgroundColor: '#444',
-    borderRadius: 8,
-    zIndex: 10,
-  },
-  backText: {
-    fontSize: 16,
-    color: '#e2ac30',
     fontWeight: 'bold',
+    color: 'green',
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginTop: 16,
+    marginBottom: 8,
+    color: '#D38300',
+  },
+  banner: {
+    width: '100%',
+    height: 160,
+    borderRadius: 10,
+  },
+  categoryRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  categoryItem: {
+    alignItems: 'center',
+    width: '30%',
+  },
+  categoryImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 12,
+  },
+  categoryTitle: {
+    marginTop: 6,
+    fontWeight: '600',
+    color: '#a66f00',
+  },
+  bookItem: {
+    width: 120,
+    marginRight: 16,
+    alignItems: 'center',
+  },
+  bookImage: {
+    width: 120,
+    height: 120,
+    borderRadius: 12,
+  },
+  bookTitle: {
+    marginTop: 4,
+    fontWeight: '600',
+  },
+  progressBarContainer: {
+    height: 6,
+    backgroundColor: '#eee',
+    borderRadius: 3,
+    width: '100%',
+    marginTop: 4,
+  },
+  progressBar: {
+    height: 6,
+    backgroundColor: '#d28c00',
+    borderRadius: 3,
+  },
+  starIcon: {
+    position: 'absolute',
+    top: 4,
+    right: 4,
   },
 });

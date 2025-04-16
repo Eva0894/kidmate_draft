@@ -1,6 +1,2 @@
-// import React from 'react';
-// import EduPage from '@/app/MyLibrary'; 
-
-// export default function Page() {
-//   return </MyLibrary />;
-// }
+import LibraryScreen from '@/components/screens/LibraryScreen';
+export default LibraryScreen;

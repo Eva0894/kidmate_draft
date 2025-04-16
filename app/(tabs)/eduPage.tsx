@@ -1,6 +1,2 @@
-import React from 'react';
-import EduPage from '@/app/(edu)/EduPage'; 
-
-export default function Page() {
-  return <EduPage />;
-}
+import EduScreen from '@/components/screens/EduScreen';
+export default EduScreen;

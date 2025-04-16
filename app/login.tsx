@@ -45,12 +45,12 @@ const Login = () => {
       return;
     }
 
-    console.log('✅ 登录成功，用户 ID:', sessionUser.id);
-    console.log('✅ 登录成功，用户邮箱:', sessionUser.email);
-    router.replace('/mainpage');
+    console.log('Login successfully, user ID:', sessionUser.id);
+    console.log('Login successfully, user mailbox:', sessionUser.email);
+    router.replace('/main');
 
   } catch (err: any) {
-    Alert.alert('Login error', err.message || '请稍后重试');
+    Alert.alert('Login error', err.message || 'Please try again later');
   } finally {
     setLoading(false);
   }
@@ -68,7 +68,7 @@ const Login = () => {
         </View>
       )}
 
-      <Image source={require('../assets/images/logo-dark.png')} style={styles.logo} />
+      <Image source={require('@/assets/images/logo-dark.png')} style={styles.logo} />
 
       <Text style={styles.title}>
         {type === 'login' ? 'Welcome back' : 'Sign in to continue'}

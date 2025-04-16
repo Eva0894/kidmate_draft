@@ -103,7 +103,7 @@ export default function ProfilePage() {
   return (
     <ScrollView style={{ flex: 1, backgroundColor: isDarkMode ? '#1e1e1e' : '#fff9ef', padding: 20 }}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-        <TouchableOpacity onPress={() => router.push('/mePage')}>
+        <TouchableOpacity onPress={() => router.push('/me')}>
           <Ionicons name="arrow-back" size={24} color="#cc8400" />
         </TouchableOpacity>
         <Text style={{ fontSize: 18, fontWeight: 'bold', color: isDarkMode ? '#fff' : '#222' }}>Profile</Text>

@@ -1,12 +1,19 @@
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { useRouter, Href } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function ParentMainPage() {
+  const router = useRouter();
   return (
     <ScrollView style={styles.container}>
       <Text style={styles.header}>Parent Dashboard</Text>
 
       <View style={styles.sectionGroup}>
+        {/* Back */}
+        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+          <Ionicons name="arrow-back" size={22} color="#D4A017" />
+          <Text style={styles.backText}>Back</Text>
+        </TouchableOpacity>
         {/* Edu History */}
         <Section title="Education History">
           <Text style={styles.subText}>
@@ -113,5 +120,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: '#B45309',
+  },
+  backButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingTop: 16,
+  },
+  backText: {
+    fontSize: 16,
+    color: '#D4A017',
+    marginLeft: 8,
+    fontWeight: '500',
   },
 });

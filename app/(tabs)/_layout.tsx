@@ -1,52 +1,68 @@
-import { Tabs, Stack } from 'expo-router';
+// app/(tabs)/_layout.tsx
+import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-
 
 export default function TabsLayout() {
   return (
-    <Tabs>
-      {/* <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons name="home" size={24} color={focused ? '#FFC107' : color} />
-          ),
-        }}
-      /> */}
-      <Tabs.Screen
-        name="eduPage"
-        options={{
-          title: 'Learning',
-          tabBarIcon: ({ color, size }) => <Ionicons name="school" size={size} color={color} />,
-        }}
-      />
+    <Tabs
+      screenOptions={{
+        tabBarActiveTintColor: '#D4A017',
+        tabBarInactiveTintColor: '#999',
+        tabBarStyle: {
+          backgroundColor: '#fff8e1',
+          borderTopWidth: 1,
+          borderTopColor: '#eee3b2',
+        },
+        headerShown: false,
+      }}
+    >
       <Tabs.Screen
         name="main"
         options={{
           title: 'Home',
-          tabBarIcon: ({ color, size }) => <Ionicons name="home" size={size} color={color} />,
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="home-outline" color={color} size={size} />
+          ),
         }}
       />
+
+      <Tabs.Screen
+        name="chat"
+        options={{
+          title: 'Chat',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="chatbubbles-outline" color={color} size={size} />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="eduPage"
+        options={{
+          title: 'Learning',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="school-outline" color={color} size={size} />
+          ),
+        }}
+      />
+
       <Tabs.Screen
         name="library"
         options={{
-          title: 'Books',
-          tabBarIcon: ({ color, size }) => <Ionicons name="book" size={size} color={color} />,
+          title: 'Library',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="book-outline" color={color} size={size} />
+          ),
         }}
       />
+
       <Tabs.Screen
-        name="chatPage"
-        options={{
-          title: 'AI Chat',
-          tabBarIcon: ({ color, size }) => <Ionicons name="rocket" size={size} color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="mePage"
+        name="me"
         options={{
           title: 'Me',
-          tabBarIcon: ({ color, size }) => <Ionicons name="person" size={size} color={color} />,
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="person-outline" color={color} size={size} />
+          ),
         }}
       />
     </Tabs>

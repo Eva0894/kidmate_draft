@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { router, type Href } from 'expo-router';
+import eduStyles from './eduStyles';
 
 const screenWidth = Dimensions.get('window').width;
 const CARD_WIDTH = (screenWidth - 48) / 2;
@@ -42,7 +43,7 @@ export default function GamePage() {
 
   return (
     <View style={styles.container}>
-        <Text style={styles.title}>Game Center</Text>
+        <Text style={eduStyles.header}>Game Center</Text>
         <TouchableOpacity style={styles.backButton} onPress={() => (router.back())}>
             <Text style={styles.backText}>← back</Text>
         </TouchableOpacity>
@@ -74,19 +75,6 @@ const styles = StyleSheet.create({
     paddingTop: 60,
     paddingHorizontal: 16,
     backgroundColor: '#fff',
-  },
-  title: {
-    textAlign: 'center',     
-    alignSelf: 'center', 
-    fontSize: 28,
-    color: '#ffcc00',
-    marginTop: 30,
-    marginBottom: 20,
-    fontWeight: '800',
-    fontFamily: 'Cochin',
-    textShadowColor: '#444',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 3,
   },
   card: {
     width: CARD_WIDTH,

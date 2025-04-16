@@ -4,9 +4,11 @@
     "strict": true,
     "paths": {
       "@/*": [
-        "./*"
+        "./*",
+        // "expo-sqlite/next", ["node_modules/expo-sqlite/next"]
       ]
-    }
+    },
+
   },
   "include": [
     "**/*.ts",

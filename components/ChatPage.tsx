@@ -13,10 +13,8 @@ import { Message, Role } from '@/utils/Interfaces';
 import MessageIdeas from '@/components/MessageIdeas';
 import { addChat, addMessage, getMessages } from '@/utils/Database';
 // import { useSQLiteContext } from 'expo-sqlite/next';
-import { useSQLiteContext } from '@/components/SQLiteContext';
-import { Button } from 'react-native';
-import { useRouter } from 'expo-router';
-
+import * as SQLite from 'expo-sqlite';
+import { openDatabaseSync } from 'expo-sqlite';
 
 const ChatPage = () => {
   const [gptVersion, setGptVersion] = useMMKVString('gptVersion', storage);
@@ -24,11 +22,8 @@ const ChatPage = () => {
   const [key, setKey] = useMMKVString('apikey', keyStorage);
   const [organization, setOrganization] = useMMKVString('org', keyStorage);
   const [messages, setMessages] = useState<Message[]>([]);
-  const db = useSQLiteContext();
+  const db = openDatabaseSync('chat.db');
   let { id } = useLocalSearchParams<{ id: string }>();
-  // test edu_page
-  const [showEduPage, setShowEduPage] = useState(false);
-  const router = useRouter();
 
   if (!key || key === '' || !organization || organization === '') {
     return <Redirect href={'/(auth)/(modal)/settings'} />;
@@ -119,43 +114,21 @@ const ChatPage = () => {
 
   return (
     <View style={defaultStyles.pageContainer}>
-      {/* new button to edu*/}
-      <Button
-        title="Go to Educational Page"
-        color="#e2ac30"
-        onPress={() => {
-          console.log('跳转按钮被点击');
-          router.push('/(tabs)/eduPage');
-        }}
-      />
-      {/* new button to Me*/}
-      <Button
-        title="Go to Me Page"
-        color="#e2ac30"
-        onPress={() => {
-          console.log('跳转按钮被点击');
-          router.push('/(tabs)/mePage');
-        }}
-      />
-
       <Stack.Screen
         options={{
-          // headerTitle: () => (
-          //   <HeaderDropDown
-          //     title="ChatGPT"
-          //     items={[
-          //       { key: '3.5', title: 'GPT-3.5', icon: 'bolt' },
-          //       { key: '4', title: 'GPT-4', icon: 'sparkles' },
-          //     ]}
-          //     onSelect={onGptVersionChange}
-          //     selected={gptVersion}
-          //   />
-          // ),
-          headerTitle: 'ChatGPT',
+          headerTitle: () => (
+            <HeaderDropDown
+              title="ChatGPT"
+              items={[
+                { key: '3.5', title: 'GPT-3.5', icon: 'bolt' },
+                { key: '4', title: 'GPT-4', icon: 'sparkles' },
+              ]}
+              onSelect={onGptVersionChange}
+              selected={gptVersion}
+            />
+          ),
         }}
       />
-
-
       <View style={styles.page} onLayout={onLayout}>
         {messages.length == 0 && (
           <View style={[styles.logoContainer, { marginTop: height / 2 - 100 }]}>
@@ -204,12 +177,6 @@ const styles = StyleSheet.create({
   },
   page: {
     flex: 1,
-  },
-  // new button
-  switchContainer: {
-    alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 20,
   },
 });
 export default ChatPage;
