@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import {
   View, Text, Image, FlatList, Dimensions,
-  ActivityIndicator, StyleSheet, TouchableOpacity, Alert
+  ActivityIndicator, StyleSheet, TouchableOpacity, Alert,
+  Platform
 } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { useNavigation } from '@react-navigation/native';
@@ -12,9 +13,15 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import libStyles from './libStyles';
 
+// 根据平台设置 API 地址
+const BACKEND_URL =
+Platform.OS === 'ios'
+  ? 'http://localhost:8000'
+  : 'http://10.0.2.2:8000';
 
+console.log('Using API URL:', BACKEND_URL);
 
-const BACKEND_URL = 'http://127.0.0.1:8000';
+//const BACKEND_URL = 'http://127.0.0.1:8000';
 const { width, height } = Dimensions.get('window');
 
 export default function BookReaderPage() {

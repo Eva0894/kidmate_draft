@@ -1,13 +1,22 @@
 // app/(library)/bookmarks.tsx
 import React, { useEffect, useState } from 'react';
 import {
-  View, Text, FlatList, TouchableOpacity, Alert, StyleSheet, ScrollView
+  View, Text, FlatList, TouchableOpacity, Alert, StyleSheet, ScrollView,
+  Platform
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import libStyles from './libStyles';
 
-const BACKEND_URL = 'http://127.0.0.1:8000';
+// 根据平台设置 API 地址
+const BACKEND_URL =
+Platform.OS === 'ios'
+  ? 'http://localhost:8000'
+  : 'http://10.0.2.2:8000';
+
+console.log('Using API URL:', BACKEND_URL);
+
+// const BACKEND_URL = 'http://127.0.0.1:8000';
 
 export default function BookmarksScreen() {
   const router = useRouter();
