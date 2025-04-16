@@ -82,7 +82,13 @@ export default function LibraryScreen() {
           <TouchableOpacity
             key={index}
             style={styles.catItem}
-            onPress={() => router.push({ pathname: '/category', params: { type: cat.title } })}
+            // onPress={() => router.push({ pathname: '/[category]', params: { type: cat.title } })}
+            onPress={() =>
+              router.push({
+                pathname: '/(library)/[category]',
+                params: { category: cat.title.toLowerCase() },
+              })
+            }
           >
             <Image source={cat.image} style={styles.catImage} />
             <Text style={styles.catLabel}>{cat.title}</Text>

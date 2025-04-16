@@ -17,12 +17,14 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.supersimon.chatgpt"
+      "bundleIdentifier": "com.supersimon.chatgpt",
+      "permissions": ["NOTIFICATIONS"]
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#ffffff",
+        "permissions": ["NOTIFICATIONS"]
       },
       "package": "com.supersimon.chatgpt"
     },

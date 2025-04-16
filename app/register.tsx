@@ -20,7 +20,6 @@ export default function RegisterScreen() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [dob, setDob] = useState(new Date('2015-01-01'));
-  const [role, setRole] = useState<'parent' | 'child'>('parent');
   const [showPicker, setShowPicker] = useState(false);
 
   const router = useRouter();
@@ -63,7 +62,6 @@ export default function RegisterScreen() {
           first_name: firstName,
           last_name: lastName,
           date_of_birth: dob.toISOString().split('T')[0],
-          role: role === 'parent' ? 1 : 0,
           is_active: true,
         },
       ]);
@@ -125,14 +123,6 @@ export default function RegisterScreen() {
         onChangeText={setLastName}
         style={styles.input}
       />
-
-      <Text style={styles.label}>Role</Text>
-      <View style={styles.pickerWrapper}>
-        <Picker selectedValue={role} onValueChange={(itemValue) => setRole(itemValue)}>
-          <Picker.Item label="Parent" value="parent" />
-          <Picker.Item label="Child" value="child" />
-        </Picker>
-      </View>
 
       <Text style={styles.label}>Birthday</Text>
       <TouchableOpacity onPress={() => setShowPicker(true)} style={styles.selectButton}>

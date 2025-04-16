@@ -31,7 +31,7 @@ export default function ProfilePage() {
 
   const t = (key: string) => {
     const dict: any = {
-      user_name: { en: 'User Name', zh: '用户名' },
+      username: { en: 'User Name', zh: '用户名' },
       first_name: { en: 'First Name', zh: '名字' },
       last_name: { en: 'Last Name', zh: '姓氏' },
       email: { en: 'Email / Phone', zh: '邮箱 / 手机' },
@@ -72,7 +72,7 @@ export default function ProfilePage() {
     if (error) {
       Alert.alert('读取用户资料失败', error.message);
     } else {
-      setUserName(data.user_name || '');
+      setUserName(data.username || '');
       setFirstName(data.first_name || '');
       setLastName(data.last_name || '');
       setEmail(data.email || '');
@@ -83,7 +83,7 @@ export default function ProfilePage() {
 
   const updateProfile = async () => {
     const updates = {
-      user_name: userName,
+      username: userName,
       first_name: firstName,
       last_name: lastName,
       email,
@@ -112,7 +112,7 @@ export default function ProfilePage() {
         </TouchableOpacity>
       </View>
 
-      <LabelInput label={t('user_name')} value={userName} onChangeText={setUserName} editable={editable} dark={isDarkMode} />
+      <LabelInput label={t('username')} value={userName} onChangeText={setUserName} editable={editable} dark={isDarkMode} />
       <LabelInput label={t('first_name')} value={firstName} onChangeText={setFirstName} editable={editable} dark={isDarkMode} />
       <LabelInput label={t('last_name')} value={lastName} onChangeText={setLastName} editable={editable} dark={isDarkMode} />
       <LabelInput label={t('email')} value={email} onChangeText={setEmail} editable={editable} dark={isDarkMode} />

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,10 +7,11 @@ import {
   ScrollView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
+import { supabase } from '@/utils/Supabase';
 
 const categories = [
-  'Literacy',
+  'Language',
   'Math',
   'Science',
   'Art',
@@ -19,19 +20,50 @@ const categories = [
 ];
 
 export default function CourseCategoryScreen() {
-  const navigation = useNavigation();
-  const [selected, setSelected] = useState('Literacy');
+  const router = useRouter();
+  const [selected, setSelected] = useState('Language');
+  const [videos, setVideos] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchVideos = async () => {
+      const folder = 'Language'; 
+      console.log('尝试读取文件夹:', folder);
+      console.log('Fetching from folder:', selected);
+      const { data, error } = await supabase
+        .storage
+        .from('courses')
+        .list('', { limit: 100 });
+        // .list(selected, { limit: 100 });
+
+      console.log('Video data:', data);
+      console.log('Error if any:', error);
+      console.log('📂', data);
+
+      if (error) {
+        console.error(`Failed to fetch ${selected} videos:`, error.message);
+        console.log('Videos:', data);
+        // setVideos([]);
+        return;
+      }
+
+      setVideos(data);
+    };
+
+    fetchVideos();
+  }, [selected]);
 
   return (
     <View style={styles.container}>
+      {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={() => router.back()}>
           <Ionicons name="arrow-back" size={24} color="#D38300" />
         </TouchableOpacity>
         <Text style={styles.title}>Courses</Text>
         <View style={{ width: 24 }} />
       </View>
 
+      {/* Sidebar + Content */}
       <View style={styles.row}>
         <View style={styles.sidebar}>
           <ScrollView showsVerticalScrollIndicator={false}>
@@ -41,17 +73,27 @@ export default function CourseCategoryScreen() {
                 style={[styles.categoryBtn, selected === cat && styles.selectedBtn]}
                 onPress={() => setSelected(cat)}
               >
-                <Text
-                  style={[styles.categoryText, selected === cat && styles.selectedText]}
-                >
+                <Text style={[styles.categoryText, selected === cat && styles.selectedText]}>
                   {cat}
                 </Text>
               </TouchableOpacity>
             ))}
           </ScrollView>
         </View>
+
+        {/* Video List */}
         <View style={styles.contentArea}>
-          {/* 👇后续可添加课程展示 */}
+          <ScrollView>
+            {videos.length === 0 ? (
+              <Text style={{ color: '#aaa' }}>No videos found.</Text>
+            ) : (
+              videos.map((video) => (
+                <View key={video.name} style={{ marginBottom: 10 }}>
+                  <Text style={{ color: '#333' }}>🎬 {video.name}</Text>
+                </View>
+              ))
+            )}
+          </ScrollView>
         </View>
       </View>
     </View>

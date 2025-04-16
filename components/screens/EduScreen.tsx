@@ -57,9 +57,9 @@ export default function EduScreen() {
 
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}>
+        {/* <TouchableOpacity onPress={() => router.back()}>
           <Ionicons name="arrow-back" size={28} color="#e2ac30" />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <Text style={styles.headerTitle}>Educational Activities</Text>
         <Ionicons name="arrow-forward" size={28} color="transparent" />
       </View>
@@ -114,6 +114,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#e2ac30',
     fontWeight: 'bold',
+    textAlign: 'center',
+    flex: 1,
+    marginTop: 30,
   },
   optionsContainer: {
     paddingHorizontal: 16,
