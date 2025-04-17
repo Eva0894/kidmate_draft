@@ -63,12 +63,16 @@ export default function RegisterScreen() {
           last_name: lastName,
           date_of_birth: dob.toISOString().split('T')[0],
           is_active: true,
+          has_answered_questions: false,
         },
       ]);
 
       if (insertError) {
         Alert.alert('注册成功，但写入数据库失败', insertError.message);
-      } else {
+      } 
+      
+      
+      else {
         Alert.alert('Register Successflly! Jump to main page...');
         router.replace('/main'); 
       }

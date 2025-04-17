@@ -54,9 +54,10 @@ export default function MeSreen() {
 
   const settings = [
     { title: 'Profile', path: '/(me)/profile' },
+    { title: 'Personalization', path: '/(me)/personalization' },
     { title: 'Language', path: '/(me)/language' },
     { title: 'Notifications', path: '/(me)/notification' },
-    { title: 'Security', path: '/(me)/security' },
+    // { title: 'Security', path: '/(me)/security' },
     { title: 'Set Parent Pin', path: '', onPress: () => setShowPinModal(true)},
     { title: 'Parent Mode', path: '', onPress: () => !isLocked && setShowPinInput(true) },
   ];
