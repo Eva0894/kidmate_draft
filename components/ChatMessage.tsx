@@ -1,123 +1,92 @@
-import Colors from '@/constants/Colors';
-import { copyImageToClipboard, downloadAndSaveImage, shareImage } from '@/utils/Image';
-import { Message, Role } from '@/utils/Interfaces';
-import { Link } from 'expo-router';
-import { View, Text, StyleSheet, Image, ActivityIndicator, Pressable } from 'react-native';
-import * as ContextMenu from 'zeego/context-menu';
-import type { Href } from 'expo-router';
+import { View, Text, StyleSheet, Image } from 'react-native';
+import { Message } from '@/utils/Interfaces';
 
-const ChatMessage = ({
-  content,
-  role,
-  imageUrl,
-  prompt,
-  loading,
-}: Message & { loading?: boolean }) => {
-  const contextItems = [
-    { title: 'Copy', systemIcon: 'doc.on.doc', action: () => copyImageToClipboard(imageUrl!) },
-    {
-      title: 'Save to Photos',
-      systemIcon: 'arrow.down.to.line',
-      action: () => downloadAndSaveImage(imageUrl!),
-    },
-    { title: 'Share', systemIcon: 'square.and.arrow.up', action: () => shareImage(imageUrl!) },
-  ];
+const ChatMessage = ({ content, role, image }: Message) => {
+  const isUser = role === 'user';
 
   return (
-    <View style={styles.row}>
-      {role === Role.Bot ? (
-        <View style={[styles.item, { backgroundColor: '#000' }]}>
-          <Image source={require('@/assets/images/logo-white.png')} style={styles.btnImage} />
-        </View>
-      ) : (
-        <Image source={{ uri: 'https://galaxies.dev/img/meerkat_2.jpg' }} style={styles.avatar} />
+    <View style={[styles.row, isUser ? styles.alignRight : styles.alignLeft]}>
+      {/* AI 头像：左侧显示 */}
+      {!isUser && (
+        <Image
+          source={require('@/assets/images/duck_head.png')}
+          style={styles.avatar}
+        />
       )}
 
-      {loading ? (
-        <View style={styles.loading}>
-          <ActivityIndicator color={Colors.primary} size="small" />
-        </View>
-      ) : (
-        <>
-          {content === '' && imageUrl ? (
-            <ContextMenu.Root>
-              <ContextMenu.Trigger>
-              <Link
-                href={
-                  `/auth/modal/image/${encodeURIComponent(imageUrl)}?prompt=${encodeURIComponent(prompt!)}` as Href
-                }
-                asChild
-              >
-                <Pressable>
-                  <Image source={{ uri: imageUrl }} style={styles.previewImage} />
-                </Pressable>
-              </Link>
-              </ContextMenu.Trigger>
-              <ContextMenu.Content
-                loop={false}
-                alignOffset={0}
-                avoidCollisions={true}
-                collisionPadding={8}
-              >
-                {contextItems.map((item, index) => (
-                  <ContextMenu.Item key={item.title} onSelect={item.action}>
-                    <ContextMenu.ItemTitle>{item.title}</ContextMenu.ItemTitle>
-                    <ContextMenu.ItemIcon
-                      ios={{
-                        name: item.systemIcon,
-                        pointSize: 18,
-                      }}
-                    />
-                  </ContextMenu.Item>
-                ))}
-              </ContextMenu.Content>
-            </ContextMenu.Root>
-          ) : (
-            <Text style={styles.text}>{content}</Text>
-          )}
-        </>
+      {/* 消息气泡 */}
+      <View style={[styles.bubble, isUser ? styles.userBubble : styles.botBubble]}>
+        {image ? (
+          <Image source={{ uri: image }} style={styles.previewImage} />
+        ) : (
+          <Text style={[styles.text, isUser ? styles.userText : styles.botText]}>
+            {content}
+          </Text>
+        )}
+      </View>
+
+      {/* 用户头像：右侧显示 */}
+      {isUser && (
+        <Image
+          source={{ uri: 'https://galaxies.dev/img/meerkat_2.jpg' }}
+          style={styles.avatar}
+        />
       )}
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    paddingHorizontal: 14,
-    gap: 14,
-    marginVertical: 12,
+    alignItems: 'flex-end',
+    marginVertical: 6,
+    paddingHorizontal: 12,
   },
-  item: {
-    borderRadius: 15,
-    overflow: 'hidden',
+  alignLeft: {
+    justifyContent: 'flex-start',
   },
-  btnImage: {
-    margin: 6,
-    width: 16,
-    height: 16,
+  alignRight: {
+    justifyContent: 'flex-end',
   },
   avatar: {
     width: 30,
     height: 30,
     borderRadius: 15,
-    backgroundColor: '#000',
+    marginHorizontal: 6,
+    marginTop: 5, 
+    alignSelf: 'flex-start',
+    backgroundColor: '#eee',
+  },
+  bubble: {
+    maxWidth: '70%',
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderRadius: 18,
+  },
+  userBubble: {
+    backgroundColor: '#007aff',
+    borderTopRightRadius: 0,
+  },
+  botBubble: {
+    backgroundColor: '#e5e5ea',
+    borderTopLeftRadius: 0,
   },
   text: {
-    padding: 4,
     fontSize: 16,
-    flexWrap: 'wrap',
-    flex: 1,
+    lineHeight: 22,
+  },
+  userText: {
+    color: '#fff',
+  },
+  botText: {
+    color: '#000',
   },
   previewImage: {
     width: 240,
     height: 240,
     borderRadius: 10,
   },
-  loading: {
-    justifyContent: 'center',
-    height: 26,
-    marginLeft: 14,
-  },
 });
+
 export default ChatMessage;
