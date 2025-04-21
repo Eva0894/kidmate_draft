@@ -5,6 +5,7 @@ import { useRouter } from 'expo-router';
 import NotificationToggle from '@/components/NotificationToggle';
 import { supabase } from '@/utils/Supabase';
 import Constants from 'expo-constants';
+import meStyles from './meStyles';
 
 export default function NotificationPage() {
   const router = useRouter();
@@ -39,9 +40,9 @@ export default function NotificationPage() {
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color="#cc8400" />
+          <Ionicons name="arrow-back" size={32} color="#E5911B" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Notifications</Text>
+        <Text style={meStyles.header}>Notifications</Text>
         <View style={{ width: 24 }} />
       </View>
 

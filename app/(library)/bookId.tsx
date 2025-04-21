@@ -163,7 +163,7 @@ export default function BookReaderPage() {
   return (
     <View style={{ flex: 1 }}>
       <TouchableOpacity onPress={() => router.back()} style={libStyles.backButton}>
-        <Ionicons name="arrow-back" size={24} color="#333" />
+        <Ionicons name="arrow-back" size={32} color="#E5911B" />
       </TouchableOpacity>
       <FlatList
         ref={flatListRef}

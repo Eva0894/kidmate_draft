@@ -79,6 +79,10 @@ export default function MainScreen() {
             />
             <Text style={styles.bookTitle}>Sam's Treasures</Text>
           </TouchableOpacity>
+                {/* Reward Button */}
+          <TouchableOpacity style={styles.rewardButton} onPress={() => router.push('/reward')}>
+            <Text style={styles.rewardButtonText}>Reward</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </ScrollView>
@@ -181,5 +185,17 @@ const styles = StyleSheet.create({
     marginTop: 8,
     fontSize: 12,
     textAlign: 'center',
+  },
+  rewardButton: {
+    backgroundColor: '#FFD700',
+    padding: 16,
+    borderRadius: 8,
+    margin: 16,
+    alignItems: 'center',
+  },
+  rewardButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
   },
 });

@@ -65,7 +65,7 @@ export default function FavoritesScreen() {
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       <View style={styles.container}>
         <TouchableOpacity onPress={() => router.back()} style={libStyles.backButton}>
-          <Ionicons name="arrow-back" size={24} color="#333" />
+          <Ionicons name="arrow-back" size={32} color="#E5911B" />
         </TouchableOpacity>
         <Text style={styles.header}>❤️ My Favorites</Text>
         <FlatList
@@ -115,10 +115,12 @@ export default function FavoritesScreen() {
 const styles = StyleSheet.create({
   container: { paddingHorizontal: 12, paddingTop: 16 },
   header: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: 'bold',
-    color: '#D1861E',
+    color: '#E5911B',
     marginBottom: 16,
+    fontFamily:'Futura',
+    textAlign:'center',
   },
   bookList: { paddingBottom: 80 },
   bookCard: {
@@ -135,8 +137,10 @@ const styles = StyleSheet.create({
   },
   bookTitle: {
     marginTop: 6,
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: '600',
     textAlign: 'center',
+    fontFamily:'Futura',
+    color:'#E5911B'
   },
 });

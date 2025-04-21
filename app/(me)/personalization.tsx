@@ -2,17 +2,16 @@ import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   StyleSheet,
   ScrollView,
   Alert,
+  ImageBackground,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '../../utils/Supabase';
 import { useRouter } from 'expo-router';
 import meStyles from './meStyles';
-
 
 const INTEREST_OPTIONS = ['Story', 'Science', 'Plant', 'Animal', 'Art', 'Sport'];
 const ACTIVITY_OPTIONS = [
@@ -36,163 +35,187 @@ export default function PersonalizationPage() {
   useEffect(() => {
     const loadData = async () => {
       const { data: userData } = await supabase.auth.getUser();
-      const id = userData?.user?.id;
-      if (!id) return;
-
-      setUserId(id);
+      const uid = userData?.user?.id;
+      setUserId(uid ?? null);
+      if (!uid) return;
 
       const { data, error } = await supabase
         .from('personalization')
         .select('interest, favorite_activity')
-        .eq('user_id', id)
+        .eq('user_id', uid)
         .single();
 
       if (!error && data) {
-        setSelectedInterests(data.interest || []);
-        setFavoriteActivity(data.favorite_activity || '');
+        setFavoriteActivity(data.favorite_activity ?? '');
+        setSelectedInterests(data.interest ?? []);
       }
     };
-
     loadData();
   }, []);
 
-  const toggleInterest = (item: string) => {
-    if (!editing) return;
-    setSelectedInterests((prev) =>
-      prev.includes(item)
-        ? prev.filter((i) => i !== item)
-        : [...prev, item]
-    );
-  };
-  const handleSave = async () => {
-    if (!userId) return;
-  
-    const { error } = await supabase
-      .from('personalization')
-      .update({
-        interest: selectedInterests,
-        favorite_activity: favoriteActivity,
-      })
-      .eq('user_id', userId);
-  
-    if (error) {
-      Alert.alert('Update failed', error.message);
+  const toggleInterest = (interest: string) => {
+    if (selectedInterests.includes(interest)) {
+      setSelectedInterests(selectedInterests.filter(i => i !== interest));
     } else {
-      Alert.alert('Saved successfully!');
+      setSelectedInterests([...selectedInterests, interest]);
+    }
+  };
+
+  const savePreferences = async () => {
+    if (!userId) return;
+
+    const { data: userProfile, error: fetchError } = await supabase
+      .from('users')
+      .select('date_of_birth')
+      .eq('user_id', userId)
+      .single();
+
+    if (fetchError || !userProfile?.date_of_birth) {
+      Alert.alert('Error', '无法获取出生日期');
+      return;
+    }
+
+    const dob = new Date(userProfile.date_of_birth);
+    const now = new Date();
+    const age = now.getFullYear() - dob.getFullYear() - (
+      now < new Date(now.getFullYear(), dob.getMonth(), dob.getDate()) ? 1 : 0
+    );
+
+    const { data: existingRow, error: fetchPersonalError } = await supabase
+      .from('personalization')
+      .select('id')
+      .eq('user_id', userId)
+      .single();
+
+    let saveError = null;
+
+    if (existingRow) {
+      const { error } = await supabase
+        .from('personalization')
+        .update({
+          age,
+          interest: selectedInterests,
+          favorite_activity: favoriteActivity,
+        })
+        .eq('user_id', userId);
+      saveError = error;
+    } else {
+      const { error } = await supabase
+        .from('personalization')
+        .insert({
+          user_id: userId,
+          age,
+          interest: selectedInterests,
+          favorite_activity: favoriteActivity,
+        });
+      saveError = error;
+    }
+
+    if (!saveError) {
+      Alert.alert('Saved', 'Your personalization has been updated!');
       setEditing(false);
+    } else {
+      Alert.alert('Error', 'Failed to save personalization.');
     }
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      {/* 顶部标题栏 */}
-      <View style={styles.header}>
-        <TouchableOpacity style={meStyles.backButton} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={22} color="#D4A017" />
-          <Text style={meStyles.backText}>Back</Text>
+    <ImageBackground
+      source={require('@/assets/images/prefer-bg.jpg')}
+      style={{ flex: 1 }}
+      resizeMode='cover'
+    >
+      <ScrollView contentContainerStyle={{ padding: 20 }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
+        <TouchableOpacity onPress={() => router.back()} style={{ position: 'absolute', left: 0 }}>
+          <Ionicons name="arrow-back" size={24} color="#c08700" />
         </TouchableOpacity>
-        <Text style={styles.title}>Personalization</Text>
-        <TouchableOpacity onPress={() => setEditing(!editing)}>
-          <Ionicons
-            name={editing ? 'close-outline' : 'create-outline'}
-            size={24}
-            color="#e0b145"
-          />
-        </TouchableOpacity>
-      </View>
 
-      {/* 兴趣区域 */}
-      <Text style={styles.label}>Interest</Text>
-      <View style={styles.interestsContainer}>
-        {INTEREST_OPTIONS.map((item) => (
-          <TouchableOpacity
-            key={item}
-            style={[
-              styles.interestButton,
-              selectedInterests.includes(item) && styles.interestSelected,
-              !editing && { opacity: 0.6 },
-            ]}
-            onPress={() => toggleInterest(item)}
-          >
-            <Text
-              style={[
-                styles.interestText,
-                selectedInterests.includes(item) && styles.interestTextSelected,
-              ]}
-            >
-              {item}
-            </Text>
+          {/* Title */}
+          <Text style={{
+            fontSize: 22,
+            fontWeight: '600',
+            fontFamily: 'ChalkboardSE-Regular',
+            textAlign: 'center',
+          }}>
+            Personalization
+          </Text>
+
+          {/* edit button */}
+          <TouchableOpacity onPress={() => setEditing(!editing)} style={{ position: 'absolute', right: 0 }}>
+            <Ionicons name={editing ? 'checkmark' : 'create-outline'} size={24} color="#c08700" />
           </TouchableOpacity>
-        ))}
-      </View>
-
-      {/* 喜好活动 */}
-      <Text style={styles.label}>Favorite Activity</Text>
-        <View style={styles.interestsContainer}>
-          {ACTIVITY_OPTIONS.map((item) => (
-            <TouchableOpacity
-              key={item}
-              style={[
-                styles.interestButton,
-                favoriteActivity === item && styles.interestSelected,
-                !editing && { opacity: 0.6 },
-              ]}
-              onPress={() => editing && setFavoriteActivity(item)}
-            >
-              <Text
-                style={[
-                  styles.interestText,
-                  favoriteActivity === item && styles.interestTextSelected,
-                ]}
-              >
-                {item}
-              </Text>
-            </TouchableOpacity>
-          ))}
         </View>
 
-      {/* 保存按钮 */}
-      {editing && (
-        <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-          <Text style={styles.saveButtonText}>Save</Text>
-        </TouchableOpacity>
-      )}
-    </ScrollView>
+        <Text style={styles.label}>Favorite Activity</Text>
+        <View style={styles.interestsContainer}>
+          {ACTIVITY_OPTIONS.map(option => {
+            const selected = favoriteActivity === option;
+            return (
+              <TouchableOpacity
+                key={option}
+                style={[
+                  styles.interestButton,
+                  selected && styles.interestSelected
+                ]}
+                onPress={() => editing && setFavoriteActivity(option)}
+              >
+                <Text
+                  style={[
+                    styles.interestText,
+                    selected && styles.interestTextSelected,
+                    { fontFamily: 'ChalkboardSE-Regular' }
+                  ]}
+                >
+                  {option}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+
+        <Text style={styles.label}>Interests</Text>
+        <View style={styles.interestsContainer}>
+          {INTEREST_OPTIONS.map(option => {
+            const selected = selectedInterests.includes(option);
+            return (
+              <TouchableOpacity
+                key={option}
+                style={[
+                  styles.interestButton,
+                  selected && styles.interestSelected
+                ]}
+                onPress={() => editing && toggleInterest(option)}
+              >
+                <Text
+                  style={[
+                    styles.interestText,
+                    selected && styles.interestTextSelected,
+                    { fontFamily: 'ChalkboardSE-Regular' }
+                  ]}
+                >
+                  {option}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+
+        {editing && (
+          <TouchableOpacity style={styles.saveButton} onPress={savePreferences}>
+            <Text style={styles.saveButtonText}>Save</Text>
+          </TouchableOpacity>
+        )}
+      </ScrollView>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#fffdf6',
-    padding: 24,
-    flexGrow: 1,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 28,
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: '700',
-    color: '#333',
-  },
   label: {
-    fontSize: 15,
-    fontWeight: '600',
-    color: '#444',
-    marginBottom: 8,
-  },
-  input: {
-    backgroundColor: '#fff',
-    borderColor: '#ddd',
-    borderWidth: 1,
-    borderRadius: 12,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
     fontSize: 16,
-    marginBottom: 24,
+    fontFamily: 'ChalkboardSE-Regular',
+    marginBottom: 8,
   },
   interestsContainer: {
     flexDirection: 'row',
@@ -231,6 +254,7 @@ const styles = StyleSheet.create({
   saveButtonText: {
     color: '#fff',
     fontSize: 16,
+    fontFamily: 'ChalkboardSE-Regular',
     fontWeight: '600',
   },
 });

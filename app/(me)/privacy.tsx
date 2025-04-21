@@ -9,12 +9,12 @@ export default function PrivacyPolicy() {
   return (
     <View style={{ flex: 1, backgroundColor: '#fff8ee' }}>
       <TouchableOpacity onPress={() => router.back()} style={meStyles.backButton}>
-        <Ionicons name="arrow-back" size={22} color="#D4A017" />
-        <Text style={meStyles.backText}>Back</Text>
+        <Ionicons name="arrow-back" size={32} color="#E5911B" />
+        {/* <Text style={meStyles.backText}>Back</Text> */}
       </TouchableOpacity>
 
       <ScrollView contentContainerStyle={meStyles.container}>
-        <Text style={meStyles.title}>Privacy Policy</Text>
+        <Text style={meStyles.header}>Privacy Policy</Text>
 
         <Text style={meStyles.sectionLabel}>1. Data We Collect</Text>
         <Text style={meStyles.content}>

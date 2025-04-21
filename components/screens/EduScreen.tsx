@@ -58,10 +58,10 @@ export default function EduScreen() {
       {/* Header */}
       <View style={styles.header}>
         {/* <TouchableOpacity onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={28} color="#e2ac30" />
+          <Ionicons name="arrow-back" size={32} color="#E5911B" />
         </TouchableOpacity> */}
         <Text style={styles.headerTitle}>Educational Activities</Text>
-        <Ionicons name="arrow-forward" size={28} color="transparent" />
+        <Ionicons name="arrow-forward" size={32} color="#E5911B" />
       </View>
 
       {/* Options Grid */}
@@ -111,12 +111,13 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   headerTitle: {
-    fontSize: 20,
-    color: '#e2ac30',
+    fontSize: 24,
+    color: '#E5911B',
     fontWeight: 'bold',
     textAlign: 'center',
     flex: 1,
     marginTop: 30,
+    fontFamily: 'Futura',
   },
   optionsContainer: {
     paddingHorizontal: 16,
@@ -145,9 +146,10 @@ const styles = StyleSheet.create({
   },
   optionText: {
     marginTop: 6,
-    fontSize: 14,
-    color: '#e2ac30',
+    fontSize: 18,
+    color: '#E5911B',
     fontWeight: '600',
+    fontFamily: 'Futura',
   },
   progressBox: {
     backgroundColor: '#FFF8E1',
@@ -162,7 +164,8 @@ const styles = StyleSheet.create({
   progressTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#e2ac30',
+    color: '#E5911B',
+    fontFamily: 'Futura',
   },
   progressSubtitle: {
     fontSize: 14,

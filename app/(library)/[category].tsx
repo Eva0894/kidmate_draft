@@ -128,7 +128,7 @@ export default function CategoryScreen() {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       <TouchableOpacity onPress={() => router.back()} style={libStyles.backButton}>
-        <Ionicons name="arrow-back" size={24} color="#333" />
+        <Ionicons name="arrow-back" size={32} color="#E5911B" />
       </TouchableOpacity>
       <View style={styles.container}>
         <View style={styles.sidebar}>
@@ -179,10 +179,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#888',
     paddingLeft: 8,
+    fontFamily:'Futura',
   },
   activeCategoryText: {
     fontWeight: 'bold',
-    color: '#D1861E',
+    color: '#E5911B',
+    fontFamily:'Futura',
   },
   content: {
     flex: 1,
@@ -193,7 +195,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 12,
-    color: '#333',
+    color: '#E5911B',
+    fontFamily:'Futura',
   },
   bookList: {
     paddingBottom: 80,
@@ -213,9 +216,11 @@ const styles = StyleSheet.create({
   },
   bookTitle: {
     marginTop: 6,
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: '600',
     textAlign: 'center',
+    fontFamily:'Futura',
+    color:'#E5911B',
   },
   favIcon: {
     position: 'absolute',

@@ -195,12 +195,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#FDF8EC',
     flex: 1,
   },
-  header: {
-    backgroundColor: '#FDF1D6',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingVertical: 40,
-  },
   section: {
     backgroundColor: '#fff',
     marginBottom: 10,
@@ -214,8 +208,9 @@ const styles = StyleSheet.create({
     borderColor: '#F2E7C7',
   },
   itemText: {
-    fontSize: 16,
+    fontSize: 18,
     color: '#222',
+    fontFamily: 'ChalkboardSE-Regular',
   },
   arrow: {
     fontSize: 18,
@@ -228,6 +223,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
     color: '#222',
+    fontFamily: 'ChalkboardSE-Regular',
   },
   logoutToggle: {
     marginVertical: 30,
@@ -239,8 +235,9 @@ const styles = StyleSheet.create({
   },
   logoutText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: '600',
+    fontFamily: 'ChalkboardSE-Regular',
   },
   themeToggle: {
     marginVertical: 30,
@@ -251,17 +248,7 @@ const styles = StyleSheet.create({
     color: '#222',
     fontSize: 16,
     fontWeight: '600',
-  },
-  backButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingTop: 20,
-  },
-  backText: {
-    fontSize: 16,
-    color: '#333',
-    marginLeft: 8,
+    fontFamily: 'ChalkboardSE-Regular',
   },
   avatarImage: {
     width: 100,

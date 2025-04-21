@@ -55,7 +55,7 @@ export default function BookmarksScreen() {
   return (
     <ScrollView contentContainerStyle={styles.container}>
         <TouchableOpacity onPress={() => router.back()} style={libStyles.backButton}>
-          <Ionicons name="arrow-back" size={24} color="#333" />
+          <Ionicons name="arrow-back" size={32} color="#E5911B" />
         </TouchableOpacity>
       <Text style={styles.header}>🔖 My Bookmarks</Text>
       <FlatList
@@ -106,7 +106,9 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 16,
-    color: '#333',
+    color: '#E5911B',
+    fontFamily:'Futura',
+    textAlign:'center',
   },
   item: {
     padding: 14,
@@ -115,7 +117,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   itemText: {
-    fontSize: 16,
-    color: '#333',
+    fontSize: 18,
+    color: '#E5911B',
+    fontFamily:'Futura',
   },
 });

@@ -19,11 +19,11 @@ export default function TermsOfServicePage() {
   return (
     <View style={{ flex: 1, backgroundColor: '#fff8ee' }}>
         <TouchableOpacity style={meStyles.backButton} onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={22} color="#D4A017" />
-            <Text style={meStyles.backText}>Back</Text>
+            <Ionicons name="arrow-back" size={32} color="#E5911B" />
+            {/* <Text style={meStyles.backText}>Back</Text> */}
         </TouchableOpacity>
         <ScrollView style={meStyles.container}>
-        <Text style={meStyles.title}>Terms of Service</Text>
+        <Text style={meStyles.header}>Terms of Service</Text>
 
         <Text style={meStyles.sectionTitle}>1. Acceptance of Terms</Text>
         <View style={meStyles.listBox}>

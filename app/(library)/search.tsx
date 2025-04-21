@@ -101,9 +101,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   header: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: 'bold',
-    color: '#000',
+    color: '#E5911B',
+    fontFamily:'Futura',
   },
   searchContainer: {
     flexDirection: 'row',
@@ -114,7 +115,8 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   searchIcon: {
-    marginRight: 8,
+    marginRight: 16,
+    color:'#E5911B',
   },
   searchInput: {
     flex: 1,
@@ -138,8 +140,10 @@ const styles = StyleSheet.create({
   },
   bookTitle: {
     marginTop: 6,
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: '600',
     textAlign: 'center',
+    fontFamily:'Futura',
+    color:'#E5911B',
   },
 });

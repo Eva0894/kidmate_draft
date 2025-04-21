@@ -7,6 +7,8 @@ import {
   StyleSheet,
   Alert,
   Platform,
+  ScrollView,
+  ImageBackground
 } from 'react-native';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
@@ -88,120 +90,141 @@ export default function RegisterScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      {/* back */}
-      <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-        <Ionicons name="arrow-back" size={24} color="#333" />
-      </TouchableOpacity>
+    <ImageBackground
+      source={require('@/assets/images/signup-bg.jpg')}
+      style={styles.background}
+      resizeMode="cover"
+    >
+        {/* back */}
+        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+          <Ionicons name="arrow-back" size={32} color="#E5911B" />
+        </TouchableOpacity>
 
-      <Text style={styles.title}>Create your account</Text>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <View style={styles.formWrapper}>
+            <Text style={styles.title}>Create Account</Text>
 
-      <TextInput
-        placeholder="Email"
-        value={email}
-        onChangeText={(text) => setEmail(text.toLowerCase())}
-        style={styles.input}
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
+          <TextInput
+            placeholder="Email"
+            value={email}
+            onChangeText={(text) => setEmail(text.toLowerCase())}
+            style={styles.input}
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
 
-      <TextInput
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        style={styles.input}
-        secureTextEntry
-      />
+          <TextInput
+            placeholder="Password"
+            value={password}
+            onChangeText={setPassword}
+            style={styles.input}
+            secureTextEntry
+          />
 
-      <TextInput
-        placeholder="First Name"
-        value={firstName}
-        onChangeText={setFirstName}
-        style={styles.input}
-      />
+          <TextInput
+            placeholder="First Name"
+            value={firstName}
+            onChangeText={setFirstName}
+            style={styles.input}
+          />
 
-      <TextInput
-        placeholder="Last Name"
-        value={lastName}
-        onChangeText={setLastName}
-        style={styles.input}
-      />
+          <TextInput
+            placeholder="Last Name"
+            value={lastName}
+            onChangeText={setLastName}
+            style={styles.input}
+          />
 
-      <Text style={styles.label}>Birthday</Text>
-      <TouchableOpacity onPress={() => setShowPicker(true)} style={styles.input}>
-        <Text>{dob.toDateString()}</Text>
-      </TouchableOpacity>
+          <Text style={styles.datePickerButton}>Birthday</Text>
+          <TouchableOpacity onPress={() => setShowPicker(true)} style={styles.input}>
+            <Text>{dob.toDateString()}</Text>
+          </TouchableOpacity>
 
-      {showPicker && (
-        <DateTimePicker
-          value={dob}
-          mode="date"
-          display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-          onChange={onDateChange}
-        />
-      )}
+          {showPicker && (
+            <DateTimePicker
+              value={dob}
+              mode="date"
+              display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+              onChange={onDateChange}
+            />
+          )}
 
-      <TouchableOpacity style={styles.button} onPress={handleRegister}>
-        <Text style={styles.buttonText}>Register</Text>
-      </TouchableOpacity>
-    </View>
+          <TouchableOpacity style={styles.submitButton} onPress={handleRegister}>
+            <Text style={styles.submitText}>Register</Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  background: {
     flex: 1,
-    backgroundColor: '#fefaf1', 
-    paddingHorizontal: 24,
-    paddingTop: 40,
   },
-  backButton: {
-    marginBottom: 16,
+  scrollContainer: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 24,
   },
-  backArrow: {
-    fontSize: 26,
-    color: '#333',
+  formWrapper: {
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    width: '100%',
+    borderRadius: 20,
+    padding: 24,
+    shadowColor: '#000',
+    shadowOpacity: 0.15,
+    shadowRadius: 10,
+    elevation: 5,
   },
   title: {
-    fontSize: 26,
+    fontSize: 30,
     fontWeight: '700',
-    color: '#333',
-    marginBottom: 32,
     textAlign: 'center',
+    marginBottom: 24,
+    fontFamily: 'ChalkboardSE-Regular',
+    color: '#444',
   },
   input: {
-    height: 48,
-    borderColor: '#e0e0e0',
-    borderWidth: 1,
+    backgroundColor: '#f2f2f2',
     borderRadius: 12,
+    paddingVertical: 12,
     paddingHorizontal: 16,
-    marginBottom: 16,
-    backgroundColor: '#fff',
     fontSize: 16,
     color: '#333',
+    marginBottom: 16,
   },
-  label: {
+  datePickerButton: {
+    backgroundColor: '#ffe4e1',
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderWidth: 1,
+    borderColor: '#ff69b4',
+    marginBottom: 16,
+  },
+  datePickerText: {
+    color: '#d63384',
     fontSize: 16,
-    fontWeight: '600',
-    color: '#555',
-    marginBottom: 6,
+    textAlign: 'center',
+  },
+  submitButton: {
+    backgroundColor: '#ff69b4',
+    borderRadius: 14,
+    paddingVertical: 14,
+    alignItems: 'center',
     marginTop: 8,
   },
-  button: {
-    backgroundColor: '#e0b145',
-    paddingVertical: 14,
-    borderRadius: 12,
-    alignItems: 'center',
-    marginTop: 24,
-    shadowColor: '#e0b145',
-    shadowOpacity: 0.3,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 6,
-    elevation: 2,
-  },
-  buttonText: {
+  submitText: {
     color: '#fff',
-    fontSize: 17,
+    fontSize: 18,
     fontWeight: '600',
+  },
+  backButton:{
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingTop: 16,
   },
 });

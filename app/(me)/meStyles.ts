@@ -13,6 +13,7 @@ const meStyles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
     color: '#333',
+    fontFamily: 'ChalkboardSE-Regular',
   },
   section: {
     backgroundColor: '#fff',
@@ -29,6 +30,7 @@ const meStyles = StyleSheet.create({
     fontSize: 16,
     color: '#444',
     lineHeight: 24,
+    fontFamily: 'ChalkboardSE-Regular',
   },
   listItem: {
     fontSize: 16,
@@ -46,28 +48,24 @@ const meStyles = StyleSheet.create({
   rowText: {
     fontSize: 16,
     color: '#333',
+    fontFamily: 'ChalkboardSE-Regular',
   },
   arrow: {
     fontSize: 18,
-    color: '#d4a373',
+    color: '#E5911B',
   },
-  title: {
-    fontSize: 26,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    color: '#333',
-  },
+  // title: {
+  //   fontSize: 26,
+  //   fontWeight: 'bold',
+  //   marginBottom: 20,
+  //   color: '#333',
+  //   fontFamily: 'ChalkboardSE-Regular',
+  // },
   backButton: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingTop: 16,
-  },
-  backText: {
-    fontSize: 16,
-    color: '#D4A017',
-    marginLeft: 8,
-    fontWeight: '500',
   },
   sectionTitle: {
     fontSize: 18,
@@ -75,11 +73,13 @@ const meStyles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 8,
     color: '#222',
+    fontFamily: 'ChalkboardSE-Regular',
   },
   content: {
     fontSize: 16,
     lineHeight: 24,
     color: '#444',
+    fontFamily: 'ChalkboardSE-Regular',
   },
   sectionLabel: {
     fontSize: 18,
@@ -97,10 +97,12 @@ const meStyles = StyleSheet.create({
   contactLine: {
     fontSize: 16,
     color: '#222',
+    fontFamily: 'ChalkboardSE-Regular',
   },
   contactText: {
     fontSize: 16,
     color: '#333',
+    fontFamily: 'ChalkboardSE-Regular',
   },
   listBox: {
     backgroundColor: '#fce9c6',

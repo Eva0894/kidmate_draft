@@ -88,8 +88,8 @@ export default function ProfilePage() {
     <ScrollView style={styles.container}>
       {/* back */}
       <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-        <Ionicons name="arrow-back" size={24} color="#333" />
-        <Text style={styles.backText}>Back</Text>
+        <Ionicons name="arrow-back" size={32} color="#E5911B" />
+        {/* <Text style={styles.backText}>Back</Text> */}
       </TouchableOpacity>
 
       {/* Header */}

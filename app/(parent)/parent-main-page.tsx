@@ -11,8 +11,8 @@ export default function ParentMainPage() {
       <View style={styles.sectionGroup}>
         {/* Back */}
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={22} color="#D4A017" />
-          <Text style={styles.backText}>Back</Text>
+          <Ionicons name="arrow-back" size={32} color="#E5911B" />
+          {/* <Text style={styles.backText}>Back</Text> */}
         </TouchableOpacity>
         {/* Edu History */}
         <Section title="Education History">

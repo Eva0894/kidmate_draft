@@ -8,11 +8,16 @@ import {
   ScrollView,
   Switch,
   Appearance,
+  ImageBackground,
 } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { supabase } from '@/utils/Supabase';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import { useTheme } from '@/components/ThemeContext';
+import { useT } from '@/utils/useT';
+import meStyles from './meStyles';
+
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -21,17 +26,15 @@ export default function ProfilePage() {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null);
   const [editable, setEditable] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [language, setLanguage] = useState<'en' | 'zh'>('en');
   const [isDarkMode, setIsDarkMode] = useState(Appearance.getColorScheme() === 'dark');
-  const [showPassword, setShowPassword] = useState(false);
 
   const t = (key: string) => {
     const dict: any = {
-      username: { en: 'User Name', zh: '用户名' },
+      username: { en: 'Nick Name', zh: '用户名' },
       first_name: { en: 'First Name', zh: '名字' },
       last_name: { en: 'Last Name', zh: '姓氏' },
       email: { en: 'Email / Phone', zh: '邮箱 / 手机' },
@@ -76,7 +79,6 @@ export default function ProfilePage() {
       setFirstName(data.first_name || '');
       setLastName(data.last_name || '');
       setEmail(data.email || '');
-      setPassword(data.password || '******************');
       setDateOfBirth(data.date_of_birth ? new Date(data.date_of_birth) : null);
     }
   };
@@ -101,115 +103,86 @@ export default function ProfilePage() {
   };
 
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: isDarkMode ? '#1e1e1e' : '#fff9ef', padding: 20 }}>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
-        <TouchableOpacity onPress={() => router.push('/me')}>
-          <Ionicons name="arrow-back" size={24} color="#cc8400" />
-        </TouchableOpacity>
-        <Text style={{ fontSize: 18, fontWeight: 'bold', color: isDarkMode ? '#fff' : '#222' }}>Profile</Text>
-        <TouchableOpacity onPress={() => setEditable(true)}>
-          <Ionicons name="create-outline" size={24} color="#cc8400" />
-        </TouchableOpacity>
-      </View>
-
-      <LabelInput label={t('username')} value={userName} onChangeText={setUserName} editable={editable} dark={isDarkMode} />
-      <LabelInput label={t('first_name')} value={firstName} onChangeText={setFirstName} editable={editable} dark={isDarkMode} />
-      <LabelInput label={t('last_name')} value={lastName} onChangeText={setLastName} editable={editable} dark={isDarkMode} />
-      <LabelInput label={t('email')} value={email} onChangeText={setEmail} editable={editable} dark={isDarkMode} />
-
-      <View style={{ marginBottom: 16 }}>
-        <Text style={{ fontWeight: 'bold', color: isDarkMode ? '#fff' : '#333' }}>{t('password')}</Text>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <TextInput
-            value={password}
-            editable={editable}
-            secureTextEntry={!showPassword}
-            onChangeText={setPassword}
-            style={{
-              flex: 1,
-              backgroundColor: isDarkMode ? '#2a2a2a' : '#fff',
-              borderColor: '#ddd',
-              borderWidth: 1,
-              padding: 10,
-              marginTop: 8,
-              borderRadius: 8,
-              color: isDarkMode ? '#fff' : '#000',
-            }}
-          />
-          {editable && (
-            <TouchableOpacity
-              onPress={() => setShowPassword(!showPassword)}
-              style={{ position: 'absolute', right: 10, top: 18 }}
-            >
-              <Ionicons
-                name={showPassword ? 'eye-off-outline' : 'eye-outline'}
-                size={22}
-                color={isDarkMode ? '#ccc' : '#666'}
-              />
-            </TouchableOpacity>
-          )}
+      <ScrollView style={{ flex: 1, backgroundColor: isDarkMode ? '#1e1e1e' : '#fff9ef', padding: 20 }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+          <TouchableOpacity onPress={() => router.push('/me')}>
+            <Ionicons name="arrow-back" size={32} color="#E5911B" />
+          </TouchableOpacity>
+          <Text style={meStyles.header}>Profile</Text>
+          <TouchableOpacity onPress={() => setEditable(true)}>
+            <Ionicons name="create-outline" size={24} color="#cc8400" />
+          </TouchableOpacity>
         </View>
-      </View>
 
-      <Text style={{ fontWeight: 'bold', marginTop: 16, color: isDarkMode ? '#fff' : '#222' }}>{t('birthday')}</Text>
-      <TouchableOpacity
-        onPress={() => editable && setShowDatePicker(true)}
-        style={{
-          backgroundColor: '#fff',
-          borderColor: '#ddd',
-          borderWidth: 1,
-          padding: 10,
-          borderRadius: 8,
-          marginTop: 8,
-        }}
-      >
-        <Text>{dateOfBirth ? dateOfBirth.toDateString() : 'Tap to select date'}</Text>
-      </TouchableOpacity>
+        <LabelInput label={t('username')} value={userName} onChangeText={setUserName} editable={editable} dark={isDarkMode} />
+        <LabelInput label={t('first_name')} value={firstName} onChangeText={setFirstName} editable={editable} dark={isDarkMode} />
+        <LabelInput label={t('last_name')} value={lastName} onChangeText={setLastName} editable={editable} dark={isDarkMode} />
+        <LabelInput label={t('email')} value={email} onChangeText={setEmail} editable={editable} dark={isDarkMode} />
 
-      <DateTimePickerModal
-        isVisible={showDatePicker}
-        mode="date"
-        date={dateOfBirth || new Date()}
-        onConfirm={(date) => {
-          setDateOfBirth(date);
-          setShowDatePicker(false);
-        }}
-        onCancel={() => setShowDatePicker(false)}
-        maximumDate={new Date()}
-      />
-
-      {editable && (
+        <Text style={{ fontWeight: 'bold', marginTop: 16, color: isDarkMode ? '#fff' : '#222', fontFamily: 'ChalkboardSE-Regular',
+          fontSize: 16, }}>{t('birthday')}</Text>
         <TouchableOpacity
-          onPress={updateProfile}
+          onPress={() => editable && setShowDatePicker(true)}
           style={{
-            backgroundColor: '#f2c66d',
-            padding: 14,
-            marginTop: 24,
-            borderRadius: 10,
-            alignItems: 'center',
+            backgroundColor: '#fff',
+            borderColor: '#ddd',
+            borderWidth: 1,
+            padding: 10,
+            borderRadius: 8,
+            marginTop: 8,
           }}
         >
-          <Text style={{ color: '#fff', fontWeight: 'bold' }}>{t('save')}</Text>
+          <Text>{dateOfBirth ? dateOfBirth.toDateString() : 'Tap to select date'}</Text>
         </TouchableOpacity>
-      )}
 
-      <View style={{ marginTop: 40 }}>
-        <Text style={{ fontWeight: 'bold', marginBottom: 8, color: isDarkMode ? '#fff' : '#222' }}>Language</Text>
-        <View style={{ flexDirection: 'row', gap: 16 }}>
-          <TouchableOpacity onPress={() => setLanguage('en')} style={{ marginRight: 16 }}>
-            <Text style={{ color: language === 'en' ? '#cc8400' : '#999' }}>English</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => setLanguage('zh')}>
-            <Text style={{ color: language === 'zh' ? '#cc8400' : '#999' }}>中文</Text>
-          </TouchableOpacity>
-        </View>
+        <DateTimePickerModal
+          isVisible={showDatePicker}
+          mode="date"
+          date={dateOfBirth || new Date()}
+          onConfirm={(date) => {
+            setDateOfBirth(date);
+            setShowDatePicker(false);
+          }}
+          onCancel={() => setShowDatePicker(false)}
+          maximumDate={new Date()}
+        />
 
-        <View style={{ marginTop: 24, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Text style={{ fontWeight: 'bold', color: isDarkMode ? '#fff' : '#222' }}>Dark Mode</Text>
-          <Switch value={isDarkMode} onValueChange={() => setIsDarkMode(!isDarkMode)} />
+        {editable && (
+          <TouchableOpacity
+            onPress={updateProfile}
+            style={{
+              backgroundColor: '#f2c66d',
+              padding: 14,
+              marginTop: 24,
+              borderRadius: 10,
+              alignItems: 'center',
+            }}
+          >
+            <Text style={{ color: '#fff', fontWeight: 'bold' }}>{t('save')}</Text>
+          </TouchableOpacity>
+        )}
+
+        <View style={{ marginTop: 40, }}>
+          <Text style={{ fontWeight: 'bold', marginBottom: 8, color: isDarkMode ? '#fff' : '#222', fontFamily: 'ChalkboardSE-Regular',
+          fontSize: 16 }}>Language</Text>
+          <View style={{ flexDirection: 'row', gap: 16 }}>
+            <TouchableOpacity onPress={() => setLanguage('en')} style={{ marginRight: 16 }}>
+              <Text style={{ color: language === 'en' ? '#cc8400' : '#999',fontFamily: 'ChalkboardSE-Regular',
+          fontSize: 14}}>English</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setLanguage('zh')}>
+              <Text style={{ color: language === 'zh' ? '#cc8400' : '#999',fontFamily: 'ChalkboardSE-Regular',
+          fontSize: 14 }}>中文</Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={{ marginTop: 24, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Text style={{ fontWeight: 'bold', color: isDarkMode ? '#fff' : '#222', fontFamily: 'ChalkboardSE-Regular',
+          fontSize: 18 }}>Dark Mode</Text>
+            <Switch value={isDarkMode} onValueChange={() => setIsDarkMode(!isDarkMode)} />
+          </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
   );
 }
 
@@ -230,7 +203,8 @@ function LabelInput({
 }) {
   return (
     <View style={{ marginBottom: 16 }}>
-      <Text style={{ fontWeight: 'bold', color: dark ? '#fff' : '#333' }}>{label}</Text>
+      <Text style={{ fontWeight: 'bold', color: dark ? '#fff' : '#333', fontFamily: 'ChalkboardSE-Regular',
+          fontSize: 16, }}>{label}</Text>
       <TextInput
         value={value}
         editable={editable}
@@ -244,6 +218,8 @@ function LabelInput({
           marginTop: 8,
           borderRadius: 8,
           color: dark ? '#fff' : '#000',
+          fontFamily: 'ChalkboardSE-Regular',
+          fontSize: 18,
         }}
       />
     </View>

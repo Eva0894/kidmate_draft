@@ -10,12 +10,12 @@ export default function InfoListPage() {
   return (
     <View style={{ flex: 1, backgroundColor: '#fff8ee' }}>
       <TouchableOpacity style={meStyles.backButton} onPress={() => router.back()}>
-        <Ionicons name="arrow-back" size={22} color="#D4A017" />
-        <Text style={meStyles.backText}>Back</Text>
+        <Ionicons name="arrow-back" size={32} color="#E5911B" />
+        {/* <Text style={meStyles.backText}>Back</Text> */}
       </TouchableOpacity>
 
       <ScrollView contentContainerStyle={meStyles.container}>
-        <Text style={meStyles.title}>Information Collection List</Text>
+        <Text style={meStyles.header}>Information Collection List</Text>
 
         <Text style={meStyles.sectionLabel}>We may collect the following:</Text>
         <View style={meStyles.listBox}>

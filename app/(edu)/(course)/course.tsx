@@ -123,7 +123,7 @@ export default function CoursePage() {
       <TouchableWithoutFeedback onPress={() => setShowProfile(false)}>
         <View style={styles.container}>
           <TouchableOpacity style={eduStyles.backButton} onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={22} color="#D4A017" />
+            <Ionicons name="arrow-back" size={32} color="#E5911B" />
           </TouchableOpacity>
           <View style={styles.header}>
 
@@ -146,6 +146,7 @@ export default function CoursePage() {
                   )}
                 </View>
             </TouchableOpacity>
+
             <Text style={styles.timer}>Today: {formatTime(totalToday)}</Text>
             <Ionicons name="search" size={24} color="#DDAA00" style={styles.icon} />
           </View>

@@ -13,6 +13,7 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '@/utils/Supabase';
 import { useSession } from '@supabase/auth-helpers-react';
+import { commonstyle } from '@/style/commonstyle';
 
 const { width } = Dimensions.get('window');
 
@@ -55,9 +56,9 @@ export default function LibraryScreen() {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.topRow}>
-        <Text style={styles.header}>My Library</Text>
+        <Text style={commonstyle.header}>My Library</Text>
         <TouchableOpacity onPress={() => router.push('/search')}>
-          <Ionicons name="search" size={22} color="#222" />
+          <Ionicons name="search" size={32} color="#E5911B" />
         </TouchableOpacity>
       </View>
 
@@ -69,14 +70,14 @@ export default function LibraryScreen() {
 
       <View style={styles.iconRow}>
         <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/favourite')}>
-          <Ionicons name="heart" size={20} color="red" />
+          <Ionicons name="heart" size={32} color="red" />
         </TouchableOpacity>
         <TouchableOpacity style={styles.iconButton} onPress={() => router.push('/bookmark')}>
-          <Ionicons name="bookmark" size={20} color="#555" />
+          <Ionicons name="bookmark" size={32} color="#555" />
         </TouchableOpacity>
       </View>
 
-      <Text style={styles.sectionTitle}>Digital Library</Text>
+      <Text style={commonstyle.sectionTitle}>Digital Library</Text>
       <View style={styles.categoryRow}>
         {categories.map((cat, index) => (
           <TouchableOpacity
@@ -96,7 +97,7 @@ export default function LibraryScreen() {
         ))}
       </View>
 
-      <Text style={styles.sectionTitle}>Recent</Text>
+      <Text style={commonstyle.sectionTitle}>Recent</Text>
       <View style={styles.recentRow}>
         {recents.map((item, index) => (
           <TouchableOpacity
@@ -142,11 +143,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 16,
   },
-  header: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#333',
-  },
+  
   banner: {
     width: '100%',
     height: 130,
@@ -163,12 +160,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginRight: 10,
   },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#D1861E',
-    marginBottom: 12,
-  },
+  
   categoryRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -187,8 +179,10 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   catLabel: {
-    fontSize: 13,
+    fontSize: 16,
     textAlign: 'center',
+    fontFamily: 'Futura',
+    color: '#E5911B',
   },
   recentRow: {
     flexDirection: 'row',

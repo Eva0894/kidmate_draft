@@ -57,7 +57,7 @@ export default function CourseCategoryScreen() {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color="#D38300" />
+          <Ionicons name="arrow-back" size={32} color="#E5911B" />
         </TouchableOpacity>
         <Text style={styles.title}>Courses</Text>
         <View style={{ width: 24 }} />

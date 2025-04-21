@@ -72,6 +72,7 @@
     "react-native-ios-context-menu": "^2.5.1",
     "react-native-ios-utilities": "^4.4.5",
     "react-native-mmkv": "^2.12.2",
+    "react-native-modal": "^14.0.0-rc.1",
     "react-native-modal-datetime-picker": "^18.0.0",
     "react-native-openai": "^0.6.1",
     "react-native-purchases": "^7.26.2",
