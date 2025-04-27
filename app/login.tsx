@@ -1,4 +1,3 @@
-
 import Colors from '@/constants/Colors';
 import { defaultStyles } from '@/constants/Styles';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -18,8 +17,8 @@ import {
 } from 'react-native';
 import { supabase } from '../utils/Supabase';
 import { Ionicons } from '@expo/vector-icons';
-import { WebView } from 'react-native-webview';
-import Modal from 'react-native-modal';
+// import { WebView } from 'react-native-webview';
+// import Modal from 'react-native-modal';
 import { useEffect } from 'react';
 
 const backgroundImage = require('@/assets/images/login-bg.jpg');
@@ -31,43 +30,48 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [showCaptcha, setShowCaptcha] = useState(false);
-  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
+  // 注释掉reCAPTCHA相关状态
+  // const [showCaptcha, setShowCaptcha] = useState(false);
+  // const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (recaptchaToken) {
-      console.log('🚀 触发 handleLogin()');
-      handleLogin();
-    }
-  }, [recaptchaToken]);
+  // 注释掉reCAPTCHA token检查效果
+  // useEffect(() => {
+  //   if (recaptchaToken) {
+  //     console.log('🚀 触发 handleLogin()');
+  //     handleLogin();
+  //   }
+  // }, [recaptchaToken]);
   
-  const handleCaptchaMessage = (event: any) => {
-    const token = event.nativeEvent.data;
-    console.log('✅ reCAPTCHA token:', token);
-    setRecaptchaToken(token);
-    setShowCaptcha(false);
-  };
+  // 注释掉Captcha处理函数
+  // const handleCaptchaMessage = (event: any) => {
+  //   const token = event.nativeEvent.data;
+  //   console.log('✅ reCAPTCHA token:', token);
+  //   setRecaptchaToken(token);
+  //   setShowCaptcha(false);
+  // };
 
   const handleLogin = async () => {
-    if (!recaptchaToken) {
-      Alert.alert('Please pass the human-machine verification first');
-      setShowCaptcha(true);
-      return;
-    }
+    // 注释掉人机验证检查
+    // if (!recaptchaToken) {
+    //   Alert.alert('Please pass the human-machine verification first');
+    //   setShowCaptcha(true);
+    //   return;
+    // }
 
     setLoading(true);
     try {
-      console.log('📤 发送 reCAPTCHA token 给后端...');
-      const res = await fetch('http://192.168.0.249:3000/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email,
-          password,
-          token: recaptchaToken, 
-        }),
-      });
-      console.log('🔗 正在发送验证请求到后端');
+      // 注释掉向后端发送reCAPTCHA验证请求
+      // console.log('📤 发送 reCAPTCHA token 给后端...');
+      // const res = await fetch('http://192.168.0.249:3000/api/login', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({
+      //     email,
+      //     password,
+      //     token: recaptchaToken, 
+      //   }),
+      // });
+      // console.log('🔗 正在发送验证请求到后端');
 
       // Supabase login
       console.log('trying to login:', email);
@@ -85,22 +89,30 @@ const Login = () => {
         Alert.alert('Login error', 'No session user found.');
         return;
       }
-      console.log('📬 收到后端响应，解析中...');
-      const result = await res.json();
-      console.log('📦 后端返回结果:', result);
-      if (result.success) {
-        Alert.alert('Login Successfully! ', 'Welcome back!');
-        console.log('Login successfully, user ID:', sessionUser.id);
-        console.log('Login successfully, user mailbox:', sessionUser.email);
-        console.log('jumping to main');
-        router.replace('/(tabs)/main');
-      } else {
-        Alert.alert('Login Failed', result.message || 'Please check the verification code or account password');
-      }
+      
+      // 注释掉后端验证检查，直接处理登录成功
+      // console.log('📬 收到后端响应，解析中...');
+      // const result = await res.json();
+      // console.log('📦 后端返回结果:', result);
+      // if (result.success) {
+      
+      // 直接执行成功逻辑
+      Alert.alert('Login Successfully! ', 'Welcome back!');
+      console.log('Login successfully, user ID:', sessionUser.id);
+      console.log('Login successfully, user mailbox:', sessionUser.email);
+      console.log('jumping to main');
+      router.replace('/(tabs)/main');
+      
+      // 注释掉后端验证错误处理
+      // } else {
+      //   Alert.alert('Login Failed', result.message || 'Please check the verification code or account password');
+      // }
 
     } catch (err) {
       const error = err as Error;
       Alert.alert('Network Error', error.message);
+    } finally {
+      setLoading(false);
     }
   };
   const handleForgotPassword = () => {
@@ -144,15 +156,15 @@ const Login = () => {
           <Text style={{ color: Colors.primary, marginTop: 10, fontFamily: 'ChalkboardSE-Regular' }}>Forgot Password?</Text>
         </TouchableOpacity>
 
-
-        <Modal isVisible={showCaptcha}>
+        {/* 注释掉reCAPTCHA模态框 */}
+        {/* <Modal isVisible={showCaptcha}>
           <View style={{ flex: 1, backgroundColor: '#fff', borderRadius: 10, overflow: 'hidden' }}>
             <WebView
               source={{ uri: 'https://kidmate-recaptcha-nmiht0pkh-evas-projects-d1ccc46f.vercel.app' }}
               onMessage={handleCaptchaMessage}
             />
           </View>
-        </Modal>
+        </Modal> */}
       </KeyboardAvoidingView>
     </ImageBackground>
   );
