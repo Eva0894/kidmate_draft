@@ -1,0 +1,244 @@
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, Modal, TouchableOpacity, Image, Dimensions, Button, Alert } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+
+interface BadgeDetailModalProps {
+  visible: boolean;
+  title: string;
+  description: string;
+  imageUrl?: string;
+  progress: number;
+  unlocked: boolean;
+  onClose: () => void;
+  onUpdateProgress?: (newProgress: number) => void;
+  awardedAt?: string;
+}
+
+const { width } = Dimensions.get('window');
+
+export default function BadgeDetailModal({
+  visible,
+  title,
+  description,
+  imageUrl,
+  progress,
+  unlocked,
+  onClose,
+  onUpdateProgress,
+  awardedAt
+}: BadgeDetailModalProps) {
+  const [localProgress, setLocalProgress] = useState(progress);
+
+  useEffect(() => {
+    setLocalProgress(progress);
+  }, [progress]);
+
+  const handleIncreaseProgress = () => {
+    if (unlocked) return;
+    
+    const newProgress = Math.min(100, localProgress + 10);
+    setLocalProgress(newProgress);
+    
+    if (onUpdateProgress) {
+      onUpdateProgress(newProgress);
+    }
+  };
+
+  const handleModalClose = () => {
+    setLocalProgress(progress);
+    onClose();
+  };
+
+  return (
+    <Modal
+      visible={visible}
+      transparent={true}
+      animationType="fade"
+      onRequestClose={handleModalClose}
+    >
+      <View style={styles.modalOverlay}>
+        <View style={styles.modalContainer}>
+          <TouchableOpacity style={styles.closeButton} onPress={handleModalClose}>
+            <Ionicons name="close" size={24} color="#666" />
+          </TouchableOpacity>
+          
+          <View style={[
+            styles.statusBadge, 
+            unlocked ? styles.unlockedStatusBadge : styles.lockedStatusBadge
+          ]}>
+            <Text style={styles.statusBadgeText}>
+              {unlocked ? "已获得勋章" : "待解锁徽章"}
+            </Text>
+            {unlocked && <Ionicons name="trophy" size={14} color="white" style={{marginLeft: 4}} />}
+            {!unlocked && <Ionicons name="lock-closed" size={12} color="white" style={{marginLeft: 4}} />}
+          </View>
+          
+          {unlocked && awardedAt && (
+            <Text style={styles.awardedDateText}>
+              {awardedAt}
+            </Text>
+          )}
+          
+          <View style={styles.badgeImageContainer}>
+            {imageUrl ? (
+              <Image 
+                source={{ uri: imageUrl }} 
+                style={styles.badgeImage} 
+              />
+            ) : (
+              <View style={styles.placeholderImage} />
+            )}
+          </View>
+          
+          <Text style={styles.badgeTitle}>{title}</Text>
+          <Text style={styles.badgeDescription}>{description}</Text>
+          
+          <View style={styles.progressContainer}>
+            <View style={[styles.progressBar, { width: `${localProgress}%` }]} />
+          </View>
+          
+          <Text style={[
+            styles.statusText, 
+            unlocked ? styles.unlockedText : styles.lockedText
+          ]}>
+            {unlocked 
+              ? "恭喜！你已解锁此成就！" 
+              : `进度：${localProgress}%，继续努力！`
+            }
+          </Text>
+
+          {!unlocked && onUpdateProgress && (
+            <TouchableOpacity 
+              style={styles.progressButton}
+              onPress={handleIncreaseProgress}
+            >
+              <Text style={styles.progressButtonText}>增加进度</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>
+    </Modal>
+  );
+}
+
+const styles = StyleSheet.create({
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContainer: {
+    width: width * 0.85,
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    borderRadius: 20,
+    padding: 20,
+    alignItems: 'center',
+    position: 'relative',
+    overflow: 'hidden',
+    backdropFilter: 'blur(10px)',
+  },
+  closeButton: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    zIndex: 1,
+  },
+  badgeImageContainer: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: '#f0f4f8',
+    marginBottom: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
+  },
+  badgeImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 50,
+  },
+  placeholderImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 50,
+    backgroundColor: '#e2e8f0',
+  },
+  badgeTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  badgeDescription: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  progressContainer: {
+    width: '100%',
+    height: 8,
+    backgroundColor: '#e2e8f0',
+    borderRadius: 4,
+    marginBottom: 12,
+    overflow: 'hidden',
+  },
+  progressBar: {
+    height: '100%',
+    backgroundColor: '#FF6B6B',
+    borderRadius: 4,
+  },
+  statusText: {
+    fontSize: 16,
+    fontWeight: '600',
+    textAlign: 'center',
+    marginBottom: 16,
+  },
+  unlockedText: {
+    color: '#10B981',
+  },
+  lockedText: {
+    color: '#6B7280',
+  },
+  progressButton: {
+    backgroundColor: '#FF6B6B',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 8,
+    marginTop: 10,
+  },
+  progressButtonText: {
+    color: 'white',
+    fontWeight: '600',
+    fontSize: 14,
+  },
+  statusBadge: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+    marginBottom: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  unlockedStatusBadge: {
+    backgroundColor: '#10B981',
+  },
+  lockedStatusBadge: {
+    backgroundColor: '#6B7280',
+  },
+  statusBadgeText: {
+    color: 'white',
+    fontWeight: '600',
+    fontSize: 14,
+  },
+  awardedDateText: {
+    fontSize: 14,
+    color: '#6B7280',
+    marginBottom: 14,
+    fontStyle: 'italic'
+  }
+}); 
