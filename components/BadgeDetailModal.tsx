@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Modal, TouchableOpacity, Image, Dimensions, Button, Alert } from 'react-native';
+import { View, Text, StyleSheet, Modal, TouchableOpacity, Image, Dimensions, Button, Alert, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 interface BadgeDetailModalProps {
@@ -59,7 +59,7 @@ export default function BadgeDetailModal({
       <View style={styles.modalOverlay}>
         <View style={styles.modalContainer}>
           <TouchableOpacity style={styles.closeButton} onPress={handleModalClose}>
-            <Ionicons name="close" size={24} color="#666" />
+            <Ionicons name="close" size={28} color="#E5911B" />
           </TouchableOpacity>
           
           <View style={[
@@ -70,7 +70,7 @@ export default function BadgeDetailModal({
               {unlocked ? "已获得勋章" : "待解锁徽章"}
             </Text>
             {unlocked && <Ionicons name="trophy" size={14} color="white" style={{marginLeft: 4}} />}
-            {!unlocked && <Ionicons name="lock-closed" size={12} color="white" style={{marginLeft: 4}} />}
+            {!unlocked && <Ionicons name="lock-closed" size={14} color="white" style={{marginLeft: 4}} />}
           </View>
           
           {unlocked && awardedAt && (
@@ -166,17 +166,24 @@ const styles = StyleSheet.create({
     backgroundColor: '#e2e8f0',
   },
   badgeTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#333',
+    fontSize: 24,
+    color: '#E5911B',
     marginBottom: 8,
     textAlign: 'center',
+    fontFamily: Platform.select({
+      ios: 'Chalkboard SE',
+      android: 'casual',
+  })
   },
   badgeDescription: {
     fontSize: 16,
     color: '#666',
     textAlign: 'center',
     marginBottom: 20,
+    fontFamily: Platform.select({
+      ios: 'Chalkboard SE',
+      android: 'casual',
+  })
   },
   progressContainer: {
     width: '100%',
@@ -196,6 +203,10 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     textAlign: 'center',
     marginBottom: 16,
+    fontFamily: Platform.select({
+      ios: 'Chalkboard SE',
+      android: 'casual',
+  })
   },
   unlockedText: {
     color: '#10B981',
@@ -239,6 +250,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#6B7280',
     marginBottom: 14,
-    fontStyle: 'italic'
+    fontStyle: 'italic',
+    fontFamily: Platform.select({
+      ios: 'Chalkboard SE',
+      android: 'casual',
+    })
   }
 }); 

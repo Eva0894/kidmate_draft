@@ -11,7 +11,8 @@ import {
   ScrollView, 
   ActivityIndicator, 
   Dimensions,
-  StatusBar
+  StatusBar,
+  Platform
 } from 'react-native';
 import { supabase } from '../utils/Supabase';
 import BadgeItem, { BadgeItemProps } from '../components/BadgeItem';
@@ -338,7 +339,7 @@ export default function RewardPage() {
                 style={styles.backButton} 
                 onPress={() => router.back()}
               >
-                <Ionicons name="arrow-back" size={22} color="#666" />
+                <Ionicons name="arrow-back" size={28} color="#E5911B" />
               </TouchableOpacity>
               <Text style={styles.headerTitle}>Achievements</Text>
             </View>
@@ -500,6 +501,8 @@ const styles = StyleSheet.create({
   headerLeft: {
     flexDirection: 'row',
     alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
   },
   backButton: {
     width: 36,
@@ -509,20 +512,35 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 10,
+    position: 'absolute',
+    left: 0,
   },
   headerTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
+    fontSize: 24,
+    color: '#E5911B',
+    textAlign: 'center',
+    fontFamily: Platform.select({
+        ios: 'Chalkboard SE',
+        android: 'casual',
+    }),
   },
   badgeCounter: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
+    position: 'absolute',
+    right: 16,
   },
   badgeCountText: {
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: 16,
+    fontWeight: Platform.select({
+      ios: '600',
+      android: 'normal',
+    }),
+    fontFamily: Platform.select({
+      ios: 'System',
+      android: 'sans-serif-medium',
+    }),
     color: '#333',
   },
   categoryContainer: {
@@ -542,9 +560,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF6B6B',
   },
   categoryText: {
-    fontSize: 14,
+    fontSize: 18,
     fontWeight: '500',
-    color: '#64748b',
+    color: '#E5911B',
+    fontFamily: Platform.select({
+      ios: 'Chalkboard SE',
+      android: 'casual',
+  })
   },
   activeCategoryText: {
     color: 'white',
@@ -573,10 +595,13 @@ const styles = StyleSheet.create({
     marginBottom: 14,
   },
   sectionTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
+    fontSize: 18,
+    color: '#E5911B',
     marginLeft: 8,
+    fontFamily: Platform.select({
+      ios: 'Chalkboard SE',
+      android: 'casual',
+  })
   },
   badgesGrid: {
     flexDirection: 'row',

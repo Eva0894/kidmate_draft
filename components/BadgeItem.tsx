@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 export interface BadgeItemProps {
@@ -107,12 +107,16 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   title: {
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: '500',
     textAlign: 'center',
     marginTop: 3,
-    color: '#333',
+    color: '#E5911B',
     width: '100%',
+    fontFamily: Platform.select({
+      ios: 'Chalkboard SE',
+      android: 'casual',
+    })
   },
   progressIndicator: {
     width: '80%',
