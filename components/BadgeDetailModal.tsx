@@ -10,7 +10,6 @@ interface BadgeDetailModalProps {
   progress: number;
   unlocked: boolean;
   onClose: () => void;
-  onUpdateProgress?: (newProgress: number) => void;
   awardedAt?: string;
 }
 
@@ -24,7 +23,6 @@ export default function BadgeDetailModal({
   progress,
   unlocked,
   onClose,
-  onUpdateProgress,
   awardedAt
 }: BadgeDetailModalProps) {
   const [localProgress, setLocalProgress] = useState(progress);
@@ -32,17 +30,6 @@ export default function BadgeDetailModal({
   useEffect(() => {
     setLocalProgress(progress);
   }, [progress]);
-
-  const handleIncreaseProgress = () => {
-    if (unlocked) return;
-    
-    const newProgress = Math.min(100, localProgress + 10);
-    setLocalProgress(newProgress);
-    
-    if (onUpdateProgress) {
-      onUpdateProgress(newProgress);
-    }
-  };
 
   const handleModalClose = () => {
     setLocalProgress(progress);
@@ -106,15 +93,6 @@ export default function BadgeDetailModal({
               : `进度：${localProgress}%，继续努力！`
             }
           </Text>
-
-          {!unlocked && onUpdateProgress && (
-            <TouchableOpacity 
-              style={styles.progressButton}
-              onPress={handleIncreaseProgress}
-            >
-              <Text style={styles.progressButtonText}>增加进度</Text>
-            </TouchableOpacity>
-          )}
         </View>
       </View>
     </Modal>
@@ -213,18 +191,6 @@ const styles = StyleSheet.create({
   },
   lockedText: {
     color: '#6B7280',
-  },
-  progressButton: {
-    backgroundColor: '#FF6B6B',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 8,
-    marginTop: 10,
-  },
-  progressButtonText: {
-    color: 'white',
-    fontWeight: '600',
-    fontSize: 14,
   },
   statusBadge: {
     paddingHorizontal: 12,

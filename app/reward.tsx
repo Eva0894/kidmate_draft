@@ -202,98 +202,6 @@ export default function RewardPage() {
     setModalVisible(false);
   };
 
-  // 处理徽章进度更新
-  const handleUpdateProgress = (newProgress: number) => {
-    if (!selectedBadge) return;
-    
-    updateBadgeProgress(selectedBadge.id, newProgress);
-  };
-
-  // 更新徽章进度的函数
-  const updateBadgeProgress = async (badgeId: string, progress: number) => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        console.error('用户未登录');
-        return;
-      }
-      
-      // 检查是否已存在用户徽章关联
-      const { data: existingBadges } = await supabase
-        .from('user_badges')
-        .select('id, progress')
-        .eq('user_id', user.id)
-        .eq('badge_id', badgeId)
-        .maybeSingle();
-      
-      let result;
-      let awardedAtDate: string | undefined = undefined;
-      
-      // 如果进度达到100%，设置当前日期作为授予日期
-      if (progress >= 100) {
-        const now = new Date();
-        awardedAtDate = now.toISOString().split('T')[0];
-      }
-      
-      if (existingBadges) {
-        // 更新已有进度
-        result = await supabase
-          .from('user_badges')
-          .update({ 
-            progress: progress,
-            // 如果进度达到100%，设置awarded_at字段
-            ...(progress >= 100 ? { awarded_at: new Date().toISOString() } : {})
-          })
-          .eq('id', existingBadges.id);
-      } else {
-        // 创建新的用户徽章关联
-        result = await supabase
-          .from('user_badges')
-          .insert({ 
-            user_id: user.id, 
-            badge_id: badgeId, 
-            progress: progress,
-            // 如果进度达到100%，设置awarded_at字段
-            ...(progress >= 100 ? { awarded_at: new Date().toISOString() } : {})
-          });
-      }
-      
-      if (result.error) {
-        console.error('更新徽章进度失败:', result.error);
-      } else {
-        // 更新本地状态
-        setBadges(prev => 
-          prev.map(b => 
-            b.id === badgeId 
-              ? { ...b, progress, earned: progress >= 100, awardedAt: progress >= 100 ? awardedAtDate : undefined } 
-              : b
-          )
-        );
-        
-        // 更新selectedBadge状态，确保在详情弹窗中显示的也是最新数据
-        if (selectedBadge && selectedBadge.id === badgeId) {
-          setSelectedBadge({
-            ...selectedBadge,
-            progress,
-            earned: progress >= 100,
-            awardedAt: progress >= 100 ? awardedAtDate : undefined
-          });
-        }
-        
-        // 如果进度达到100%且之前未解锁，更新总计数
-        if (progress >= 100 && selectedBadge && selectedBadge.id === badgeId && !selectedBadge.earned) {
-          setUserTotalBadges(prev => ({
-            ...prev,
-            earned: prev.earned + 1
-          }));
-        }
-      }
-    } catch (error) {
-      console.error('处理徽章进度更新时出错:', error);
-    }
-  };
-
   const getIconNameForType = (type: string): string => {
     return type;
   };
@@ -477,7 +385,6 @@ export default function RewardPage() {
               unlocked={selectedBadge.earned}
               awardedAt={selectedBadge.awardedAt}
               onClose={handleCloseModal}
-              onUpdateProgress={handleUpdateProgress}
             />
           )}
         </SafeAreaView>
