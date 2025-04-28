@@ -352,85 +352,91 @@ export default function RewardPage() {
           </View>
           
           {/* 分类标签 */}
-          <View style={styles.categoryContainer}>
-            <TouchableOpacity 
-              style={[
-                styles.categoryTab, 
-                activeCategory === 'all' && styles.activeCategoryTab
-              ]}
-              onPress={() => setActiveCategory('all')}
-            >
-              <Text style={[
-                styles.categoryText, 
-                activeCategory === 'all' && styles.activeCategoryText
-              ]}>All</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity 
-              style={[
-                styles.categoryTab, 
-                activeCategory === 'game' && styles.activeCategoryTab
-              ]}
-              onPress={() => setActiveCategory('game')}
-            >
-              <Text style={[
-                styles.categoryText, 
-                activeCategory === 'game' && styles.activeCategoryText
-              ]}>Game</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity 
-              style={[
-                styles.categoryTab, 
-                activeCategory === 'drawing' && styles.activeCategoryTab
-              ]}
-              onPress={() => setActiveCategory('drawing')}
-            >
-              <Text style={[
-                styles.categoryText, 
-                activeCategory === 'drawing' && styles.activeCategoryText
-              ]}>Drawing</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity 
-              style={[
-                styles.categoryTab, 
-                activeCategory === 'cartoon' && styles.activeCategoryTab
-              ]}
-              onPress={() => setActiveCategory('cartoon')}
-            >
-              <Text style={[
-                styles.categoryText, 
-                activeCategory === 'cartoon' && styles.activeCategoryText
-              ]}>Cartoon</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity 
-              style={[
-                styles.categoryTab, 
-                activeCategory === 'course' && styles.activeCategoryTab
-              ]}
-              onPress={() => setActiveCategory('course')}
-            >
-              <Text style={[
-                styles.categoryText, 
-                activeCategory === 'course' && styles.activeCategoryText
-              ]}>Course</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity 
-              style={[
-                styles.categoryTab, 
-                activeCategory === 'reading' && styles.activeCategoryTab
-              ]}
-              onPress={() => setActiveCategory('reading')}
-            >
-              <Text style={[
-                styles.categoryText, 
-                activeCategory === 'reading' && styles.activeCategoryText
-              ]}>Reading</Text>
-            </TouchableOpacity>
-          </View>
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.categoryScrollContainer}
+          >
+            <View style={styles.categoryContainer}>
+              <TouchableOpacity 
+                style={[
+                  styles.categoryTab, 
+                  activeCategory === 'all' && styles.activeCategoryTab
+                ]}
+                onPress={() => setActiveCategory('all')}
+              >
+                <Text style={[
+                  styles.categoryText, 
+                  activeCategory === 'all' && styles.activeCategoryText
+                ]}>All</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity 
+                style={[
+                  styles.categoryTab, 
+                  activeCategory === 'game' && styles.activeCategoryTab
+                ]}
+                onPress={() => setActiveCategory('game')}
+              >
+                <Text style={[
+                  styles.categoryText, 
+                  activeCategory === 'game' && styles.activeCategoryText
+                ]}>Game</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity 
+                style={[
+                  styles.categoryTab, 
+                  activeCategory === 'drawing' && styles.activeCategoryTab
+                ]}
+                onPress={() => setActiveCategory('drawing')}
+              >
+                <Text style={[
+                  styles.categoryText, 
+                  activeCategory === 'drawing' && styles.activeCategoryText
+                ]}>Drawing</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity 
+                style={[
+                  styles.categoryTab, 
+                  activeCategory === 'cartoon' && styles.activeCategoryTab
+                ]}
+                onPress={() => setActiveCategory('cartoon')}
+              >
+                <Text style={[
+                  styles.categoryText, 
+                  activeCategory === 'cartoon' && styles.activeCategoryText
+                ]}>Cartoon</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity 
+                style={[
+                  styles.categoryTab, 
+                  activeCategory === 'course' && styles.activeCategoryTab
+                ]}
+                onPress={() => setActiveCategory('course')}
+              >
+                <Text style={[
+                  styles.categoryText, 
+                  activeCategory === 'course' && styles.activeCategoryText
+                ]}>Course</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity 
+                style={[
+                  styles.categoryTab, 
+                  activeCategory === 'reading' && styles.activeCategoryTab
+                ]}
+                onPress={() => setActiveCategory('reading')}
+              >
+                <Text style={[
+                  styles.categoryText, 
+                  activeCategory === 'reading' && styles.activeCategoryText
+                ]}>Reading</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
           
           {badges.length === 0 ? (
             // 空状态内容
@@ -543,11 +549,12 @@ const styles = StyleSheet.create({
     }),
     color: '#333',
   },
+  categoryScrollContainer: {
+    paddingHorizontal: 10,
+  },
   categoryContainer: {
     flexDirection: 'row',
-    paddingHorizontal: 10,
     marginBottom: 15,
-    overflow: 'scroll',
   },
   categoryTab: {
     paddingHorizontal: 15,
@@ -555,6 +562,8 @@ const styles = StyleSheet.create({
     marginRight: 8,
     borderRadius: 20,
     backgroundColor: 'white',
+    height:43,
+    
   },
   activeCategoryTab: {
     backgroundColor: '#FF6B6B',
@@ -572,7 +581,7 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   content: {
-    flex: 1,
+    height: '90%',
   },
   contentContainer: {
     paddingBottom: 20,
