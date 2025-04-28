@@ -1,4 +1,4 @@
-package com.supersimon.chatgpt
+package com.eva0894.kidmate
 
 import android.app.Application
 import android.content.res.Configuration

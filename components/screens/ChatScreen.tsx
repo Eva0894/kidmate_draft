@@ -220,7 +220,7 @@ export default function Page() {
     <View style={defaultStyles.pageContainer}>
       <Stack.Screen
         options={{
-          headerTitle: 'ChatGPT',
+          headerTitle: 'KidMate',
           headerTitleAlign: 'center',
           headerTitleStyle: {
             fontSize: 18,

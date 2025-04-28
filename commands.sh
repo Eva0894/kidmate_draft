@@ -1,4 +1,4 @@
-npx create-expo-app chatgpt -t tabs
+npx create-expo-app kidmate -t tabs
 npx expo install expo-dev-client react-native-reanimated react-native-gesture-handler
 
 npm i react-native-redash

@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Chatgpt",
-    "slug": "chatgpt",
+    "name": "KidMate",
+    "slug": "kidmate",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "chatgpt",
+    "scheme": "kidmate",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/splash.png",
@@ -17,7 +17,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.supersimon.chatgpt",
+      "bundleIdentifier": "com.eva0894.kidmate",
       "permissions": ["NOTIFICATIONS"]
     },
     "android": {
@@ -26,7 +26,7 @@
         "backgroundColor": "#ffffff",
         "permissions": ["NOTIFICATIONS"]
       },
-      "package": "com.supersimon.chatgpt"
+      "package": "com.eva0894.kidmate"
     },
     "web": {
       "bundler": "metro",

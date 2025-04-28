@@ -1,5 +1,5 @@
 {
-  "name": "chatgpt",
+  "name": "kidmate",
   "version": "1.0.0",
   "scripts": {
     "start": "expo start",
@@ -27,6 +27,7 @@
     "@supabase/auth-helpers-react": "^0.5.0",
     "@supabase/supabase-js": "^2.49.4",
     "base64-arraybuffer": "^1.0.2",
+    "cors": "^2.8.5",
     "cross-fetch": "^4.1.0",
     "dayjs": "^1.11.13",
     "dotenv": "^16.5.0",
@@ -58,6 +59,7 @@
     "expo-status-bar": "~2.0.1",
     "expo-system-ui": "~4.0.8",
     "expo-web-browser": "~14.0.2",
+    "express": "^5.1.0",
     "i18n-js": "^4.5.1",
     "i18next": "^25.0.0",
     "lottie-react-native": "7.1.0",

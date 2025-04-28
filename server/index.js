@@ -1,30 +1,38 @@
 import express from 'express';
 import axios from 'axios';
+import cors from 'cors';
 import dotenv from 'dotenv';
 
-dotenv.config();
+dotenv.config(); // 加载 .env 配置
 
 const app = express();
 const PORT = 3000;
 
-app.use(express.json());
+// 中间件
+app.use(cors()); // 允许跨域
+app.use(express.json()); // 解析 JSON 请求体
+
+app.get('/', (req, res) => {
+  res.send('✅ Server is running! You reached the backend.');
+});
+
+// ✅ 请求日志
 app.use((req, res, next) => {
   console.log('📩 收到请求:', req.method, req.url);
   next();
 });
 
+// 登录接口（验证 reCAPTCHA）
 app.post('/api/login', async (req, res) => {
-  console.log('📩 收到请求:', req.method, req.url);
-  console.log('📦 req.body:', req.body); 
+  console.log('📩 收到 /api/login 请求');
+  console.log('📦 请求内容:', req.body);
   const { token } = req.body;
 
   if (!token) {
-    console.log('⚠️ token 缺失，终止验证');
     return res.status(400).json({ success: false, message: 'Missing reCAPTCHA token' });
   }
 
   try {
-    // Step 1: Verify reCAPTCHA
     const { data } = await axios.post('https://www.google.com/recaptcha/api/siteverify', null, {
       params: {
         secret: process.env.RECAPTCHA_SECRET_KEY,
@@ -32,7 +40,7 @@ app.post('/api/login', async (req, res) => {
       },
     });
 
-    console.log('🧠 Google reCAPTCHA 验证结果:', data);
+    console.log('Google reCAPTCHA 验证结果:', data);
 
     if (!data.success) {
       return res.status(403).json({
@@ -42,8 +50,7 @@ app.post('/api/login', async (req, res) => {
       });
     }
 
-    // ✅ 验证成功
-    return res.json({ success: true, message: 'reCAPTCHA OK' });
+    return res.json({ success: true, message: 'Login verified via reCAPTCHA' });
 
   } catch (error) {
     console.error('🚨 reCAPTCHA 验证出错:', error);
@@ -51,6 +58,7 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 后端服务监听中：本地 http://localhost:${PORT}，局域网 http://<192.168.0.249>:${PORT}`);
+// 启动服务
+app.listen(3000, '0.0.0.0', () => {
+  console.log('🚀 服务运行中: http://localhost:3000, 局域网: http://192.168.0.249:3000');
 });

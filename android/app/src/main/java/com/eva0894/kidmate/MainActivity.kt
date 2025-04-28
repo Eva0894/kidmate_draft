@@ -1,4 +1,4 @@
-package com.supersimon.chatgpt
+package com.eva0894.kidmate
 import expo.modules.splashscreen.SplashScreenManager
 
 import android.os.Build

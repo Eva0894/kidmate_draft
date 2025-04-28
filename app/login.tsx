@@ -21,6 +21,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { WebView } from 'react-native-webview';
 import Modal from 'react-native-modal';
 import { useEffect } from 'react';
+import { BASE_URL, post } from '@/utils/api';
 
 const backgroundImage = require('@/assets/images/login-bg.jpg');
 
@@ -40,13 +41,15 @@ const Login = () => {
       handleLogin();
     }
   }, [recaptchaToken]);
-  
+
+  console.log('✅ BASE_URL:', BASE_URL);
   const handleCaptchaMessage = (event: any) => {
     const token = event.nativeEvent.data;
     console.log('✅ reCAPTCHA token:', token);
     setRecaptchaToken(token);
     setShowCaptcha(false);
   };
+  console.log('📡 正在请求:', `${BASE_URL}/api/login`);
 
   const handleLogin = async () => {
     if (!recaptchaToken) {
@@ -54,55 +57,75 @@ const Login = () => {
       setShowCaptcha(true);
       return;
     }
-
+  
     setLoading(true);
+  
     try {
-      console.log('📤 发送 reCAPTCHA token 给后端...');
-      const res = await fetch('http://192.168.0.249:3000/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email,
-          password,
-          token: recaptchaToken, 
-        }),
+      console.log('🚀 触发 handleLogin()');
+      console.log('✅ reCAPTCHA token:', recaptchaToken);
+  
+      // Step 1️⃣: 后端验证 reCAPTCHA
+      // const res = await fetch(`${BASE_URL}/api/login`, {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({
+      //     token: recaptchaToken,
+      //     email, 
+      //   }),
+      // });
+      const result = await post('/api/login', {
+        token: recaptchaToken,
+        email, // optional
       });
-      console.log('🔗 正在发送验证请求到后端');
-
-      // Supabase login
-      console.log('trying to login:', email);
+  
+      // console.log('🔗 正在发送验证请求到后端');
+  
+      // if (!res.ok) {
+      //   const errText = await res.text();
+      //   throw new Error(`reCAPTCHA 验证失败: ${errText}`);
+      // }
+  
+      // const result = await res.json();
+      // console.log('📦 后端返回结果:', result);
+  
+      if (!result.success) {
+        Alert.alert('人机验证失败', result.message || '请重试');
+        return;
+      }
+  
+      // Step 2️⃣: Supabase 账号密码登录
+      console.log('🟢 reCAPTCHA 成功，开始 Supabase 登录:', email);
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
+  
       if (error) {
-        console.log('login failed:', error.message);
+        console.log('🔴 登录失败:', error.message);
         Alert.alert('Login failed', error.message);
         return;
       }
+  
       const sessionUser = data.session?.user;
+  
       if (!sessionUser) {
         Alert.alert('Login error', 'No session user found.');
         return;
       }
-      console.log('📬 收到后端响应，解析中...');
-      const result = await res.json();
-      console.log('📦 后端返回结果:', result);
-      if (result.success) {
-        Alert.alert('Login Successfully! ', 'Welcome back!');
-        console.log('Login successfully, user ID:', sessionUser.id);
-        console.log('Login successfully, user mailbox:', sessionUser.email);
-        console.log('jumping to main');
-        router.replace('/(tabs)/main');
-      } else {
-        Alert.alert('Login Failed', result.message || 'Please check the verification code or account password');
-      }
-
+  
+      Alert.alert('Login Successfully! ', 'Welcome back!');
+      console.log('✅ 登录成功, user ID:', sessionUser.id);
+      router.replace('/(tabs)/main');
+  
     } catch (err) {
+      console.error('❌ 登录流程出错:', err);
       const error = err as Error;
-      Alert.alert('Network Error', error.message);
+      Alert.alert('Network Error', error.message || 'Request failed');
+    } finally {
+      setLoading(false);
     }
   };
+
   const handleForgotPassword = () => {
     Alert.alert('Forgot Password', 'Please contact support for password recovery.');
   };

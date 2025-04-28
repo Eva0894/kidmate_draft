@@ -86,9 +86,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.supersimon.chatgpt'
+    namespace 'com.eva0894.kidmate'
     defaultConfig {
-        applicationId 'com.supersimon.chatgpt'
+        applicationId 'com.eva0894.kidmate'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

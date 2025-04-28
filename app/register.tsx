@@ -11,76 +11,48 @@ import {
   ImageBackground
 } from 'react-native';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
-import { Picker } from '@react-native-picker/picker';
+import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { supabase } from '../utils/Supabase';
-import { Ionicons } from '@expo/vector-icons';
 
 export default function RegisterScreen() {
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [dob, setDob] = useState(new Date('2015-01-01'));
   const [showPicker, setShowPicker] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-  const router = useRouter();
+  const handleSendMagicLink = async () => {
+    if (!email) {
+      Alert.alert('Please enter your email');
+      return;
+    }
+    if (password !== confirmPassword) {
+      Alert.alert('Passwords do not match');
+      return;
+    }
 
-  const handleRegister = async () => {
+    setLoading(true);
     try {
-      // Step 1: 注册账户
-      const { error: signUpError } = await supabase.auth.signUp({
+      const { error } = await supabase.auth.signInWithOtp({
         email,
-        password,
-      });
-
-      if (signUpError) {
-        throw signUpError;
-      }
-
-      // Step 2: 注册后立即登录
-      const { data: loginData, error: loginError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (loginError) {
-        throw loginError;
-      }
-
-      // Step 3: 获取当前登录用户信息
-      const { data: userData, error: userError } = await supabase.auth.getUser();
-      const userId = userData?.user?.id;
-
-      if (userError || !userId) {
-        throw new Error('登录成功但获取用户信息失败');
-      }
-
-      // Step 4: 写入 users 表
-      const { error: insertError } = await supabase.from('users').upsert([
-        {
-          user_id: userId,
-          email,
-          first_name: firstName,
-          last_name: lastName,
-          date_of_birth: dob.toISOString().split('T')[0],
-          is_active: true,
-          has_answered_questions: false,
+        options: {
+          shouldCreateUser: true,
         },
-      ]);
+      });
+      if (error) throw error;
 
-      if (insertError) {
-        Alert.alert('注册成功，但写入数据库失败', insertError.message);
-      } 
-      
-      
-      else {
-        Alert.alert('Register Successflly! Jump to main page...');
-        router.replace('/main'); 
-      }
+      Alert.alert('Check your email', 'Click the login link we sent to proceed.');
     } catch (err: any) {
-      console.log('Supabase 注册错误:', err);
-      Alert.alert('Register Failed', err.message || 'Please try again later');
+      console.error('Send Magic Link error:', err);
+      Alert.alert('Failed to send magic link', err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -95,14 +67,13 @@ export default function RegisterScreen() {
       style={styles.background}
       resizeMode="cover"
     >
-        {/* back */}
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={32} color="#E5911B" />
-        </TouchableOpacity>
+      <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+        <Ionicons name="arrow-back" size={32} color="#E5911B" />
+      </TouchableOpacity>
 
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
-          <View style={styles.formWrapper}>
-            <Text style={styles.title}>Create Account</Text>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.formWrapper}>
+          <Text style={styles.title}>Create Account</Text>
 
           <TextInput
             placeholder="Email"
@@ -113,12 +84,32 @@ export default function RegisterScreen() {
             autoCapitalize="none"
           />
 
+          <View style={{ position: 'relative' }}>
+            <TextInput
+              placeholder="Password"
+              value={password}
+              onChangeText={setPassword}
+              style={styles.input}
+              secureTextEntry={!showPassword}
+            />
+            <TouchableOpacity
+              style={{ position: 'absolute', right: 16, top: 12 }}
+              onPress={() => setShowPassword(!showPassword)}
+            >
+              <Ionicons
+                name={showPassword ? 'eye-off' : 'eye'}
+                size={20}
+                color="#999"
+              />
+            </TouchableOpacity>
+          </View>
+
           <TextInput
-            placeholder="Password"
-            value={password}
-            onChangeText={setPassword}
+            placeholder="Confirm Password"
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
             style={styles.input}
-            secureTextEntry
+            secureTextEntry={!showPassword}
           />
 
           <TextInput
@@ -149,8 +140,14 @@ export default function RegisterScreen() {
             />
           )}
 
-          <TouchableOpacity style={styles.submitButton} onPress={handleRegister}>
-            <Text style={styles.submitText}>Register</Text>
+          <TouchableOpacity
+            style={[styles.submitButton, loading && { opacity: 0.6 }]}
+            onPress={handleSendMagicLink}
+            disabled={loading}
+          >
+            <Text style={styles.submitText}>
+              {loading ? 'Processing...' : 'Send Magic Link'}
+            </Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -159,9 +156,7 @@ export default function RegisterScreen() {
 }
 
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-  },
+  background: { flex: 1 },
   scrollContainer: {
     flexGrow: 1,
     justifyContent: 'center',
@@ -194,6 +189,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333',
     marginBottom: 16,
+    fontFamily: 'ChalkboardSE-Regular',
   },
   datePickerButton: {
     backgroundColor: '#ffe4e1',
@@ -203,11 +199,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ff69b4',
     marginBottom: 16,
-  },
-  datePickerText: {
-    color: '#d63384',
+    fontFamily: 'ChalkboardSE-Regular',
     fontSize: 16,
-    textAlign: 'center',
   },
   submitButton: {
     backgroundColor: '#ff69b4',
@@ -215,13 +208,16 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     alignItems: 'center',
     marginTop: 8,
+    fontFamily: 'ChalkboardSE-Regular',
   },
   submitText: {
     color: '#fff',
     fontSize: 18,
     fontWeight: '600',
+    fontFamily: 'ChalkboardSE-Regular',
+    textShadowColor: 'rgba(0, 0, 0, 0.2)',
   },
-  backButton:{
+  backButton: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,

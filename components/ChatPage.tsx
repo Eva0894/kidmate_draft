@@ -118,7 +118,7 @@ const ChatPage = () => {
         options={{
           headerTitle: () => (
             <HeaderDropDown
-              title="ChatGPT"
+              title="KidMate"
               items={[
                 { key: '3.5', title: 'GPT-3.5', icon: 'bolt' },
                 { key: '4', title: 'GPT-4', icon: 'sparkles' },
