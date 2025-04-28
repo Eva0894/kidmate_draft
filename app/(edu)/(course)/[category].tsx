@@ -38,23 +38,38 @@ export default function CourseCategoryScreen() {
       setVideos([]); // 先清空数据，显示加载状态
       
       try {
+        // 检查Supabase连接
+        if (!supabase) {
+          console.error('❌ Supabase客户端未初始化');
+          return;
+        }
+
         const { data, error } = await supabase
           .from('courses')
           .select('id, title, video_url')
           .eq('category', selected.toLowerCase())
           .order('created_at', { ascending: false });
 
-        console.log('📥 获取到的数据:', data);
+        console.log('📥 获取到的数据:', JSON.stringify(data, null, 2));
         
         if (error) {
-          console.error(`❌ 获取${selected}类别的视频失败:`, error.message);
+          console.error(`❌ 获取${selected}类别的视频失败:`, error.message, error.details);
           setVideos([]);
           return;
         }
 
         if (data && data.length > 0) {
           console.log(`✅ 成功获取${selected}类别的${data.length}个视频`);
-          setVideos(data as Video[]);
+          // 检查视频URL格式
+          const validVideos = data.filter(video => {
+            const isValid = video.video_url && typeof video.video_url === 'string' && video.video_url.trim() !== '';
+            if (!isValid) {
+              console.warn(`⚠️ 视频ID ${video.id} URL格式无效:`, video.video_url);
+            }
+            return isValid;
+          });
+          console.log(`✅ 有效视频数量: ${validVideos.length}/${data.length}`);
+          setVideos(validVideos as Video[]);
         } else {
           console.log(`ℹ️ ${selected}类别没有视频数据`);
           setVideos([]);

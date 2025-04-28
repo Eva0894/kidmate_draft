@@ -36,6 +36,22 @@ const games = [
     image: require('../../assets/images/game.jpg'),
     route: '/(games)/numberGame',
   },
+  {
+    title: 'puzzle',
+    image: require('../../assets/images/game.jpg'),
+    route: '/(games)/puzzleGame',
+  },
+  {
+    title: 'Ballon Pop',
+    image: require('../../assets/images/game.jpg'),
+    route: '/(games)/ballonpopGame',
+  },
+ 
+  {
+    title: ' Whack-a-Mole',
+    image: require('../../assets/images/game.jpg'),
+    route: '/(games)/Whack-a-Mole',
+  },
 ];
 
 export default function GamePage() {
@@ -118,3 +134,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+
+

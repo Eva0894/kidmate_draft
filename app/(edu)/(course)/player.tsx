@@ -18,14 +18,19 @@ export default function CoursePlayerPage() {
 
   const handleVideoError = (error: string) => {
     console.error('视频播放错误:', error);
-    setError('视频播放失败，请稍后重试');
+    console.error('视频URL:', url);
+    setError(`视频播放失败: ${error}`);
   };
 
   const handlePlaybackStatusUpdate = (status: AVPlaybackStatus) => {
     if (!status.isLoaded) {
       if (status.error) {
+        console.error('播放状态错误:', status.error);
         handleVideoError(status.error);
       }
+    } else {
+      // 正常播放状态
+      console.log('视频播放状态:', status.isPlaying ? '播放中' : '已暂停');
     }
   };
 
