@@ -520,7 +520,7 @@ export default function PlayerPage() {
           onPress={async () => {
             if (soundRef.current) {
               const status = await soundRef.current.getStatusAsync();
-              if (status.isPlaying) {
+              if (status.isLoaded && status.isPlaying) {
                 await soundRef.current.pauseAsync();
                 setIsPlaying(false);
               } else {
