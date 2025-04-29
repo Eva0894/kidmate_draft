@@ -23,8 +23,8 @@ const libStyles = StyleSheet.create({
     backButton: {
         flexDirection: 'row',
         alignItems: 'center',
-        paddingHorizontal: 16,
-        paddingTop: 16,
+        paddingHorizontal:16,
+        paddingTop: 0,
       },
       backText: {
         fontSize: 16,
