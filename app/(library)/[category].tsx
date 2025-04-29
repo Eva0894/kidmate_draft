@@ -128,7 +128,7 @@ export default function CategoryScreen() {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
       <TouchableOpacity onPress={() => router.back()} style={libStyles.backButton}>
-        <Ionicons name="arrow-back" size={32} color="#E5911B" />
+        <Ionicons name="arrow-back" size={28} color="#E5911B" />
       </TouchableOpacity>
       <View style={styles.container}>
         <View style={styles.sidebar}>
@@ -158,7 +158,13 @@ export default function CategoryScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, flexDirection: 'row' },
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    paddingHorizontal: 12,
+    flexDirection: 'row'
+  },
+  
   sidebar: {
     width: 100,
     backgroundColor: '#f0f0f0',
@@ -176,15 +182,19 @@ const styles = StyleSheet.create({
     borderLeftColor: '#D1861E',
   },
   categoryText: {
-    fontSize: 14,
+    fontSize: 18,
     color: '#888',
     paddingLeft: 8,
-    fontFamily:'Futura',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'casual',}),
   },
   activeCategoryText: {
     fontWeight: 'bold',
     color: '#E5911B',
-    fontFamily:'Futura',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'casual',}),
   },
   content: {
     flex: 1,
@@ -192,11 +202,13 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   header: {
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 12,
     color: '#E5911B',
-    fontFamily:'Futura',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'casual',}),
   },
   bookList: {
     paddingBottom: 80,
@@ -216,10 +228,12 @@ const styles = StyleSheet.create({
   },
   bookTitle: {
     marginTop: 6,
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: '600',
     textAlign: 'center',
-    fontFamily:'Futura',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'casual',}),
     color:'#E5911B',
   },
   favIcon: {

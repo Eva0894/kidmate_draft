@@ -55,7 +55,7 @@ export default function BookmarksScreen() {
   return (
     <ScrollView contentContainerStyle={styles.container}>
         <TouchableOpacity onPress={() => router.back()} style={libStyles.backButton}>
-          <Ionicons name="arrow-back" size={32} color="#E5911B" />
+          <Ionicons name="arrow-back" size={28} color="#E5911B" />
         </TouchableOpacity>
       <Text style={styles.header}>🔖 My Bookmarks</Text>
       <FlatList
@@ -98,16 +98,18 @@ export default function BookmarksScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
-    paddingBottom: 100,
+    flex: 1,
     backgroundColor: '#fff',
+    paddingHorizontal: 12,
   },
   header: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 16,
     color: '#E5911B',
-    fontFamily:'Futura',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'casual',}),
     textAlign:'center',
   },
   item: {
@@ -117,8 +119,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   itemText: {
-    fontSize: 18,
+    fontSize: 14,
     color: '#E5911B',
-    fontFamily:'Futura',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'casual',}),
   },
 });

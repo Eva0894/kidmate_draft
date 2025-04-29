@@ -8,12 +8,13 @@ import {
   Alert,
   Platform,
   ScrollView,
-  ImageBackground
+  ImageBackground,
 } from 'react-native';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { supabase } from '../utils/Supabase';
+
 
 export default function RegisterScreen() {
   const router = useRouter();
@@ -27,9 +28,10 @@ export default function RegisterScreen() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSendMagicLink = async () => {
-    if (!email) {
-      Alert.alert('Please enter your email');
+
+  const handleRegister = async () => {
+    if (!email || !password || !confirmPassword) {
+      Alert.alert('Please fill all fields');
       return;
     }
     if (password !== confirmPassword) {
@@ -39,18 +41,28 @@ export default function RegisterScreen() {
 
     setLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithOtp({
+      const { error } = await supabase.auth.signUp({
         email,
-        options: {
-          shouldCreateUser: true,
-        },
+        password,
       });
+
       if (error) throw error;
 
-      Alert.alert('Check your email', 'Click the login link we sent to proceed.');
+      // 注册成功后，跳到 confirm-email 页面，传递注册信息
+      router.push({
+        pathname: '/confirm-email',
+        params: {
+          email,
+          password,
+          firstName,
+          lastName,
+          dob: dob.toISOString(), // 一定要转成字符串
+        },
+      });
+
     } catch (err: any) {
-      console.error('Send Magic Link error:', err);
-      Alert.alert('Failed to send magic link', err.message);
+      console.error('Registration error:', err);
+      Alert.alert('Registration failed', err.message);
     } finally {
       setLoading(false);
     }
@@ -142,11 +154,11 @@ export default function RegisterScreen() {
 
           <TouchableOpacity
             style={[styles.submitButton, loading && { opacity: 0.6 }]}
-            onPress={handleSendMagicLink}
+            onPress={handleRegister}
             disabled={loading}
           >
             <Text style={styles.submitText}>
-              {loading ? 'Processing...' : 'Send Magic Link'}
+              {loading ? 'Registering...' : 'Register'}
             </Text>
           </TouchableOpacity>
         </View>
@@ -208,7 +220,6 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     alignItems: 'center',
     marginTop: 8,
-    fontFamily: 'ChalkboardSE-Regular',
   },
   submitText: {
     color: '#fff',

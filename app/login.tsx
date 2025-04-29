@@ -65,28 +65,10 @@ const Login = () => {
       console.log('✅ reCAPTCHA token:', recaptchaToken);
   
       // Step 1️⃣: 后端验证 reCAPTCHA
-      // const res = await fetch(`${BASE_URL}/api/login`, {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({
-      //     token: recaptchaToken,
-      //     email, 
-      //   }),
-      // });
       const result = await post('/api/login', {
         token: recaptchaToken,
         email, // optional
       });
-  
-      // console.log('🔗 正在发送验证请求到后端');
-  
-      // if (!res.ok) {
-      //   const errText = await res.text();
-      //   throw new Error(`reCAPTCHA 验证失败: ${errText}`);
-      // }
-  
-      // const result = await res.json();
-      // console.log('📦 后端返回结果:', result);
   
       if (!result.success) {
         Alert.alert('人机验证失败', result.message || '请重试');
@@ -170,8 +152,12 @@ const Login = () => {
 
         <Modal isVisible={showCaptcha}>
           <View style={{ flex: 1, backgroundColor: '#fff', borderRadius: 10, overflow: 'hidden' }}>
-            <WebView
+            {/* <WebView
               source={{ uri: 'https://kidmate-recaptcha-nmiht0pkh-evas-projects-d1ccc46f.vercel.app' }}
+              onMessage={handleCaptchaMessage}
+            /> */}
+            <WebView
+              source={{ uri: 'https://kidmate-recaptcha.vercel.app' }}
               onMessage={handleCaptchaMessage}
             />
           </View>

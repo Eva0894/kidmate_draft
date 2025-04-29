@@ -12,6 +12,7 @@ import {
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import { Platform } from 'react-native';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -61,7 +62,7 @@ export default function EduScreen() {
           <Ionicons name="arrow-back" size={32} color="#E5911B" />
         </TouchableOpacity> */}
         <Text style={styles.headerTitle}>Educational Activities</Text>
-        <Ionicons name="arrow-forward" size={32} color="#E5911B" />
+        <Ionicons name="arrow-forward" size={28} color="#E5911B" />
       </View>
 
       {/* Options Grid */}
@@ -117,7 +118,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     flex: 1,
     marginTop: 30,
-    fontFamily: 'Futura',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'casual',}),
   },
   optionsContainer: {
     paddingHorizontal: 16,
@@ -149,7 +152,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#E5911B',
     fontWeight: '600',
-    fontFamily: 'Futura',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'casual',}),
   },
   progressBox: {
     backgroundColor: '#FFF8E1',
@@ -165,7 +170,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: '#E5911B',
-    fontFamily: 'Futura',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'casual',}),
   },
   progressSubtitle: {
     fontSize: 14,

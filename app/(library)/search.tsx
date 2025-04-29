@@ -13,6 +13,9 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import libStyles from './libStyles';
+
+
 
 // const BACKEND_URL = 'http://127.0.0.1:8000';
 // 根据平台设置 API 地址
@@ -65,12 +68,15 @@ export default function SearchScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+        <TouchableOpacity onPress={() => router.back()} style={libStyles.backButton}>
+          <Ionicons name="arrow-back" size={28} color="#E5911B" />
+        </TouchableOpacity>
       <View style={styles.headerRow}>
         <Text style={styles.header}>Search Books</Text>
       </View>
 
       <View style={styles.searchContainer}>
-        <Ionicons name="search" size={20} color="#333" style={styles.searchIcon} />
+        <Ionicons name="search" size={28} color="#E5911B" style={styles.searchIcon} />
         <TextInput
           style={styles.searchInput}
           placeholder="Enter book title..."
@@ -97,14 +103,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   headerRow: {
-    paddingVertical: 16,
+    paddingVertical: 10,
     alignItems: 'center',
   },
   header: {
     fontSize: 24,
     fontWeight: 'bold',
     color: '#E5911B',
-    fontFamily:'Futura',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'casual',}),
   },
   searchContainer: {
     flexDirection: 'row',
@@ -140,10 +148,12 @@ const styles = StyleSheet.create({
   },
   bookTitle: {
     marginTop: 6,
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: '600',
     textAlign: 'center',
-    fontFamily:'Futura',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'casual',}),
     color:'#E5911B',
   },
 });

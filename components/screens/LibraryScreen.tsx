@@ -14,6 +14,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '@/utils/Supabase';
 import { useSession } from '@supabase/auth-helpers-react';
 import { commonstyle } from '@/style/commonstyle';
+import { Platform } from 'react-native';
 
 const { width } = Dimensions.get('window');
 
@@ -56,9 +57,9 @@ export default function LibraryScreen() {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.topRow}>
-        <Text style={commonstyle.header}>My Library</Text>
+        <Text style={styles.header}>My Library</Text>
         <TouchableOpacity onPress={() => router.push('/search')}>
-          <Ionicons name="search" size={32} color="#E5911B" />
+          <Ionicons name="search" size={28} color="#E5911B" />
         </TouchableOpacity>
       </View>
 
@@ -77,7 +78,7 @@ export default function LibraryScreen() {
         </TouchableOpacity>
       </View>
 
-      <Text style={commonstyle.sectionTitle}>Digital Library</Text>
+      <Text style={styles.sectionTitle}>Digital Library</Text>
       <View style={styles.categoryRow}>
         {categories.map((cat, index) => (
           <TouchableOpacity
@@ -97,7 +98,7 @@ export default function LibraryScreen() {
         ))}
       </View>
 
-      <Text style={commonstyle.sectionTitle}>Recent</Text>
+      <Text style={styles.sectionTitle}>Recent</Text>
       <View style={styles.recentRow}>
         {recents.map((item, index) => (
           <TouchableOpacity
@@ -143,6 +144,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 16,
   },
+
+  header: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#E5911B',
+    textAlign: 'center',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'casual',}),
+  },
+
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#E5911B',
+    marginBottom: 8,
+    marginTop: 12,
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'casual',}),
+  },
   
   banner: {
     width: '100%',
@@ -179,9 +201,11 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   catLabel: {
-    fontSize: 16,
+    fontSize: 18,
     textAlign: 'center',
-    fontFamily: 'Futura',
+    fontFamily: Platform.select({
+          ios: 'ChalkboardSE-Regular',
+          android: 'casual',}),
     color: '#E5911B',
   },
   recentRow: {
