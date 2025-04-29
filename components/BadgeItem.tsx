@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Platform } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 export interface BadgeItemProps {
   id?: string;
@@ -25,23 +26,35 @@ export default function BadgeItem({
       onPress={onPress}
       activeOpacity={0.8}
     >
-      <View style={[
-        styles.imageContainer, 
-        unlocked ? styles.unlockedContainer : styles.lockedContainer
-      ]}>
-        {imageUrl ? (
-          <Image 
-            source={{ uri: imageUrl }} 
-            style={[
-              styles.image, 
-              !unlocked && styles.lockedImage
-            ]} 
-            resizeMode="cover"
-          />
-        ) : (
-          <View style={[styles.placeholderImage, !unlocked && styles.lockedImage]} />
+      <View style={styles.badgeWrapper}>
+        <View style={[
+          styles.imageContainer, 
+          unlocked ? styles.unlockedContainer : styles.lockedContainer
+        ]}>
+          {imageUrl ? (
+            <Image 
+              source={{ uri: imageUrl }} 
+              style={[
+                styles.image, 
+                !unlocked && styles.lockedImage
+              ]} 
+              resizeMode="cover"
+            />
+          ) : (
+            <View style={[styles.placeholderImage, !unlocked && styles.lockedImage]} />
+          )}
+        </View>
+        
+        {/* 未解锁时显示锁图标 - 放在外层确保显示在最上方 */}
+        {!unlocked && (
+          <View style={styles.lockIconContainer}>
+            <View style={styles.lockIconBackground}>
+              <Ionicons name="lock-closed" size={10} color="white" />
+            </View>
+          </View>
         )}
       </View>
+      
       <Text style={styles.title} numberOfLines={1}>{title}</Text>
       {!unlocked && progress < 100 && (
         <View style={styles.progressIndicator}>
@@ -59,11 +72,16 @@ const styles = StyleSheet.create({
     marginHorizontal: 6,
     marginVertical: 8,
   },
+  badgeWrapper: {
+    position: 'relative',
+    width: 60,
+    height: 60,
+    marginBottom: 6,
+  },
   imageContainer: {
     width: 60,
     height: 60,
     borderRadius: 30,
-    marginBottom: 6,
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
@@ -89,12 +107,16 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   title: {
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: '500',
     textAlign: 'center',
     marginTop: 3,
-    color: '#333',
+    color: '#E5911B',
     width: '100%',
+    fontFamily: Platform.select({
+      ios: 'Chalkboard SE',
+      android: 'casual',
+    })
   },
   progressIndicator: {
     width: '80%',
@@ -108,5 +130,28 @@ const styles = StyleSheet.create({
     height: '100%',
     backgroundColor: '#FF6B6B',
     borderRadius: 1,
+  },
+  lockIconContainer: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    width: 18,
+    height: 18,
+    borderRadius: 9,
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'white',
+    elevation: 3,
+    zIndex: 10,
+  },
+  lockIconBackground: {
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: 'rgba(50, 50, 50, 0.7)',
+    justifyContent: 'center',
+    alignItems: 'center',
   }
 }); 

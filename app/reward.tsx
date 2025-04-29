@@ -11,7 +11,8 @@ import {
   ScrollView, 
   ActivityIndicator, 
   Dimensions,
-  StatusBar
+  StatusBar,
+  Platform
 } from 'react-native';
 import { supabase } from '../utils/Supabase';
 import BadgeItem, { BadgeItemProps } from '../components/BadgeItem';
@@ -31,6 +32,7 @@ interface BadgeData {
   imageUrl?: string;
   progress: number;
   earned: boolean;
+  awardedAt?: string;
 }
 
 export default function RewardPage() {
@@ -82,12 +84,19 @@ export default function RewardPage() {
           const isEarned = ub.awarded_at !== null;
           const progress = ub.progress !== null ? ub.progress : (isEarned ? 100 : 0);
           
+          // 格式化授予时间为YYYY-MM-DD格式
+          let formattedAwardedAt: string | undefined = undefined;
+          if (ub.awarded_at) {
+            formattedAwardedAt = new Date(ub.awarded_at).toISOString().split('T')[0];
+          }
+          
           acc[ub.badge_id] = { 
             earned: isEarned, 
-            progress: progress 
+            progress: progress,
+            awardedAt: formattedAwardedAt
           };
           return acc;
-        }, {} as Record<string, { earned: boolean; progress: number }>);
+        }, {} as Record<string, { earned: boolean; progress: number; awardedAt: string | undefined }>);
         
         // 如果没有任何徽章数据，显示空状态
         if (!allBadges || allBadges.length === 0) {
@@ -98,7 +107,7 @@ export default function RewardPage() {
           });
         } else {
           const formattedBadges = allBadges.map(badge => {
-            const userBadgeInfo = userBadgeMap[badge.id] || { earned: false, progress: 0 };
+            const userBadgeInfo = userBadgeMap[badge.id] || { earned: false, progress: 0, awardedAt: undefined };
             return {
               id: badge.id,
               name: badge.name,
@@ -106,7 +115,8 @@ export default function RewardPage() {
               description: badge.description || '完成特定挑战解锁此成就！',
               imageUrl: badge.icon_url,
               progress: userBadgeInfo.progress,
-              earned: userBadgeInfo.earned
+              earned: userBadgeInfo.earned,
+              awardedAt: userBadgeInfo.awardedAt
             };
           });
 
@@ -192,81 +202,6 @@ export default function RewardPage() {
     setModalVisible(false);
   };
 
-  // 处理徽章进度更新
-  const handleUpdateProgress = (newProgress: number) => {
-    if (!selectedBadge) return;
-    
-    updateBadgeProgress(selectedBadge.id, newProgress);
-  };
-
-  // 更新徽章进度的函数
-  const updateBadgeProgress = async (badgeId: string, progress: number) => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        console.error('用户未登录');
-        return;
-      }
-      
-      // 检查是否已存在用户徽章关联
-      const { data: existingBadges } = await supabase
-        .from('user_badges')
-        .select('id, progress')
-        .eq('user_id', user.id)
-        .eq('badge_id', badgeId)
-        .maybeSingle();
-      
-      let result;
-      
-      if (existingBadges) {
-        // 更新已有进度
-        result = await supabase
-          .from('user_badges')
-          .update({ 
-            progress: progress,
-            // 如果进度达到100%，设置awarded_at字段
-            ...(progress >= 100 ? { awarded_at: new Date().toISOString() } : {})
-          })
-          .eq('id', existingBadges.id);
-      } else {
-        // 创建新的用户徽章关联
-        result = await supabase
-          .from('user_badges')
-          .insert({ 
-            user_id: user.id, 
-            badge_id: badgeId, 
-            progress: progress,
-            // 如果进度达到100%，设置awarded_at字段
-            ...(progress >= 100 ? { awarded_at: new Date().toISOString() } : {})
-          });
-      }
-      
-      if (result.error) {
-        console.error('更新徽章进度失败:', result.error);
-      } else {
-        // 更新本地状态
-        setBadges(prev => 
-          prev.map(b => 
-            b.id === badgeId 
-              ? { ...b, progress, earned: progress >= 100 } 
-              : b
-          )
-        );
-        
-        // 如果进度达到100%且之前未解锁，更新总计数
-        if (progress >= 100 && selectedBadge && selectedBadge.id === badgeId && !selectedBadge.earned) {
-          setUserTotalBadges(prev => ({
-            ...prev,
-            earned: prev.earned + 1
-          }));
-        }
-      }
-    } catch (error) {
-      console.error('处理徽章进度更新时出错:', error);
-    }
-  };
-
   const getIconNameForType = (type: string): string => {
     return type;
   };
@@ -312,7 +247,7 @@ export default function RewardPage() {
                 style={styles.backButton} 
                 onPress={() => router.back()}
               >
-                <Ionicons name="arrow-back" size={22} color="#666" />
+                <Ionicons name="arrow-back" size={28} color="#E5911B" />
               </TouchableOpacity>
               <Text style={styles.headerTitle}>Achievements</Text>
             </View>
@@ -325,85 +260,91 @@ export default function RewardPage() {
           </View>
           
           {/* 分类标签 */}
-          <View style={styles.categoryContainer}>
-            <TouchableOpacity 
-              style={[
-                styles.categoryTab, 
-                activeCategory === 'all' && styles.activeCategoryTab
-              ]}
-              onPress={() => setActiveCategory('all')}
-            >
-              <Text style={[
-                styles.categoryText, 
-                activeCategory === 'all' && styles.activeCategoryText
-              ]}>All</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity 
-              style={[
-                styles.categoryTab, 
-                activeCategory === 'game' && styles.activeCategoryTab
-              ]}
-              onPress={() => setActiveCategory('game')}
-            >
-              <Text style={[
-                styles.categoryText, 
-                activeCategory === 'game' && styles.activeCategoryText
-              ]}>Game</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity 
-              style={[
-                styles.categoryTab, 
-                activeCategory === 'drawing' && styles.activeCategoryTab
-              ]}
-              onPress={() => setActiveCategory('drawing')}
-            >
-              <Text style={[
-                styles.categoryText, 
-                activeCategory === 'drawing' && styles.activeCategoryText
-              ]}>Drawing</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity 
-              style={[
-                styles.categoryTab, 
-                activeCategory === 'cartoon' && styles.activeCategoryTab
-              ]}
-              onPress={() => setActiveCategory('cartoon')}
-            >
-              <Text style={[
-                styles.categoryText, 
-                activeCategory === 'cartoon' && styles.activeCategoryText
-              ]}>Cartoon</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity 
-              style={[
-                styles.categoryTab, 
-                activeCategory === 'course' && styles.activeCategoryTab
-              ]}
-              onPress={() => setActiveCategory('course')}
-            >
-              <Text style={[
-                styles.categoryText, 
-                activeCategory === 'course' && styles.activeCategoryText
-              ]}>Course</Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity 
-              style={[
-                styles.categoryTab, 
-                activeCategory === 'reading' && styles.activeCategoryTab
-              ]}
-              onPress={() => setActiveCategory('reading')}
-            >
-              <Text style={[
-                styles.categoryText, 
-                activeCategory === 'reading' && styles.activeCategoryText
-              ]}>Reading</Text>
-            </TouchableOpacity>
-          </View>
+          <ScrollView 
+            horizontal 
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.categoryScrollContainer}
+          >
+            <View style={styles.categoryContainer}>
+              <TouchableOpacity 
+                style={[
+                  styles.categoryTab, 
+                  activeCategory === 'all' && styles.activeCategoryTab
+                ]}
+                onPress={() => setActiveCategory('all')}
+              >
+                <Text style={[
+                  styles.categoryText, 
+                  activeCategory === 'all' && styles.activeCategoryText
+                ]}>All</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity 
+                style={[
+                  styles.categoryTab, 
+                  activeCategory === 'game' && styles.activeCategoryTab
+                ]}
+                onPress={() => setActiveCategory('game')}
+              >
+                <Text style={[
+                  styles.categoryText, 
+                  activeCategory === 'game' && styles.activeCategoryText
+                ]}>Game</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity 
+                style={[
+                  styles.categoryTab, 
+                  activeCategory === 'drawing' && styles.activeCategoryTab
+                ]}
+                onPress={() => setActiveCategory('drawing')}
+              >
+                <Text style={[
+                  styles.categoryText, 
+                  activeCategory === 'drawing' && styles.activeCategoryText
+                ]}>Drawing</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity 
+                style={[
+                  styles.categoryTab, 
+                  activeCategory === 'cartoon' && styles.activeCategoryTab
+                ]}
+                onPress={() => setActiveCategory('cartoon')}
+              >
+                <Text style={[
+                  styles.categoryText, 
+                  activeCategory === 'cartoon' && styles.activeCategoryText
+                ]}>Cartoon</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity 
+                style={[
+                  styles.categoryTab, 
+                  activeCategory === 'course' && styles.activeCategoryTab
+                ]}
+                onPress={() => setActiveCategory('course')}
+              >
+                <Text style={[
+                  styles.categoryText, 
+                  activeCategory === 'course' && styles.activeCategoryText
+                ]}>Course</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity 
+                style={[
+                  styles.categoryTab, 
+                  activeCategory === 'reading' && styles.activeCategoryTab
+                ]}
+                onPress={() => setActiveCategory('reading')}
+              >
+                <Text style={[
+                  styles.categoryText, 
+                  activeCategory === 'reading' && styles.activeCategoryText
+                ]}>Reading</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
           
           {badges.length === 0 ? (
             // 空状态内容
@@ -442,8 +383,8 @@ export default function RewardPage() {
               imageUrl={selectedBadge.imageUrl}
               progress={selectedBadge.progress}
               unlocked={selectedBadge.earned}
+              awardedAt={selectedBadge.awardedAt}
               onClose={handleCloseModal}
-              onUpdateProgress={handleUpdateProgress}
             />
           )}
         </SafeAreaView>
@@ -473,6 +414,8 @@ const styles = StyleSheet.create({
   headerLeft: {
     flexDirection: 'row',
     alignItems: 'center',
+    flex: 1,
+    justifyContent: 'center',
   },
   backButton: {
     width: 36,
@@ -482,27 +425,43 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 10,
+    position: 'absolute',
+    left: 0,
   },
   headerTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
+    fontSize: 24,
+    color: '#E5911B',
+    textAlign: 'center',
+    fontFamily: Platform.select({
+        ios: 'Chalkboard SE',
+        android: 'casual',
+    }),
   },
   badgeCounter: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
+    position: 'absolute',
+    right: 16,
   },
   badgeCountText: {
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: 16,
+    fontWeight: Platform.select({
+      ios: '600',
+      android: 'normal',
+    }),
+    fontFamily: Platform.select({
+      ios: 'System',
+      android: 'sans-serif-medium',
+    }),
     color: '#333',
+  },
+  categoryScrollContainer: {
+    paddingHorizontal: 10,
   },
   categoryContainer: {
     flexDirection: 'row',
-    paddingHorizontal: 10,
     marginBottom: 15,
-    overflow: 'scroll',
   },
   categoryTab: {
     paddingHorizontal: 15,
@@ -510,20 +469,26 @@ const styles = StyleSheet.create({
     marginRight: 8,
     borderRadius: 20,
     backgroundColor: 'white',
+    height:43,
+    
   },
   activeCategoryTab: {
     backgroundColor: '#FF6B6B',
   },
   categoryText: {
-    fontSize: 14,
+    fontSize: 18,
     fontWeight: '500',
-    color: '#64748b',
+    color: '#E5911B',
+    fontFamily: Platform.select({
+      ios: 'Chalkboard SE',
+      android: 'casual',
+  })
   },
   activeCategoryText: {
     color: 'white',
   },
   content: {
-    flex: 1,
+    height: '90%',
   },
   contentContainer: {
     paddingBottom: 20,
@@ -546,10 +511,13 @@ const styles = StyleSheet.create({
     marginBottom: 14,
   },
   sectionTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
+    fontSize: 18,
+    color: '#E5911B',
     marginLeft: 8,
+    fontFamily: Platform.select({
+      ios: 'Chalkboard SE',
+      android: 'casual',
+  })
   },
   badgesGrid: {
     flexDirection: 'row',

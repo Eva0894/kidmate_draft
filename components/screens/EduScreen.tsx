@@ -30,7 +30,7 @@ const options = [
   {
     title: 'Cartoon',
     image: require('../../assets/images/game.jpg'),
-    route: '', 
+    route: '/cartoon', 
   },
   {
     title: 'Piano',
