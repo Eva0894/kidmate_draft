@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
+  TextInput,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter, useLocalSearchParams } from 'expo-router';
@@ -15,15 +16,17 @@ const categories = [
   'language',
   'math',
   'science',
-  'art',
-  'sport',
-  'emotion',
+  'chess',
+  'social studies',
+  
 ];
 
 type Video = {
   id: number;
   title: string;
   video_url: string;
+  cover_url: string;
+  favorite: boolean;
 };
 
 export default function CourseCategoryScreen() {
@@ -31,45 +34,32 @@ export default function CourseCategoryScreen() {
   const { category } = useLocalSearchParams();
   const [selected, setSelected] = useState(category?.toString().toLowerCase() || 'language');
   const [videos, setVideos] = useState<Video[]>([]);
+  const [filteredVideos, setFilteredVideos] = useState<Video[]>([]);
 
   useEffect(() => {
+    
     const fetchVideos = async () => {
       console.log('🔄 开始获取视频数据，类别:', selected);
       setVideos([]); // 先清空数据，显示加载状态
       
       try {
-        // 检查Supabase连接
-        if (!supabase) {
-          console.error('❌ Supabase客户端未初始化');
-          return;
-        }
-
         const { data, error } = await supabase
           .from('courses')
-          .select('id, title, video_url')
+          .select('id, title, video_url,cover_url, favorite')
           .eq('category', selected.toLowerCase())
           .order('created_at', { ascending: false });
 
-        console.log('📥 获取到的数据:', JSON.stringify(data, null, 2));
+        console.log('📥 获取到的数据:', data);
         
         if (error) {
-          console.error(`❌ 获取${selected}类别的视频失败:`, error.message, error.details);
+          console.error(`❌ 获取${selected}类别的视频失败:`, error.message);
           setVideos([]);
           return;
         }
 
         if (data && data.length > 0) {
           console.log(`✅ 成功获取${selected}类别的${data.length}个视频`);
-          // 检查视频URL格式
-          const validVideos = data.filter(video => {
-            const isValid = video.video_url && typeof video.video_url === 'string' && video.video_url.trim() !== '';
-            if (!isValid) {
-              console.warn(`⚠️ 视频ID ${video.id} URL格式无效:`, video.video_url);
-            }
-            return isValid;
-          });
-          console.log(`✅ 有效视频数量: ${validVideos.length}/${data.length}`);
-          setVideos(validVideos as Video[]);
+          setVideos(data as Video[]);
         } else {
           console.log(`ℹ️ ${selected}类别没有视频数据`);
           setVideos([]);
@@ -82,10 +72,29 @@ export default function CourseCategoryScreen() {
 
     fetchVideos();
   }, [selected]); // 确保selected变化时触发重新获取
+//xinjia
+  const toggleFavorite = async (id: number, currentFavorite: boolean) => {
+    // 本地先切换
+    setVideos(prev =>
+      prev.map(video =>
+        video.id === id ? { ...video, favorite: !currentFavorite } : video
+      )
+    );
+  
+    // 同步到数据库
+    const { error } = await supabase
+      .from('courses')
+      .update({ favorite: !currentFavorite })
+      .eq('id', id);
+  
+    if (error) {
+      console.error('❌ 更新收藏失败:', error.message);
+    }
+  };
 
   return (
     <View style={styles.container}>
-      {/* 页头 */}
+      
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()}>
           <Ionicons name="arrow-back" size={32} color="#E5911B" />
@@ -94,7 +103,6 @@ export default function CourseCategoryScreen() {
         <View style={{ width: 24 }} />
       </View>
 
-      {/* 侧边栏 + 内容 */}
       <View style={styles.row}>
         <View style={styles.sidebar}>
           <ScrollView showsVerticalScrollIndicator={false}>
@@ -112,8 +120,10 @@ export default function CourseCategoryScreen() {
           </ScrollView>
         </View>
 
-        {/* 视频列表 */}
+        
         <View style={styles.contentArea}>
+          
+           
           <ScrollView>
             {videos.length === 0 ? (
               <Text style={{ color: '#aaa' }}>没有找到视频。</Text>
@@ -136,14 +146,22 @@ export default function CourseCategoryScreen() {
                 >
                   <View style={styles.videoInfo}>
                     <Image 
-                      source={require('../../../assets/images/art.png')}
+            source={video.cover_url ? { uri: video.cover_url } : require('../../../assets/images/art.png')}
                       style={styles.thumbnail}
                     />
                     <View style={styles.videoText}>
                       <Text style={styles.videoTitle} numberOfLines={2}>{video.title}</Text>
                       <View style={styles.playButton}>
                         <Ionicons name="play-circle" size={24} color="#D38300" />
-                        <Text style={styles.playText}>播放</Text>
+                       
+                         {/* ❤️ 收藏按钮 */}
+    <TouchableOpacity onPress={() => toggleFavorite(video.id, video.favorite)}>
+      <Ionicons
+        name={video.favorite ? 'heart' : 'heart-outline'}
+        size={24}
+        color={video.favorite ? '#f44336' : '#aaa'}
+      />
+    </TouchableOpacity>
                       </View>
                     </View>
                   </View>
@@ -189,6 +207,16 @@ const styles = StyleSheet.create({
   categoryBtn: {
     paddingVertical: 16,
     alignItems: 'center',
+  },
+  searchInput: {
+    backgroundColor: '#fff',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 8,
+    fontSize: 16,
+    borderColor: '#ddd',
+    borderWidth: 1,
+    marginBottom: 12,
   },
   selectedBtn: {
     backgroundColor: '#fff',
