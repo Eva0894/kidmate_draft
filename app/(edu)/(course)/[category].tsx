@@ -7,6 +7,7 @@ import {
   ScrollView,
   Image,
   TextInput,
+  Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter, useLocalSearchParams } from 'expo-router';
@@ -97,7 +98,7 @@ export default function CourseCategoryScreen() {
       
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={32} color="#E5911B" />
+          <Ionicons name="arrow-back" size={28} color="#E5911B" />
         </TouchableOpacity>
         <Text style={styles.title}>课程</Text>
         <View style={{ width: 24 }} />
@@ -152,7 +153,7 @@ export default function CourseCategoryScreen() {
                     <View style={styles.videoText}>
                       <Text style={styles.videoTitle} numberOfLines={2}>{video.title}</Text>
                       <View style={styles.playButton}>
-                        <Ionicons name="play-circle" size={24} color="#D38300" />
+                        <Ionicons name="play-circle" size={24} color="#E5911B" />
                        
                          {/* ❤️ 收藏按钮 */}
     <TouchableOpacity onPress={() => toggleFavorite(video.id, video.favorite)}>
@@ -179,19 +180,27 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FAFAFA',
-    paddingTop: 50,
+    paddingTop: 0,
     paddingHorizontal: 16,
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 16,
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#E5911B',
+    marginBottom: 20,
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'casual',}),
+    textAlign: 'center',
   },
   title: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: 'bold',
-    color: '#D38300',
+    color: '#E5911B',
+    textAlign: 'center',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'casual',}),
   },
   row: {
     flex: 1,
@@ -224,8 +233,11 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 12,
   },
   categoryText: {
-    fontSize: 16,
-    color: '#c47a00',
+    fontSize: 18,
+    color: '#E5911B',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'casual',}),
   },
   selectedText: {
     fontWeight: 'bold',
@@ -265,9 +277,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   videoTitle: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '500',
-    color: '#333',
+    color: '#E5911B',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'casual',}),
   },
   playButton: {
     flexDirection: 'row',
@@ -276,7 +291,7 @@ const styles = StyleSheet.create({
   },
   playText: {
     marginLeft: 4,
-    color: '#D38300',
+    color: '#E5911B',
     fontWeight: '500',
   },
 });

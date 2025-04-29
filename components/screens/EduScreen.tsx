@@ -62,7 +62,7 @@ export default function EduScreen() {
           <Ionicons name="arrow-back" size={32} color="#E5911B" />
         </TouchableOpacity> */}
         <Text style={styles.headerTitle}>Educational Activities</Text>
-        <Ionicons name="arrow-forward" size={28} color="#E5911B" />
+        
       </View>
 
       {/* Options Grid */}
@@ -87,11 +87,7 @@ export default function EduScreen() {
         )}
       />
 
-      {/* Progress Box */}
-      <View style={styles.progressBox}>
-        <Text style={styles.progressTitle}>Progress</Text>
-        <Text style={styles.progressSubtitle}> (Stay tuned)</Text>
-      </View>
+      
     </SafeAreaView>
   );
 }

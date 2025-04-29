@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { supabase } from '@/utils/Supabase';
@@ -29,7 +29,7 @@ export default function FavoritePage() {
       {/* 返回 + 标题 */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={24} color="#D38300" />
+          <Ionicons name="arrow-back" size={28} color="#E5911B" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>My Favorites</Text>
       </View>
@@ -74,9 +74,14 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
   },
   headerTitle: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: 'bold',
-    color: '#D38300',
+    color: '#E5911B',
+    textAlign: 'center',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'casual',}),
+    
   },
   grid: {
     flexDirection: 'row',
@@ -95,8 +100,12 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   title: {
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: '600',
     textAlign: 'center',
+    color: '#E5911B',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'casual',}),
   },
 });

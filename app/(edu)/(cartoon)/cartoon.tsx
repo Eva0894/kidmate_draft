@@ -556,6 +556,7 @@ import {
   Image,
   TextInput,
   TouchableWithoutFeedback,
+  Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -626,22 +627,22 @@ export default function CartoonPage() {
     <TouchableWithoutFeedback onPress={() => setShowProfile(false)}>
       <View style={styles.container}>
         <TouchableOpacity style={eduStyles.backButton} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={22} color="#D4A017" />
+          <Ionicons name="arrow-back" size={28} color="#E5911B" />
         </TouchableOpacity>
 
         <View style={styles.header}>
           <TouchableOpacity onPress={() => setShowProfile((prev) => !prev)}>
-            <Ionicons name="person-circle" size={48} color="orange" />
+            <Ionicons name="person-circle" size={48} color="#E5911B" />
           </TouchableOpacity>
 
           <Text style={styles.timer}>Today: {formatTime(totalToday)}</Text>
 
           <TouchableOpacity onPress={() => setShowSearch((prev) => !prev)}>
-            <Ionicons name="search" size={24} color="#DDAA00" style={styles.icon} />
+            <Ionicons name="search" size={28} color="#E5911B" style={styles.icon} />
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => router.push('/(edu)/(cartoon)/favorite')}>
-            <Ionicons name="heart" size={24} color="#D38300" />
+            <Ionicons name="heart" size={32} color='red' />
           </TouchableOpacity>
         </View>
 
@@ -751,11 +752,14 @@ const styles = StyleSheet.create({
     color: 'green',
   },
   sectionTitle: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
     marginTop: 16,
     marginBottom: 8,
-    color: '#D38300',
+    color: '#E5911B',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'casual',}),
   },
   banner: {
     width: '100%',
@@ -772,12 +776,16 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   categoryTitle: {
+    fontSize: 18,
     marginTop: 6,
     fontWeight: '600',
-    color: '#a66f00',
+    color: '#E5911B',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'casual',}),
   },
   duration: {
-    fontSize: 12,
+    fontSize: 16,
     color: '#999',
     marginTop: 4,
   },
@@ -788,6 +796,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     marginBottom: 12,
+    fontSize: 16,
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'casual',}),
   },
   resultItem: {
     paddingVertical: 8,
@@ -796,6 +808,9 @@ const styles = StyleSheet.create({
     borderColor: '#eee',
     fontSize: 16,
     color: '#333',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'casual',}),
   },
   bookItem: {
     width: 120,
@@ -810,6 +825,11 @@ const styles = StyleSheet.create({
   bookTitle: {
     marginTop: 4,
     fontWeight: '600',
+    fontSize: 14,
+    color: '#E5911B',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'casual',}),
   },
   progressBarContainer: {
     height: 6,

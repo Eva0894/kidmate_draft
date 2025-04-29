@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Alert, Platform } from 'react-native';
 import { Video, ResizeMode } from 'expo-av';
 import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '@/utils/Supabase';
@@ -265,7 +265,7 @@ export default function CartoonPlayerPage() {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-        <Ionicons name="arrow-back" size={24} color="#D38300" />
+        <Ionicons name="arrow-back" size={28} color="#E5911B" />
       </TouchableOpacity>
       <Text style={styles.title}>{cartoon.title}</Text>
       <Video
@@ -293,10 +293,13 @@ const styles = StyleSheet.create({
     left: 20,
   },
   title: {
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: '#333',
+    color: '#E5911B',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'casual',}),
   },
   video: {
     width: '90%',

@@ -124,6 +124,7 @@ import {
   TouchableOpacity,
   Image,
   FlatList,
+  Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -202,7 +203,7 @@ export default function CartoonCategoryPage() {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-        <Ionicons name="arrow-back" size={24} color="#D38300" />
+        <Ionicons name="arrow-back" size={28} color="#E5911B" />
       </TouchableOpacity>
       <Text style={styles.header}>Cartoons</Text>
 
@@ -255,14 +256,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   backButton: {
-    marginTop: 50,
-    marginBottom: 10,
+    marginTop: 16,
+    marginBottom: 16,
   },
   header: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: 'bold',
-    color: '#D38300',
+    color: '#E5911B',
     marginBottom: 20,
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'casual',}),
+    textAlign: 'center',
   },
   row: {
     justifyContent: 'space-between',
@@ -290,9 +295,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 14,
     fontWeight: '600',
-    color: '#333',
+    color: '#E5911B',
     flex: 1,
     paddingRight: 6,
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'casual',}),
   },
 });
 

@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
 
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useRef, useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import { Video, ResizeMode, AVPlaybackStatus } from 'expo-av';
 import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '@/utils/Supabase'; // ✅ 加上这一行
@@ -194,7 +194,7 @@ export default function CoursePlayerPage() {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-        <Ionicons name="arrow-back" size={24} color="#D38300" />
+        <Ionicons name="arrow-back" size={28} color="#E5911B" />
       </TouchableOpacity>
       <Text style={styles.title}>{title}</Text>
       <Video
@@ -224,10 +224,14 @@ const styles = StyleSheet.create({
     left: 20,
   },
   title: {
-    fontSize: 18,
+    
+    fontSize: 14,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: '#333',
+    color: '#E5911B',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'casual',}),
   },
   video: {
     width: '90%',

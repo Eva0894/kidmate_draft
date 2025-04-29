@@ -333,7 +333,7 @@ const styles = StyleSheet.create({
 */
 
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, TouchableWithoutFeedback } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, TextInput, TouchableWithoutFeedback, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { supabase } from '@/utils/Supabase';
@@ -439,7 +439,7 @@ export default function CoursePage() {
       <TouchableWithoutFeedback onPress={() => setShowProfile(false)}>
         <View style={styles.container}>
           <TouchableOpacity style={eduStyles.backButton} onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={24} color="#D4A017" />
+            <Ionicons name="arrow-back" size={28} color="#E5911B" />
           </TouchableOpacity>
 
           <View style={styles.header}>
@@ -447,18 +447,18 @@ export default function CoursePage() {
               {avatarUrl ? (
                 <Image source={{ uri: avatarUrl }} style={styles.avatar} />
               ) : (
-                <Ionicons name="person-circle" size={48} color="orange" />
+                <Ionicons name="person-circle" size={48} color="#E5911B" />
               )}
             </TouchableOpacity>
 
             <Text style={styles.timer}>Today: {formatTime(totalToday)}</Text>
 
             <TouchableOpacity onPress={() => setShowSearch((prev) => !prev)}>
-              <Ionicons name="search" size={24} color="#DDAA00" style={styles.icon} />
+              <Ionicons name="search" size={28} color="#E5911B" style={styles.icon} />
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => router.push('/(edu)/(course)/favorite')}>
-              <Ionicons name="heart" size={24} color="#D38300" />
+              <Ionicons name="heart" size={32} color='red' />
             </TouchableOpacity>
           </View>
 
@@ -541,18 +541,28 @@ export default function CoursePage() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff', paddingHorizontal: 16 },
-  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 12 },
+  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 12},
   icon: { marginHorizontal: 8 },
   timer: { fontSize: 16, fontWeight: 'bold', color: 'green' },
-  sectionTitle: { fontSize: 20, fontWeight: 'bold', marginTop: 16, marginBottom: 8, color: '#D38300' },
+  sectionTitle: { fontSize: 18, fontWeight: 'bold', marginTop: 16, marginBottom: 8, color: '#E5911B', fontFamily: Platform.select({
+    ios: 'ChalkboardSE-Regular',
+    android: 'casual',}), },
   banner: { width: '100%', height: 160, borderRadius: 10 },
   categoryItem: { alignItems: 'center', marginRight: 16 },
   categoryImage: { width: 80, height: 80, borderRadius: 12 },
-  categoryTitle: { marginTop: 6, fontWeight: '600', color: '#a66f00' },
-  searchInput: { borderWidth: 1, borderColor: '#ccc', borderRadius: 8, paddingHorizontal: 12, paddingVertical: 8, marginBottom: 12 },
-  resultItem: { paddingVertical: 8, paddingHorizontal: 10, borderBottomWidth: 1, borderColor: '#eee', fontSize: 16, color: '#333' },
+  categoryTitle: { fontSize: 18, marginTop: 6, fontWeight: '600', color: '#E5911B', fontFamily: Platform.select({
+    ios: 'ChalkboardSE-Regular',
+    android: 'casual',}),},
+  searchInput: { borderWidth: 1, fontSize: 16, borderColor: '#ccc', borderRadius: 8, paddingHorizontal: 12, paddingVertical: 8, marginBottom: 12, fontFamily: Platform.select({
+    ios: 'ChalkboardSE-Regular',
+    android: 'casual',}), },
+  resultItem: { paddingVertical: 8, paddingHorizontal: 10, borderBottomWidth: 1, borderColor: '#eee', fontSize: 16, color: '#333', fontFamily: Platform.select({
+    ios: 'ChalkboardSE-Regular',
+    android: 'casual',}), },
   bookItem: { width: 120, marginRight: 16, alignItems: 'center' },
   bookImage: { width: 120, height: 120, borderRadius: 12 },
-  bookTitle: { marginTop: 4, fontWeight: '600' },
+  bookTitle: { marginTop: 4, fontWeight: '600',fontSize: 14, color: '#E5911B',fontFamily: Platform.select({
+    ios: 'ChalkboardSE-Regular',
+    android: 'casual',}), },
   avatar: { width: 48, height: 48, borderRadius: 24, backgroundColor: '#ccc' },
 });

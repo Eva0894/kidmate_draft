@@ -21,11 +21,10 @@ const libStyles = StyleSheet.create({
       textShadowRadius: 3,
     },
     backButton: {
-        position: 'absolute',
         flexDirection: 'row',
         alignItems: 'center',
-        paddingHorizontal: 16,
-        paddingTop: 12,
+        paddingHorizontal:16,
+        paddingTop: 0,
       },
       backText: {
         fontSize: 16,

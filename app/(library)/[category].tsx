@@ -126,7 +126,10 @@ export default function CategoryScreen() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+    <SafeAreaView 
+      style={{ flex: 1, backgroundColor: '#fff' }}
+      edges={['left', 'right', 'bottom']}
+    >
       <TouchableOpacity onPress={() => router.back()} style={libStyles.backButton}>
         <Ionicons name="arrow-back" size={28} color="#E5911B" />
       </TouchableOpacity>
@@ -158,13 +161,9 @@ export default function CategoryScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    paddingHorizontal: 12,
-    flexDirection: 'row'
-  },
-  
+  container: { 
+    flex: 1, flexDirection: 'row',backgroundColor: '#fff',
+   },
   sidebar: {
     width: 100,
     backgroundColor: '#f0f0f0',
