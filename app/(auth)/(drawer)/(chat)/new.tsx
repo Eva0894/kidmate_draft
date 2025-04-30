@@ -1,6 +1,4 @@
-
 import HeaderDropDown from '@/components/HeaderDropDown';
-import { useAuth } from '@clerk/clerk-react';
 import { defaultStyles } from '@/constants/Styles';
 import {View, Image,Text, Button, StyleSheet,KeyboardAvoidingView, Platform} from 'react-native';
 import {Redirect, Stack} from 'expo-router';

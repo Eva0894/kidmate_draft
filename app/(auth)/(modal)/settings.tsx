@@ -1,7 +1,6 @@
 import Colors from '@/constants/Colors';
 import { defaultStyles } from '@/constants/Styles';
 import { keyStorage } from '@/utils/Storage';
-import { useAuth } from '@clerk/clerk-expo';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, TextInput, Button } from 'react-native';
@@ -13,8 +12,6 @@ const Page = () => {
   const [apiKey, setApiKey] = useState('');
   const [org, setOrg] = useState('');
   const router = useRouter();
-
-  const { signOut } = useAuth();
 
   const saveApiKey = async () => {
     setKey(apiKey);
@@ -67,7 +64,6 @@ const Page = () => {
           </TouchableOpacity>
         </>
       )}
-      <Button title="Sign Out" onPress={() => signOut()} color={Colors.grey} />
     </View>
   );
 };

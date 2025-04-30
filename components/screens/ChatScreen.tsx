@@ -212,9 +212,9 @@ export default function Page() {
     setModalVisible(true);
   };
 
-  if (!key || !organization) {
-    return <Redirect href={'/(auth)/(modal)/settings'} />;
-  }
+  // if (!key || !organization) {
+  //   return <Redirect href={'/(auth)/(modal)/settings'} />;
+  // }
 
   return (
     <View style={defaultStyles.pageContainer}>
