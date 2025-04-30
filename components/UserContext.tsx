@@ -17,20 +17,31 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const {
-        data: { user },
-        error,
-      } = await supabase.auth.getUser();
+      try {
+        const {
+          data: { user },
+          error,
+        } = await supabase.auth.getUser();
 
-      if (error) console.error('Error fetching user:', error);
-      if (user) setUserId(user.id);
-      setLoading(false);
+        if (error) {
+          if (error.name !== 'AuthSessionMissingError') {
+            console.error('Error fetching user:', error);
+          }
+          setUserId(null);
+        } else if (user) {
+          setUserId(user.id);
+        }
+      } catch (e) {
+        console.error('Unexpected error in fetchUser:', e);
+      } finally {
+        setLoading(false);ß
+      }
     };
 
     fetchUser();
 
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUserId(session?.user.id || null);
+      setUserId(session?.user?.id || null);
     });
 
     return () => {
