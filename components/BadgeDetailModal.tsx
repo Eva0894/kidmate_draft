@@ -54,7 +54,7 @@ export default function BadgeDetailModal({
             unlocked ? styles.unlockedStatusBadge : styles.lockedStatusBadge
           ]}>
             <Text style={styles.statusBadgeText}>
-              {unlocked ? "已获得勋章" : "待解锁徽章"}
+               {unlocked ? "Unlocked Badge" : "Locked Badge"}
             </Text>
             {unlocked && <Ionicons name="trophy" size={14} color="white" style={{marginLeft: 4}} />}
             {!unlocked && <Ionicons name="lock-closed" size={14} color="white" style={{marginLeft: 4}} />}
@@ -88,10 +88,10 @@ export default function BadgeDetailModal({
             styles.statusText, 
             unlocked ? styles.unlockedText : styles.lockedText
           ]}>
-            {unlocked 
-              ? "恭喜！你已解锁此成就！" 
-              : `进度：${localProgress}%，继续努力！`
-            }
+             {unlocked 
+               ? "Yay! You unlocked this badge!" 
+               : `Progress: ${localProgress}%. You're doing great!`
+             }
           </Text>
         </View>
       </View>
