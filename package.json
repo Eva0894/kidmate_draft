@@ -18,7 +18,7 @@
     "@likashefqet/react-native-image-zoom": "^3.0.0",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@react-native-community/datetimepicker": "8.2.0",
-    "@react-native-community/slider": "^4.5.5",
+    "@react-native-community/slider": "4.5.5",
     "@react-native-menu/menu": "^1.0.3",
     "@react-native-picker/picker": "2.9.0",
     "@react-navigation/drawer": "^7.3.9",

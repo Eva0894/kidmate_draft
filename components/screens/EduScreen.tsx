@@ -30,7 +30,7 @@ const options = [
   {
     title: 'Cartoon',
     image: require('../../assets/images/game.jpg'),
-    route: '/cartoon', 
+    route: '', 
   },
   {
     title: 'Piano',
@@ -62,10 +62,6 @@ export default function EduScreen() {
           <Ionicons name="arrow-back" size={32} color="#E5911B" />
         </TouchableOpacity> */}
         <Text style={styles.headerTitle}>Educational Activities</Text>
-<<<<<<< HEAD
-        
-=======
->>>>>>> 852d615 (update piano and login)
       </View>
 
       {/* Options Grid */}
