@@ -89,13 +89,8 @@
     "react-native-vector-icons": "^10.2.0",
     "react-native-web": "~0.19.13",
     "react-native-webview": "13.12.5",
-<<<<<<< HEAD
     "uuid": "^11.1.0",
     "zeego": "^1.10.0"
-=======
-    "zeego": "^1.10.0",
-    "expo-network": "~7.0.5"
->>>>>>> 852d615 (update piano and login)
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
