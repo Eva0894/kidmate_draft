@@ -65,6 +65,7 @@ const meStyles = StyleSheet.create({
     color: '#333',
   },
   backButton: {
+    position: 'absolute',
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 16,

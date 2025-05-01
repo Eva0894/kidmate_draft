@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 const libStyles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#fdf9ef',
+      backgroundColor: '#fff',
       paddingHorizontal: 20,
       paddingTop: 40,
     },
@@ -22,9 +22,14 @@ const libStyles = StyleSheet.create({
     },
     backButton: {
         flexDirection: 'row',
+<<<<<<< HEAD
         alignItems: 'center',
         paddingHorizontal:16,
         paddingTop: 0,
+=======
+        paddingHorizontal: 16,
+        paddingTop: 16,
+>>>>>>> 852d615 (update piano and login)
       },
       backText: {
         fontSize: 16,

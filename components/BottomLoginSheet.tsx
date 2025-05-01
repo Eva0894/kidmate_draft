@@ -18,11 +18,6 @@ const BottomLoginSheet = () => {
 const signInWithGoogle = async () => {
   try {
     console.log('📍点击了登录按钮');
-
-    // const redirectUrl = AuthSession.makeRedirectUri({
-    //   scheme: 'kidmate',
-    //   preferLocalhost: true, 
-    // });
     const redirectUrl = 'https://dgizrlyymkxenkeddmdj.supabase.co/auth/v1/callback';
 
     console.log('📍redirect URL:', redirectUrl);

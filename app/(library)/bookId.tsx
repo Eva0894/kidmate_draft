@@ -12,11 +12,12 @@ import * as Sharing from 'expo-sharing';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import libStyles from './libStyles';
+import { BASE_URL, post } from '@/utils/api';
 
 // 根据平台设置 API 地址
 const BACKEND_URL =
 Platform.OS === 'ios'
-  ? 'http://localhost:8000'
+  ? BASE_URL
   : 'http://10.0.2.2:8000';
 
 console.log('Using API URL:', BACKEND_URL);

@@ -6,7 +6,7 @@ export const getBackendUrl = () => {
   if (__DEV__) {
     // 开发环境
     if (Platform.OS === 'ios') {
-      return 'http://localhost:3000';
+      return 'http://192.168.0.249:3000';
     } else {
       return 'http://10.0.2.2:3000';
     }

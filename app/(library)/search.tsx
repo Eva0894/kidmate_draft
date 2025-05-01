@@ -14,6 +14,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import libStyles from './libStyles';
+import { BASE_URL, post } from '@/utils/api';
 
 
 
@@ -21,7 +22,7 @@ import libStyles from './libStyles';
 // 根据平台设置 API 地址
 const BACKEND_URL =
 Platform.OS === 'ios'
-  ? 'http://localhost:8000'
+  ? BASE_URL
   : 'http://10.0.2.2:8000';
 
 console.log('Using API URL:', BACKEND_URL);
@@ -68,12 +69,12 @@ export default function SearchScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-        <TouchableOpacity onPress={() => router.back()} style={libStyles.backButton}>
-          <Ionicons name="arrow-back" size={28} color="#E5911B" />
-        </TouchableOpacity>
-      <View style={styles.headerRow}>
-        <Text style={styles.header}>Search Books</Text>
-      </View>
+        <View style={styles.headerContainer}>
+    <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+      <Ionicons name="arrow-back" size={28} color="#E5911B" />
+    </TouchableOpacity>
+    <Text style={styles.header}>Search Books</Text>
+  </View>
 
       <View style={styles.searchContainer}>
         <Ionicons name="search" size={28} color="#E5911B" style={styles.searchIcon} />
@@ -100,13 +101,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingHorizontal: 12,
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: 16,
+    paddingHorizontal: 16,
+    marginBottom: 16,
+    position: 'relative',
   },
   headerRow: {
     paddingVertical: 10,
     alignItems: 'center',
   },
   header: {
+    flex:1,
+    textAlign: 'center',
     fontSize: 24,
     fontWeight: 'bold',
     color: '#E5911B',
@@ -114,6 +124,13 @@ const styles = StyleSheet.create({
       ios: 'ChalkboardSE-Regular',
       android: 'casual',}),
   },
+  backButton: {
+    position: 'absolute',
+    flexDirection: 'row',
+    paddingHorizontal: 16,
+    paddingTop: 16,
+  },
+
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',

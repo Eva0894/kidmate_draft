@@ -15,12 +15,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import libStyles from './libStyles';
+import { BASE_URL, post } from '@/utils/api';
 
 
 // 根据平台设置 API 地址
 const BACKEND_URL =
 Platform.OS === 'ios'
-  ? 'http://localhost:8000'
+  ? BASE_URL
   : 'http://10.0.2.2:8000';
 
 console.log('Using API URL:', BACKEND_URL);
@@ -62,12 +63,13 @@ export default function FavoritesScreen() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-      <View style={styles.container}>
-        <TouchableOpacity onPress={() => router.back()} style={libStyles.backButton}>
-          <Ionicons name="arrow-back" size={28} color="#E5911B" />
-        </TouchableOpacity>
-        <Text style={styles.header}>❤️ My Favorites</Text>
+    <SafeAreaView style={styles.container}>
+        <View style={styles.headerContainer}>
+    <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+      <Ionicons name="arrow-back" size={28} color="#E5911B" />
+    </TouchableOpacity>
+    <Text style={styles.header}>❤️ My Favorites</Text>
+  </View>
         <FlatList
           data={favoriteBooks}
           keyExtractor={(item) => item.id.toString()}
@@ -107,7 +109,7 @@ export default function FavoritesScreen() {
             </TouchableOpacity>
           )}
         />
-      </View>
+      
     </SafeAreaView>
   );
 }
@@ -116,18 +118,32 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingHorizontal: 12,
+  },
+
+  headerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingTop: 0,
+    paddingBottom: 8,
+    paddingHorizontal: 16,
+
   },
   header: {
-    paddingVertical: 10,
+    flex:1,  
+    paddingTop: 8,
     fontSize: 24,
     fontWeight: 'bold',
     color: '#E5911B',
-    marginBottom: 16,
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
       android: 'casual',}),
     textAlign:'center',
+  },
+  backButton: {
+    position: 'absolute',
+    flexDirection: 'row',
+    paddingHorizontal: 16,
+    paddingTop: 16,
   },
   bookList: { paddingBottom: 80 },
   bookCard: {
@@ -144,7 +160,7 @@ const styles = StyleSheet.create({
   },
   bookTitle: {
     marginTop: 6,
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: '600',
     textAlign: 'center',
     fontFamily: Platform.select({

@@ -1,4 +1,3 @@
-
 import Colors from '@/constants/Colors';
 import { defaultStyles } from '@/constants/Styles';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -39,17 +38,17 @@ const Login = () => {
     if (recaptchaToken) {
       console.log('🚀 触发 handleLogin()');
       handleLogin();
+      console.log('✅ BASE_URL:', BASE_URL);
     }
   }, [recaptchaToken]);
 
-  console.log('✅ BASE_URL:', BASE_URL);
   const handleCaptchaMessage = (event: any) => {
     const token = event.nativeEvent.data;
     console.log('✅ reCAPTCHA token:', token);
     setRecaptchaToken(token);
     setShowCaptcha(false);
+    console.log('📡 正在请求:', `${BASE_URL}/api/login`);
   };
-  console.log('📡 正在请求:', `${BASE_URL}/api/login`);
 
   const handleLogin = async () => {
     if (!recaptchaToken) {
@@ -137,7 +136,11 @@ const Login = () => {
             style={styles.input}
           />
 
-          <TouchableOpacity style={styles.loginButton} onPress={handleLogin} disabled={loading}>
+          <TouchableOpacity
+            style={styles.loginButton}
+            onPress={() => setShowCaptcha(true)}  
+            disabled={loading}
+          >
             {loading ? (
               <ActivityIndicator color="#fff" />
             ) : (
