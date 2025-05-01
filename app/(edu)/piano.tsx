@@ -3,39 +3,43 @@ import { ScrollView, View, Text, TouchableOpacity, StyleSheet, Dimensions } from
 import { Audio } from 'expo-av';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { useNavigation } from '@react-navigation/native';
+import { IconTypes } from 'react-native-ios-context-menu';
+import { Ionicons } from '@expo/vector-icons';
+import * as FileSystem from 'expo-file-system';
 
+const BASE_URL = 'https://dgizrlyymkxenkeddmdj.supabase.co/storage/v1/object/public/piano-sounds';
 const noteSoundMap: Record<string, string> = {
-  'C2': 'https://raw.githubusercontent.com/Eva0894/5703resource/piano_scale/C2.mp3',
-  'D2': 'https://raw.githubusercontent.com/Eva0894/5703resource/piano_scale/D2.mp3',
-  'E2': 'https://raw.githubusercontent.com/Eva0894/5703resource/piano_scale/E2.mp3',
-  'F2': 'https://raw.githubusercontent.com/Eva0894/5703resource/piano_scale/F2.mp3',
-  'G2': 'https://raw.githubusercontent.com/Eva0894/5703resource/piano_scale/G2.mp3',
-  'A2': 'https://raw.githubusercontent.com/Eva0894/5703resource/piano_scale/A2.mp3',
-  'B2': 'https://raw.githubusercontent.com/Eva0894/5703resource/piano_scale/B2.mp3',
+  'C2': `${BASE_URL}/D2.mp3`,
+  'D2': `${BASE_URL}/D2.mp3`,
+  'E2': `${BASE_URL}/E2.mp3`,
+  'F2': `${BASE_URL}/F2.mp3`,
+  'G2': `${BASE_URL}/G2.mp3`,
+  'A2': `${BASE_URL}/A2.mp3`,
+  'B2': `${BASE_URL}/B2.mp3`,
 
-  'C3': 'https://raw.githubusercontent.com/Eva0894/5703resource/piano_scale/C3.mp3',
-  'D3': 'https://raw.githubusercontent.com/Eva0894/5703resource/piano_scale/D3.mp3',
-  'E3': 'https://raw.githubusercontent.com/Eva0894/5703resource/piano_scale/E3.mp3',
-  'F3': 'https://raw.githubusercontent.com/Eva0894/5703resource/piano_scale/F3.mp3',
-  'G3': 'https://raw.githubusercontent.com/Eva0894/5703resource/piano_scale/G3.mp3',
-  'A3': 'https://raw.githubusercontent.com/Eva0894/5703resource/piano_scale/A3.mp3',
-  'B3': 'https://raw.githubusercontent.com/Eva0894/5703resource/piano_scale/B3.mp3',
+  'C3': `${BASE_URL}/C3.mp3`,
+  'D3': `${BASE_URL}/D3.mp3`,
+  'E3': `${BASE_URL}/E3.mp3`,
+  'F3': `${BASE_URL}/F3.mp3`,
+  'G3': `${BASE_URL}/G3.mp3`,
+  'A3': `${BASE_URL}/A3.mp3`,
+  'B3': `${BASE_URL}/B3.mp3`,
 
-  'C4': 'https://raw.githubusercontent.com/Eva0894/5703resource/piano_scale/C4.mp3',
-  'D4': 'https://raw.githubusercontent.com/Eva0894/5703resource/piano_scale/D4.mp3',
-  'E4': 'https://raw.githubusercontent.com/Eva0894/5703resource/piano_scale/E4.mp3',
-  'F4': 'https://raw.githubusercontent.com/Eva0894/5703resource/piano_scale/F4.mp3',
-  'G4': 'https://raw.githubusercontent.com/Eva0894/5703resource/piano_scale/G4.mp3',
-  'A4': 'https://raw.githubusercontent.com/Eva0894/5703resource/piano_scale/A4.mp3',
-  'B4': 'https://raw.githubusercontent.com/Eva0894/5703resource/piano_scale/B4.mp3',
+  'C4': `${BASE_URL}/C4.mp3`,
+  'D4': `${BASE_URL}/D4.mp3`,
+  'E4': `${BASE_URL}/E4.mp3`,
+  'F4': `${BASE_URL}/F4.mp3`,
+  'G4': `${BASE_URL}/G4.mp3`,
+  'A4': `${BASE_URL}/A4.mp3`,
+  'B4': `${BASE_URL}/B4.mp3`,
 
-  'C5': 'https://raw.githubusercontent.com/Eva0894/5703resource/piano_scale/C5.mp3',
-  'D5': 'https://raw.githubusercontent.com/Eva0894/5703resource/piano_scale/D5.mp3',
-  'E5': 'https://raw.githubusercontent.com/Eva0894/5703resource/piano_scale/E5.mp3',
-  'F5': 'https://raw.githubusercontent.com/Eva0894/5703resource/piano_scale/F5.mp3',
-  'G5': 'https://raw.githubusercontent.com/Eva0894/5703resource/piano_scale/G5.mp3',
-  'A5': 'https://raw.githubusercontent.com/Eva0894/5703resource/piano_scale/A5.mp3',
-  'B5': 'https://raw.githubusercontent.com/Eva0894/5703resource/piano_scale/B5.mp3',
+  'C5': `${BASE_URL}/C5.mp3`,
+  'D5': `${BASE_URL}/D5.mp3`,
+  'E5': `${BASE_URL}/E5.mp3`,
+  'F5': `${BASE_URL}/F5.mp3`,
+  'G5': `${BASE_URL}/G5.mp3`,
+  'A5': `${BASE_URL}/A5.mp3`,
+  'B5': `${BASE_URL}/B5.mp3`,
 };
 
 const whiteNotes = [
@@ -50,31 +54,64 @@ export default function MusicScreen() {
   const [activeNote, setActiveNote] = useState<string | null>(null);
 
   useEffect(() => {
-    const lockLandscape = async () => {
+    const initialize = async () => {
       await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
+  
+      await Audio.setAudioModeAsync({
+        allowsRecordingIOS: false,
+        staysActiveInBackground: false,
+        playsInSilentModeIOS: true,
+        shouldDuckAndroid: true,
+      });
     };
-    lockLandscape();
+  
+    initialize();
   
     return () => {
       ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
     };
   }, []);
   
-  
-
   const playNote = async (note: string) => {
-    const url = noteSoundMap[note];
-    if (!url) return;
-    setActiveNote(note);
-    const { sound } = await Audio.Sound.createAsync({ uri: url });
-    await sound.playAsync();
-    setTimeout(() => setActiveNote(null), 200);
+    try {
+      const url = noteSoundMap[note];
+      if (!url) return;
+  
+      console.log('准备播放:', note);
+      setActiveNote(note);
+  
+      const localUri = `${FileSystem.cacheDirectory}${note}.mp3`;
+  
+      // 如果已经缓存，直接用缓存文件
+      const fileInfo = await FileSystem.getInfoAsync(localUri);
+      if (!fileInfo.exists) {
+        console.log('开始下载:', url);
+        await FileSystem.downloadAsync(url, localUri);
+        console.log('下载完成:', localUri);
+      } else {
+        console.log('使用缓存文件:', localUri);
+      }
+  
+      const sound = new Audio.Sound();
+      await sound.loadAsync({ uri: localUri }, {}, true);
+      await sound.playAsync();
+  
+      sound.setOnPlaybackStatusUpdate((status) => {
+        if (status.isLoaded && status.didJustFinish) {
+          sound.unloadAsync();
+        }
+      });
+  
+      setTimeout(() => setActiveNote(null), 200);
+    } catch (e) {
+      console.error('播放失败:', e);
+    }
   };
 
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-        <Text style={styles.backText}>← back</Text>
+        <Ionicons name='arrow-back' size={32} color="#E5911B" marginTop={40}/>
       </TouchableOpacity>
       <Text style={styles.title}>🎹 Play Your Music!</Text>
       <ScrollView horizontal contentContainerStyle={styles.piano}>
@@ -103,9 +140,6 @@ const styles = StyleSheet.create({
     left: 10,
     paddingVertical: 6,
     paddingHorizontal: 12,
-    backgroundColor: '#444',
-    borderRadius: 8,
-    zIndex: 10,
   },
   backText: {
     fontSize: 16,
