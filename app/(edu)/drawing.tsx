@@ -6,6 +6,7 @@ import * as FileSystem from 'expo-file-system';
 import * as MediaLibrary from 'expo-media-library';
 import { supabase } from '@/utils/Supabase';
 import { v4 as uuidv4 } from 'uuid';
+import { Ionicons } from '@expo/vector-icons';
 
 // Badge数据类型定义
 interface BadgeType {
@@ -254,7 +255,7 @@ const DrawingPage = () => {
 
       <View style={styles.topBar}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-            <Text style={styles.backText}>← Back</Text>
+         <Ionicons name="arrow-back" size={28} color="#E5911B" />
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -277,11 +278,17 @@ const DrawingPage = () => {
         webStyle={style}
       />
 
-      <View style={styles.buttonContainer}>
-        <Button title="Save" color="#e2ac30" onPress={() => ref.current.readSignature()} />
-        <Button title="Clear" color="#e2ac30" onPress={handleClear} />
-        <Button title="Revoke" color="#e2ac30" onPress={handleUndo} />
-      </View>
+<View style={styles.buttonContainer}>
+  <TouchableOpacity style={styles.customButton} onPress={() => ref.current.readSignature()}>
+    <Text style={styles.text}>Save</Text>
+  </TouchableOpacity>
+  <TouchableOpacity style={styles.customButton} onPress={handleClear}>
+    <Text style={styles.text}>Clear</Text>
+  </TouchableOpacity>
+  <TouchableOpacity style={styles.customButton} onPress={handleUndo}>
+    <Text style={styles.text}>Revoke</Text>
+  </TouchableOpacity>
+</View>
     </View>
   );
 };
@@ -300,18 +307,24 @@ const styles = StyleSheet.create({
   },
   backButton: {
     padding: 10,
-    backgroundColor: '#eee',
     borderRadius: 5,
+    marginBottom: 5,
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     padding: 16,
-    backgroundColor: '#fff',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'casual',}),
+
   },
   viewButtonContainer: {
     marginHorizontal: 20,
     marginBottom: 16,
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'casual',}),
   },
   topBar: {
     flexDirection: 'row',
@@ -320,21 +333,34 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 16,
   },
-  backText: {
-    fontSize: 16,
-    color: '#e2ac30',
+  text: {
+    fontSize: 24,
+    color: '#E5911B',
     fontWeight: 'bold',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'casual',}),
+    marginTop: -40,
   },
   seeMyWorkButton: {
     padding: 8,
+    marginBottom: 5,
   },
   seeMyWorkText: {
-    fontSize: 16,
-    color: '#6a5acd',
+    fontSize: 18,
+    color: '#E5911B',
     fontWeight: 'bold',
+    fontFamily: Platform.select({
+          ios: 'ChalkboardSE-Regular',
+          android: 'casual',}),
   },
-  
-  
+  customButton: {
+  flexDirection: 'row',  // 横向排列
+  justifyContent: 'space-between',  // 按钮之间留空间
+  paddingHorizontal: 20,  // 整体左右留点间距
+  marginTop: -10,
+  paddingVertical: 50,
+ },
 });
 
 export default DrawingPage;

@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 const libStyles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#fdf9ef',
+      backgroundColor: '#fff',
       paddingHorizontal: 20,
       paddingTop: 40,
     },
@@ -21,11 +21,11 @@ const libStyles = StyleSheet.create({
       textShadowRadius: 3,
     },
     backButton: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingHorizontal:16,
-        paddingTop: 0,
-      },
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingHorizontal: 16,
+      paddingTop: 0,
+    },
       backText: {
         fontSize: 16,
         color: '#D4A017',
