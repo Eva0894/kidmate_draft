@@ -1,144 +1,175 @@
-// app/(library)/bookmarks.tsx
 import React, { useEffect, useState } from 'react';
 import {
-  View, Text, FlatList, TouchableOpacity, Alert, StyleSheet, ScrollView,
-  Platform
+  View, Text, FlatList, TouchableOpacity, Alert, StyleSheet, Image, Platform,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import libStyles from './libStyles';
-import { BASE_URL, post } from '@/utils/api';
 
-// 根据平台设置 API 地址
 const BACKEND_URL =
-Platform.OS === 'ios'
-  ? BASE_URL
-  : 'http://10.0.2.2:8000';
+  Platform.OS === 'ios'
+    ? 'http://localhost:8000' // 你可以改成实际 IP
+    : 'http://192.168.10.117:8000';
 
-console.log('Using API URL:', BACKEND_URL);
-
-// const BACKEND_URL = 'http://127.0.0.1:8000';
+type Bookmark = { book_id: string; page_index: number };
+type Book = { id: string; title: string; cover?: string };
 
 export default function BookmarksScreen() {
   const router = useRouter();
-  type Bookmark = { book_id: number; page_index: number };
-  type Book = { id: number; title: string; author?: string; cover_url?: string };
-  
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const [books, setBooks] = useState<Book[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`${BACKEND_URL}/books/bookmarks`)
-      .then(res => res.json())
-      .then(setBookmarks)
-      .catch(console.error);
-
-    fetch(`${BACKEND_URL}/books`)
-      .then(res => res.json())
-      .then(setBooks)
-      .catch(console.error);
+    Promise.all([
+      fetch(`${BACKEND_URL}/books/bookmarks`).then(res => res.json()),
+      fetch(`${BACKEND_URL}/books`).then(res => res.json()),
+    ])
+      .then(([bookmarkData, bookData]) => {
+        setBookmarks(bookmarkData);
+        setBooks(bookData);
+      })
+      .catch(err => {
+        console.error('❌ Failed to load bookmarks:', err);
+        Alert.alert('Error', 'Unable to load bookmarks.');
+      })
+      .finally(() => setLoading(false));
   }, []);
 
-  const getBookTitle = (id: number) => {
-    const book = books.find(b => b.id === id);
-    return book?.title || 'Unknown Book';
+  const getBookInfo = (id: string) => books.find(b => b.id === id);
+
+  const handleDelete = async (bookId: string, pageIndex: number) => {
+    try {
+      await fetch(`${BACKEND_URL}/books/bookmarks/delete`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ book_id: bookId, page_index: pageIndex }),
+      });
+      setBookmarks(prev => prev.filter(b => !(b.book_id === bookId && b.page_index === pageIndex)));
+    } catch (err) {
+      console.error('Failed to delete bookmark:', err);
+      Alert.alert('Error', 'Failed to delete bookmark.');
+    }
   };
 
-  const handleDelete = async (bookId: number, pageIndex: number) => {
-    await fetch(`${BACKEND_URL}/books/bookmarks/delete`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ book_id: bookId, page_index: pageIndex }),
-    });
-    setBookmarks(prev => prev.filter(b => !(b.book_id === bookId && b.page_index === pageIndex)));
+  const renderItem = ({ item }: { item: Bookmark }) => {
+    const book = getBookInfo(item.book_id);
+    if (!book) return null;
+
+    return (
+      <TouchableOpacity
+        style={styles.item}
+        onPress={() =>
+          router.push({
+            pathname: '/(library)/bookId',
+            params: { bookId: item.book_id, page: String(item.page_index) },
+          })
+        }
+        onLongPress={() =>
+          Alert.alert('Delete Bookmark', 'Are you sure you want to delete this bookmark?', [
+            { text: 'Cancel', style: 'cancel' },
+            {
+              text: 'Delete',
+              style: 'destructive',
+              onPress: () => handleDelete(item.book_id, item.page_index),
+            },
+          ])
+        }
+      >
+        {book.cover && (
+          <Image
+            source={{ uri: `${BACKEND_URL}${book.cover}` }}
+            style={styles.cover}
+          />
+        )}
+        <View style={{ flex: 1 }}>
+          <Text style={styles.itemText} numberOfLines={1}>
+            {book.title || 'Unknown Book'}
+          </Text>
+          <Text style={styles.pageText}>Page {item.page_index + 1}</Text>
+        </View>
+      </TouchableOpacity>
+    );
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.headerContainer}>
-         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-           <Ionicons name="arrow-back" size={28} color="#E5911B" />
-         </TouchableOpacity>
-         <Text style={styles.header}>🔖 My Bookmarks</Text>
-  </View>
-      <FlatList
-        data={bookmarks}
-        keyExtractor={(item, index) => `${item.book_id}-${item.page_index}-${index}`}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.item}
-            onPress={() => router.push({
-                pathname: "/bookId" as const,
-                params: {
-                  id: item.book_id.toString(),
-                  page: item.page_index.toString(),
-                },
-              })
-            }
-            
-            onLongPress={() => {
-              Alert.alert(
-                'Delete Bookmark',
-                'Are you sure you want to delete this bookmark?',
-                [
-                  { text: 'Cancel', style: 'cancel' },
-                  {
-                    text: 'Delete',
-                    style: 'destructive',
-                    onPress: () => handleDelete(item.book_id, item.page_index),
-                  },
-                ]
-              );
-            }}
-          >
-            <Text style={styles.itemText}>{getBookTitle(item.book_id)} - Page {item.page_index + 1}</Text>
-          </TouchableOpacity>
-        )}
-      />
-    </ScrollView>
+    <View style={styles.container}>
+      <View style={styles.headerRow}>
+        <TouchableOpacity onPress={() => router.back()} style={libStyles.backButton}>
+          <Ionicons name="arrow-back" size={28} color="#E5911B" />
+        </TouchableOpacity>
+        <Text style={styles.header}>🔖 My Bookmarks</Text>
+      </View>
+
+      {loading ? (
+        <Text style={styles.statusText}>Loading...</Text>
+      ) : bookmarks.length === 0 ? (
+        <Text style={styles.statusText}>No bookmarks found.</Text>
+      ) : (
+        <FlatList
+          data={bookmarks}
+          keyExtractor={(item, index) => `${item.book_id}-${item.page_index}-${index}`}
+          renderItem={renderItem}
+        />
+      )}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    padding: 16,
     backgroundColor: '#fff',
+    flex: 1,
   },
-  headerContainer: {
+  headerRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: 16, 
     marginBottom: 16,
     position: 'relative',
   },
-  backButton: {
-    position: 'absolute',
-    flexDirection: 'row',
-    paddingHorizontal: 16,
-    paddingTop: 16,
-  },
   header: {
     flex: 1,
+    textAlign: 'center',
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 16,
     color: '#E5911B',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
-    textAlign:'center',
+      android: 'casual',
+    }),
+  },
+  statusText: {
+    textAlign: 'center',
+    marginTop: 40,
+    color: '#999',
   },
   item: {
-    padding: 14,
-    backgroundColor: '#f2f2f2',
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 12,
+    backgroundColor: '#f3f3f3',
     borderRadius: 10,
     marginBottom: 10,
   },
+  cover: {
+    width: 50,
+    height: 70,
+    borderRadius: 6,
+    marginRight: 12,
+    backgroundColor: '#ddd',
+  },
   itemText: {
     fontSize: 14,
+    fontWeight: '600',
     color: '#E5911B',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'casual',
+    }),
+  },
+  pageText: {
+    fontSize: 12,
+    color: '#555',
   },
 });

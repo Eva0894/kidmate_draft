@@ -3,32 +3,29 @@ import {
   View,
   StyleSheet,
   Image,
+  ImageBackground,
   KeyboardAvoidingView,
   Platform,
   TouchableOpacity,
   Modal,
+  Text,
 } from 'react-native';
 import { Stack, Redirect } from 'expo-router';
 import { FlashList } from '@shopify/flash-list';
 import { Audio } from 'expo-av';
-import { useMMKVString } from 'react-native-mmkv';
-import { defaultStyles } from '@/constants/Styles';
-import HeaderDropDown from '@/components/HeaderDropDown';
 import MessageInput from '@/components/MessageInput';
 import MessageIdeas from '@/components/MessageIdeas';
-import ChatMessage from '@/components/ChatMessage'; 
-import { keyStorage, storage } from '@/utils/Storage';
-import { Message, Role } from '@/types/message';
+import ChatMessage from '@/components/ChatMessage';
+import { supabase } from '@/utils/Supabase';
 
-const BACKEND_WS = 'ws://10.16.86.220:8000/api/chat/ws/chat';
-const BACKEND_HTTP = 'http://10.16.86.220:8000';
+const BACKEND_WS = 'ws://localhost:8000/api/chat/ws/chat';
+const BACKEND_HTTP = 'http://localhost:8000';
 
-
-// type Message = {
-//   role: 'user' | 'bot';
-//   content: string;
-//   image?: string;
-// };
+type Message = {
+  role: 'user' | 'bot';
+  content: string;
+  image?: string;
+};
 
 export default function Page() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -41,22 +38,28 @@ export default function Page() {
   const isPlaying = useRef<boolean>(false);
   const isFirstAudio = useRef<boolean>(true);
 
-  const [key, setKey] = useMMKVString('apikey', keyStorage);
-  const [organization, setOrganization] = useMMKVString('org', keyStorage);
-  const [gptVersion, setGptVersion] = useMMKVString('gptVersion', storage);
+  const [user, setUser] = useState<any>(null);
+  const [userChecked, setUserChecked] = useState(false);
+  const [shouldRedirect, setShouldRedirect] = useState(false);
 
-  const waitForAudioFile = async (url: string, maxRetries: number = 20, interval: number = 300) => {
-    for (let i = 0; i < maxRetries; i++) {
-      try {
-        const res = await fetch(url, { method: 'HEAD' });
-        if (res.ok) return;
-      } catch {}
-      await new Promise((resolve) => setTimeout(resolve, interval));
-    }
-    throw new Error('音频文件超时未准备好');
-  };
-
+  // ✅ 总是调用 useEffect
   useEffect(() => {
+    const checkUser = async () => {
+      const { data } = await supabase.auth.getUser();
+      if (data?.user) {
+        setUser(data.user);
+      } else {
+        setShouldRedirect(true);
+      }
+      setUserChecked(true);
+    };
+    checkUser();
+  }, []);
+
+  // ✅ 不提前 return，只标记跳转
+  useEffect(() => {
+    if (!user) return;
+
     const ws = new WebSocket(BACKEND_WS);
     wsRef.current = ws;
 
@@ -85,7 +88,7 @@ export default function Page() {
           }
         }
       } catch (err) {
-        console.warn('⚠️ JSON parse error:', err);
+        console.warn(' JSON parse error:', err);
       }
     };
 
@@ -93,7 +96,18 @@ export default function Page() {
     ws.onclose = () => console.log('WebSocket closed');
 
     return () => ws.close();
-  }, []);
+  }, [user]);
+
+  const waitForAudioFile = async (url: string, maxRetries: number = 20, interval: number = 300) => {
+    for (let i = 0; i < maxRetries; i++) {
+      try {
+        const res = await fetch(url, { method: 'HEAD' });
+        if (res.ok) return;
+      } catch {}
+      await new Promise((resolve) => setTimeout(resolve, interval));
+    }
+    throw new Error('The audio file timed out and was not ready.');
+  };
 
   const playNext = async () => {
     if (isPlaying.current || audioQueue.current.length === 0) return;
@@ -124,7 +138,7 @@ export default function Page() {
         }
       });
     } catch (err) {
-      console.warn('🔊 音频播放失败:', err);
+      console.warn(' Audio playback failed:', err);
       isPlaying.current = false;
       setIsDuckTalking(false);
       playNext();
@@ -149,12 +163,12 @@ export default function Page() {
     setMessages((prev) => [
       ...prev,
       { role: 'user', content: message },
-      { role: 'bot', content: '思考中...', image: undefined },
+      { role: 'bot', content: 'dear friends, I am thinking...' },
     ]);
 
     if (isImagePrompt(message)) {
       try {
-        const res = await fetch(`http://localhost:8000/api/chat/generate_image`, {
+        const res = await fetch(`${BACKEND_HTTP}/api/chat/generate_image`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -179,12 +193,12 @@ export default function Page() {
           return updated;
         });
       } catch (err) {
-        console.warn('🖼 图像生成失败:', err);
+        console.warn(' Image generation failed:', err);
         setMessages((prev) => {
           const updated = [...prev];
           updated[updated.length - 1] = {
             role: 'bot',
-            content: '图像生成失败，请稍后重试。',
+            content: 'Image generation failed, please try again later.',
           };
           return updated;
         });
@@ -193,14 +207,14 @@ export default function Page() {
     }
 
     fullMessageRef.current = '';
-    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+    if (wsRef.current?.readyState === WebSocket.OPEN) {
       wsRef.current.send(message);
     } else {
       setMessages((prev) => {
         const updated = [...prev];
         updated[updated.length - 1] = {
           role: 'bot',
-          content: '连接错误，AI 暂时无法响应。',
+          content: 'Connection error, AI temporarily unresponsive.',
         };
         return updated;
       });
@@ -212,70 +226,85 @@ export default function Page() {
     setModalVisible(true);
   };
 
-  // if (!key || !organization) {
-  //   return <Redirect href={'/(auth)/(modal)/settings'} />;
-  // }
+  // ✅ 显示跳转
+  if (shouldRedirect) return <Redirect href="/login" />;
+  if (!userChecked) return null;
 
   return (
-    <View style={defaultStyles.pageContainer}>
-      <Stack.Screen
-        options={{
-          headerTitle: 'KidMate',
-          headerTitleAlign: 'center',
-          headerTitleStyle: {
-            fontSize: 18,
-            fontWeight: '600',
-          },
-        }}
-      />
+    <ImageBackground
+      source={require('@/assets/images/background.png')}
+      style={styles.fullScreenBackground}
+      imageStyle={{ resizeMode: 'cover' }}
+    >
+      <View style={styles.container}>
+        <Stack.Screen
+          options={{
+            headerTitle: 'Neo goose',
+            headerTitleAlign: 'center',
+            headerTitleStyle: { fontSize: 18, fontWeight: '600' },
+          }}
+        />
 
-      <View style={styles.page}>
-        {/* 🦆 鸭子状态 */}
-        <View style={styles.logoContainer}>
-          <Image
-            source={
-              isDuckTalking
-                ? require('@/assets/images/duck_open.png')
-                : require('@/assets/images/duck_closed.png')
-            }
-            style={styles.image}
+        <View style={styles.page}>
+          <View style={styles.logoContainer}>
+            <Image
+              source={
+                isDuckTalking
+                  ? require('@/assets/images/duck_open.png')
+                  : require('@/assets/images/duck_closed.png')
+              }
+              style={styles.image}
+            />
+          </View>
+
+          {messages.length === 0 && (
+            <View style={styles.overlay}>
+              <Text style={{ fontSize: 16, color: '#000' }}>
+                Try asking me a question, or asking me to draw something～
+              </Text>
+            </View>
+          )}
+
+          <FlashList
+            data={messages}
+            renderItem={({ item }) => <ChatMessage {...item} />}
+            estimatedItemSize={400}
+            contentContainerStyle={{ paddingBottom: 160 }}
+            keyboardDismissMode="on-drag"
           />
         </View>
 
-        <FlashList
-          data={messages}
-          renderItem={({ item }) => <ChatMessage {...item} />}
-          estimatedItemSize={400}
-          contentContainerStyle={{ paddingBottom: 160 }}
-          keyboardDismissMode="on-drag"
-        />
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          keyboardVerticalOffset={70}
+          style={{ position: 'absolute', bottom: 0, left: 0, width: '100%' }}
+        >
+          {messages.length === 0 && <MessageIdeas onSelectCard={getCompletion} />}
+          <MessageInput onShouldSend={getCompletion} />
+        </KeyboardAvoidingView>
+
+        <Modal visible={modalVisible} transparent animationType="fade">
+          <View style={styles.modalContainer}>
+            <TouchableOpacity style={styles.modalBackground} onPress={() => setModalVisible(false)}>
+              <Image source={{ uri: modalImage || '' }} style={styles.modalImage} resizeMode="contain" />
+            </TouchableOpacity>
+          </View>
+        </Modal>
       </View>
-
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={70}
-        style={{ position: 'absolute', bottom: 0, left: 0, width: '100%' }}
-      >
-        {messages.length === 0 && <MessageIdeas onSelectCard={getCompletion} />}
-        <MessageInput onShouldSend={getCompletion} />
-      </KeyboardAvoidingView>
-
-      <Modal visible={modalVisible} transparent animationType="fade">
-        <View style={styles.modalContainer}>
-          <TouchableOpacity style={styles.modalBackground} onPress={() => setModalVisible(false)}>
-            <Image
-              source={{ uri: modalImage || '' }}
-              style={styles.modalImage}
-              resizeMode="contain"
-            />
-          </TouchableOpacity>
-        </View>
-      </Modal>
-    </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
+  fullScreenBackground: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
+  },
+  container: {
+    flex: 1,
+    backgroundColor: 'transparent',
+  },
   page: {
     flex: 1,
   },
@@ -286,9 +315,20 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   image: {
-    width: 240,
-    height: 240,
+    width: 190,
+    height: 190,
     resizeMode: 'contain',
+  },
+  overlay: {
+    position: 'absolute',
+    bottom: 170,
+    left: 20,
+    right: 20,
+    backgroundColor: 'rgba(232, 168, 17, 0.2)',
+    paddingHorizontal: 24,
+    paddingVertical: 16,
+    borderRadius: 16,
+    zIndex: 99,
   },
   modalContainer: {
     flex: 1,

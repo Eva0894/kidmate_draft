@@ -3,7 +3,7 @@ npx expo install expo-dev-client react-native-reanimated react-native-gesture-ha
 
 npm i react-native-redash
 
-npm install @clerk/clerk-expo
+# npm install @clerk/clerk-expo
 npx expo install expo-secure-store
 
 npx expo install @react-navigation/drawer

@@ -1,4 +1,3 @@
-// app/(library)/[category].tsx
 import React, { useEffect, useState } from 'react';
 import {
   View,
@@ -14,17 +13,8 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import libStyles from './libStyles';
-import { BASE_URL, post } from '@/utils/api';
 
-
-// 根据平台设置 API 地址
-const BACKEND_URL =
-Platform.OS === 'ios'
-  ? BASE_URL
-  : 'http://10.0.2.2:8000';
-
-console.log('Using API URL:', BACKEND_URL);
-// const BACKEND_URL = 'http://127.0.0.1:8000';
+const BACKEND_URL = "http://localhost:8000"; // ✅ 局域网 IP
 const { width } = Dimensions.get('window');
 
 const CATEGORIES = ['story', 'science', 'plant', 'animal', 'art', 'sport'];
@@ -43,10 +33,11 @@ export default function CategoryScreen() {
     fetch(`${BACKEND_URL}/books`)
       .then(res => res.json())
       .then(data => {
+        console.log('📚 所有图书:', data);
         const filtered = data.filter(
           (book: any) =>
             book.category &&
-            book.category.toLowerCase() === selectedCategory.toLowerCase()
+            book.category.toLowerCase?.() === selectedCategory.toLowerCase()
         );
         setBooks(filtered);
       })
@@ -55,8 +46,15 @@ export default function CategoryScreen() {
 
   useEffect(() => {
     fetch(`${BACKEND_URL}/books/favorites`)
-      .then(res => res.json())
-      .then(ids => setFavoriteIds(ids || []))
+      .then(async res => {
+        const text = await res.text();
+        try {
+          const json = JSON.parse(text);
+          setFavoriteIds(json || []);
+        } catch (e) {
+          console.error("❌ 无法解析 JSON，原始内容:", text);
+        }
+      })
       .catch(err => console.error('Failed to fetch favorites:', err));
   }, []);
 

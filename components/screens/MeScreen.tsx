@@ -9,6 +9,7 @@ import {
   Alert,
   Modal,
   TextInput,
+  Appearance,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTheme } from '@/components/ThemeContext';
@@ -37,6 +38,7 @@ export default function MeSreen() {
     const [loading, setLoading] = useState(false);
     const t = useT();
     const [modalVisible, setModalVisible] = useState(false);
+    const [isDarkMode, setIsDarkMode] = useState(Appearance.getColorScheme() === 'dark');
 
     const [userId, setUserId] = useState<string | null>(null);
     useEffect(() => {

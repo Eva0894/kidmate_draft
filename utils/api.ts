@@ -1,18 +1,19 @@
 // utils/api.ts
 import { Platform } from 'react-native';
 
-// 动态获取后端地址
+// Dynamically obtain the backend address
 export const getBackendUrl = () => {
   if (__DEV__) {
-    // 开发环境
+    // Development Environment
     if (Platform.OS === 'ios') {
-      return 'http://192.168.0.249:3000';
+      // return 'http://192.168.0.249:3000';
+      return 'http://localhost:3000';
     } else {
       return 'http://10.0.2.2:3000';
     }
   } else {
-    // 生产环境
-    return 'https://your-production-api.com'; // TODO: 上线后换成你的域名
+    // Production Environment
+    return 'https://your-production-api.com'; // Change to my domain name after going online
   }
 };
 

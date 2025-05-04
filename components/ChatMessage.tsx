@@ -6,7 +6,6 @@ const ChatMessage = ({ content, role, image }: Message) => {
 
   return (
     <View style={[styles.row, isUser ? styles.alignRight : styles.alignLeft]}>
-      {/* AI 头像：左侧显示 */}
       {!isUser && (
         <Image
           source={require('@/assets/images/duck_head.png')}
@@ -14,7 +13,6 @@ const ChatMessage = ({ content, role, image }: Message) => {
         />
       )}
 
-      {/* 消息气泡 */}
       <View style={[styles.bubble, isUser ? styles.userBubble : styles.botBubble]}>
         {image ? (
           <Image source={{ uri: image }} style={styles.previewImage} />
@@ -25,7 +23,6 @@ const ChatMessage = ({ content, role, image }: Message) => {
         )}
       </View>
 
-      {/* 用户头像：右侧显示 */}
       {isUser && (
         <Image
           source={{ uri: 'https://galaxies.dev/img/meerkat_2.jpg' }}
@@ -54,7 +51,7 @@ const styles = StyleSheet.create({
     height: 30,
     borderRadius: 15,
     marginHorizontal: 6,
-    marginTop: 5, 
+    marginTop: 5,
     alignSelf: 'flex-start',
     backgroundColor: '#eee',
   },
@@ -64,23 +61,34 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     borderRadius: 18,
   },
+
+  // ✅ 用户：奶油白气泡 + 棕色字体 + 左上角方形
   userBubble: {
-    backgroundColor: '#007aff',
-    borderTopRightRadius: 0,
+    backgroundColor: '#fffbea',
+    borderTopRightRadius: 4,
+    borderTopLeftRadius: 18,
+    borderBottomLeftRadius: 18,
+    borderBottomRightRadius: 18,
   },
+
+  // ✅ AI：鸭蛋黄气泡 + 黑灰字体 + 右上角方形
   botBubble: {
-    backgroundColor: '#e5e5ea',
-    borderTopLeftRadius: 0,
+    backgroundColor: '#fff0b3',
+    borderTopLeftRadius: 4,
+    borderTopRightRadius: 18,
+    borderBottomLeftRadius: 18,
+    borderBottomRightRadius: 18,
   },
+
   text: {
     fontSize: 16,
     lineHeight: 22,
   },
   userText: {
-    color: '#fff',
+    color: '#4a3e2c',
   },
   botText: {
-    color: '#000',
+    color: '#333',
   },
   previewImage: {
     width: 240,

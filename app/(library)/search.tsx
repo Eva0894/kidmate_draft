@@ -13,26 +13,16 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import libStyles from './libStyles';
-import { BASE_URL, post } from '@/utils/api';
 
-
-
-// const BACKEND_URL = 'http://127.0.0.1:8000';
-// 根据平台设置 API 地址
 const BACKEND_URL =
-Platform.OS === 'ios'
-  ? BASE_URL
-  : 'http://10.0.2.2:8000';
-
-console.log('Using API URL:', BACKEND_URL);
+  Platform.OS === 'ios'
+    ? 'http://localhost:8000'
+    : 'http://10.0.2.2:8000';
 
 const { width } = Dimensions.get('window');
 
-type Book = { id: number; title: string; cover?: string };
-
 export default function SearchScreen() {
-  const [books, setBooks] = useState<Book[]>([]);
+  const [books, setBooks] = useState([]);
   const [searchText, setSearchText] = useState('');
   const router = useRouter();
 
@@ -47,18 +37,21 @@ export default function SearchScreen() {
     book.title.toLowerCase().includes(searchText.toLowerCase())
   );
 
-  const renderItem = ({ item }: { item: Book }) => (
+  const renderItem = ({ item }) => (
     <TouchableOpacity
       style={styles.bookCard}
       onPress={() =>
         router.push({
-          pathname: '/bookId' as const,
-          params: { id: String(item.id), page: '0' },
+          pathname: '/(library)/bookId',
+          params: {
+            bookId: item.id,
+            page: '0',
+          },
         })
       }
     >
       <Image
-        source={{ uri: `${BACKEND_URL}${item.cover}` }}
+        source={{ uri: item.cover ? `${BACKEND_URL}${item.cover}` : '' }}
         style={styles.bookCover}
       />
       <Text style={styles.bookTitle} numberOfLines={2}>
@@ -69,15 +62,19 @@ export default function SearchScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-        <View style={styles.headerContainer}>
-    <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-      <Ionicons name="arrow-back" size={28} color="#E5911B" />
-    </TouchableOpacity>
-    <Text style={styles.header}>Search Books</Text>
-  </View>
+      <View style={styles.headerRow}>
+        <TouchableOpacity
+          onPress={() => router.back()}
+          style={styles.backButton}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+        >
+          <Ionicons name="arrow-back" size={28} color="#E5911B" />
+        </TouchableOpacity>
+        <Text style={styles.header}>Search Books</Text>
+      </View>
 
       <View style={styles.searchContainer}>
-        <Ionicons name="search" size={28} color="#E5911B" style={styles.searchIcon} />
+        <Ionicons name="search" size={20} color="#E5911B" style={styles.searchIcon} />
         <TextInput
           style={styles.searchInput}
           placeholder="Enter book title..."
@@ -88,7 +85,7 @@ export default function SearchScreen() {
 
       <FlatList
         data={filteredBooks}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item) => item.id}
         renderItem={renderItem}
         numColumns={3}
         contentContainerStyle={styles.booksList}
@@ -101,36 +98,32 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-  },
-  headerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingTop: 16,
-    paddingHorizontal: 16,
-    marginBottom: 16,
-    position: 'relative',
+    paddingHorizontal: 12,
   },
   headerRow: {
-    paddingVertical: 10,
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+    height: 48,
+    marginBottom: 12,
+  },
+  backButton: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    padding: 10,
+    zIndex: 999,
   },
   header: {
-    flex:1,
-    textAlign: 'center',
     fontSize: 24,
     fontWeight: 'bold',
     color: '#E5911B',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'casual',
+    }),
   },
-  backButton: {
-    position: 'absolute',
-    flexDirection: 'row',
-    paddingHorizontal: 16,
-    paddingTop: 16,
-  },
-
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -140,8 +133,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   searchIcon: {
-    marginRight: 16,
-    color:'#E5911B',
+    marginRight: 8,
   },
   searchInput: {
     flex: 1,
@@ -149,7 +141,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'casual',
+    }),
   },
   booksList: {
     paddingBottom: 60,
@@ -171,9 +164,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     textAlign: 'center',
+    color: '#E5911B',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
-    color:'#E5911B',
+      android: 'casual',
+    }),
   },
 });

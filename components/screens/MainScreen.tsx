@@ -1,201 +1,282 @@
-import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import React, { useEffect, useState } from 'react';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  ActivityIndicator,
+  Dimensions,
+} from 'react-native';
 import { router } from 'expo-router';
+import { supabase } from '@/utils/Supabase';
+
+const { width } = Dimensions.get('window');
+const AGE_OPTIONS = ['Age 3-4', 'Age 5-6', 'Age 7+'];
+const BACKEND_URL = 'http://10.19.141.103:8000';
+type Book = {
+  id: string;
+  title: string;
+  cover: string;
+  age_group: string;
+};
 
 export default function MainScreen() {
+  const [loading, setLoading] = useState(true);
+  const [selectedAge, setSelectedAge] = useState('Age 3-4');
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [recommendedBooks, setRecommendedBooks] = useState<Book[]>([]);
+
+  useEffect(() => {
+    const checkUser = async () => {
+      const { data, error } = await supabase.auth.getUser();
+      if (error || !data?.user) {
+        router.replace('/login');
+      } else {
+        console.log('✅ Logged-in user:', data.user);
+      }
+      setLoading(false);
+    };
+    checkUser();
+  }, []);
+
+  const handleAgeSelect = (age: string) => {
+    setSelectedAge(age);
+    setShowDropdown(false);
+  };
+
+  const fetchRecommendedBooks = () => {
+    fetch(`${BACKEND_URL}/books`)
+      .then((res) => res.json())
+      .then((data) => {
+        const filtered = data.filter((book: any) => book.age_group === selectedAge);
+        const shuffled = filtered.sort(() => 0.5 - Math.random());
+        setRecommendedBooks(shuffled.slice(0, 10));
+      });
+  };
+
+  useEffect(() => {
+    fetchRecommendedBooks();
+  }, [selectedAge]);
+
+  // const handleSignOut = async () => {
+  //   await supabase.auth.signOut();
+  //   router.replace('/login');
+  // };
+
+  if (loading) {
+    return (
+      <View style={styles.loader}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
   return (
     <ScrollView style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
-        <View style={styles.profileContainer}>
-          <TouchableOpacity
-            style={styles.ageContainer}
-            onPress={() => router.push('/(me)/profile')}
-          >
-            <Image
-              source={require('@/assets/images/profile.png')}
-              style={styles.profileImage}
-            />
-            <Text style={styles.ageRange}>3-7</Text>
+      {/* Header: Age selector + Logout */}
+      <View style={styles.topBar}>
+        <View style={{ position: 'relative' }}>
+          <TouchableOpacity onPress={() => setShowDropdown(!showDropdown)} style={styles.ageTag}>
+            <Text style={styles.ageText}>👤 {selectedAge} ⌄</Text>
           </TouchableOpacity>
+
+          {showDropdown && (
+            <View style={styles.dropdown}>
+              {AGE_OPTIONS.map((age) => (
+                <TouchableOpacity key={age} onPress={() => handleAgeSelect(age)}>
+                  <Text style={styles.dropdownItem}>{age}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
         </View>
+
+        {/* <TouchableOpacity onPress={handleSignOut} style={styles.logoutButton}>
+          <Text style={styles.logoutIcon}>⏏️</Text>
+        </TouchableOpacity> */}
       </View>
 
       {/* Banner */}
-      <View style={styles.banner}>
-        <Image
-          source={require('../../assets/images/banner-image.png')}
-          style={styles.bannerImage}
-        />
-        <View style={styles.bannerTextContainer}>
-          <Text style={styles.bannerText}>Hi!</Text>
-          <Text style={styles.bannerSubText}>I'm your AI learning companion</Text>
-        </View>
+      <Image
+        source={require('@/assets/images/banner-image.png')}
+        style={styles.banner}
+      />
+      <Text style={styles.bannerText}>Hi! I'm your AI learning companion</Text>
+
+      {/* Navigation Icons */}
+      <View style={styles.iconRow}>
+        <TouchableOpacity onPress={() => router.push('/chat')}>
+          <Image source={require('@/assets/images/ai.png')} style={styles.iconImage} />
+          <Text style={styles.iconLabel}>AI</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity>
+          <Image source={require('@/assets/images/learning.png')} style={styles.iconImage} />
+          <Text style={styles.iconLabel}>Learning</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => router.push('/library')}>
+          <Image source={require('@/assets/images/library.png')} style={styles.iconImage} />
+          <Text style={styles.iconLabel}>Library</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => router.push('/reward')}>
+          <Image source={require('@/assets/images/reward.png')} style={styles.iconImage} />
+          <Text style={styles.iconLabel}>Reward</Text>
+        </TouchableOpacity>
       </View>
 
-      {/* Categories */}
-      <View style={styles.categories}>
-        <TouchableOpacity style={styles.category} onPress={() => router.push('/chat')}>
-          <Text style={styles.categoryText}>AI</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.category}>
-          <Text style={styles.categoryText}>Storytelling</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.category} onPress={() => router.push('/(tabs)/eduPage')}>
-          <Text style={styles.categoryText}>Educational Activities</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.category}>
-          <Text style={styles.categoryText}>Digital</Text>
+      {/* Recommendation Header */}
+      <View style={styles.recommendHeader}>
+        <Text style={styles.recommendTitleText}>
+          Recommended Books for {selectedAge}
+        </Text>
+        <TouchableOpacity onPress={fetchRecommendedBooks} style={styles.refreshButton}>
+          <Text style={styles.refreshText}>🔄</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Recommendations */}
-      <View style={styles.recommendations}>
-        <Text style={styles.sectionTitle}>Recommendation</Text>
-        <View style={styles.books}>
-          <TouchableOpacity style={styles.book}>
+      {/* Recommended Book List */}
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 40 }}>
+        {recommendedBooks.map((book) => (
+          <TouchableOpacity
+            key={book.id}
+            onPress={() => router.push(`/book/${book.id}`)}
+            style={styles.recommendCard}
+          >
             <Image
-              source={require('@/assets/images/book1.png')}
-              style={styles.bookImage}
+              source={{ uri: `${BACKEND_URL}${book.cover}` }}
+              style={styles.recommendCover}
             />
-            <Text style={styles.bookTitle}>Alex's Super Medicine</Text>
+            <Text numberOfLines={2} style={styles.recommendBookTitle}>
+              {book.title}
+            </Text>
           </TouchableOpacity>
-
-          <TouchableOpacity style={styles.book}>
-            <Image
-              source={require('@/assets/images/book2.png')}
-              style={styles.bookImage}
-            />
-            <Text style={styles.bookTitle}>Brave Bora</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.book}>
-            <Image
-              source={require('@/assets/images/book3.png')}
-              style={styles.bookImage}
-            />
-            <Text style={styles.bookTitle}>Sam's Treasures</Text>
-          </TouchableOpacity>
-                {/* Reward Button */}
-          <TouchableOpacity style={styles.rewardButton} onPress={() => router.push('/reward')}>
-            <Text style={styles.rewardButtonText}>Reward</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+        ))}
+      </ScrollView>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff' },
-  header: {
+  container: { flex: 1, backgroundColor: '#FFFFFF', paddingTop: 20, paddingHorizontal: 20 },
+  loader: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  topBar: {
     flexDirection: 'row',
-    alignItems: 'center',
-    padding: 16,
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 10,
   },
-  profileContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  ageTag: {
+    backgroundColor: '#F0F0F0',
+    borderRadius: 18,
+    paddingHorizontal: 12,
+    paddingVertical: 5,
   },
-  ageContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#E0E0E0',
+  ageText: {
+    fontSize: 14,
+    color: '#333',
+    fontWeight: '500',
+  },
+  dropdown: {
+    position: 'absolute',
+    top: 36,
+    left: 0,
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    elevation: 6,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    zIndex: 999,
+  },
+  dropdownItem: {
+    paddingVertical: 8,
+    fontSize: 14,
+    color: '#333',
+  },
+  logoutButton: {
+    padding: 6,
+    marginRight: 4,
+  },
+  logoutIcon: {
+    fontSize: 20,
+  },
+  banner: {
+    width: width - 40,
+    height: 140,
     borderRadius: 20,
+    marginTop: 10,
+    alignSelf: 'center',
+    resizeMode: 'cover',
+  },
+  bannerText: {
+    textAlign: 'center',
+    marginTop: 10,
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#555',
+  },
+  iconRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 28,
+  },
+  iconImage: {
+    width: 76,
+    height: 76,
+    borderRadius: 38,
+    backgroundColor: '#FFF8E1',
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+  iconLabel: {
+    textAlign: 'center',
+    marginTop: 6,
+    fontWeight: '600',
+    fontSize: 14,
+    color: '#333',
+  },
+  recommendHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 30,
+    marginBottom: 12,
+  },
+  recommendTitleText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  refreshButton: {
     paddingHorizontal: 8,
     paddingVertical: 4,
   },
-  profileImage: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    marginRight: 8,
-    backgroundColor: '#FDEBD0',
+  refreshText: {
+    fontSize: 20,
   },
-  ageRange: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#D68910',
-  },
-  banner: {
-    backgroundColor: '#f1e4c2',
-    flexDirection: 'row',
+  recommendCard: {
+    width: 120,
+    marginRight: 14,
     alignItems: 'center',
-    padding: 16,
-    borderRadius: 8,
-    margin: 16,
   },
-  bannerImage: {
-    width: 80,
-    height: 80,
-    marginRight: 16,
-  },
-  bannerTextContainer: {
-    flex: 1,
-  },
-  bannerText: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#D68910',
-  },
-  bannerSubText: {
-    fontSize: 16,
-    color: '#D68910',
-    marginTop: 4,
-  },
-  categories: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginVertical: 16,
-  },
-  category: {
-    backgroundColor: '#F0F0F0',
-    padding: 16,
-    borderRadius: 8,
-  },
-  categoryText: {
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  recommendations: {
-    padding: 16,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 8,
-  },
-  books: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  book: {
-    alignItems: 'center',
+  recommendCover: {
     width: 100,
-  },
-  bookImage: {
-    width: 80,
-    height: 80,
+    height: 130,
     borderRadius: 8,
+    backgroundColor: '#eee',
   },
-  bookTitle: {
-    marginTop: 8,
-    fontSize: 12,
+  recommendBookTitle: {
+    marginTop: 6,
     textAlign: 'center',
-  },
-  rewardButton: {
-    backgroundColor: '#FFD700',
-    padding: 16,
-    borderRadius: 8,
-    margin: 16,
-    alignItems: 'center',
-  },
-  rewardButtonText: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 12,
+    fontWeight: '500',
     color: '#333',
+    width: 100,
   },
 });

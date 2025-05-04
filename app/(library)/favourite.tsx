@@ -21,7 +21,7 @@ import { BASE_URL, post } from '@/utils/api';
 // 根据平台设置 API 地址
 const BACKEND_URL =
 Platform.OS === 'ios'
-  ? BASE_URL
+  ? 'http://localhost:8000'
   : 'http://10.0.2.2:8000';
 
 console.log('Using API URL:', BACKEND_URL);
@@ -81,7 +81,7 @@ export default function FavoritesScreen() {
               onPress={() =>
                 router.push({
                   pathname: '/bookId' as const,
-                  params: { id: String(item.id), page: '0' },
+                  params: { bookId: String(item.id), page: '0' },
                 })
               }
               onLongPress={() =>

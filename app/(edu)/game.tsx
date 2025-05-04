@@ -1,138 +1,198 @@
-import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  TouchableOpacity,
-  Image,
-  Dimensions,
-} from 'react-native';
+import React, { useEffect , useState} from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, TextInput} from 'react-native';
 import { useRouter } from 'expo-router';
-import { router, type Href } from 'expo-router';
-import eduStyles from './eduStyles';
+import { Ionicons } from '@expo/vector-icons';
+import * as ScreenOrientation from 'expo-screen-orientation';
 
-const screenWidth = Dimensions.get('window').width;
-const CARD_WIDTH = (screenWidth - 48) / 2;
-
-const games = [
-  {
-    title: '🎴 Memory Match',
-    image: require('../../assets/images/game.jpg'),
-    route: '/(games)/memoryGame',
-  },
-  {
-    title: '🎨 Color Sort',
-    image: require('../../assets/images/game.jpg'),
-    route: '/(games)/colorSort',
-  },
-  {
-    title: '🧩 Shape Match',
-    image: require('../../assets/images/game.jpg'),
-    route: '/(games)/shapeMatch',
-  },
-  {
-    title: '🔢 Number Tap',
-    image: require('../../assets/images/game.jpg'),
-    route: '/(games)/numberGame',
-  },
-  {
-    title: 'puzzle',
-    image: require('../../assets/images/game.jpg'),
-    route: '/(games)/puzzleGame',
-  },
-  {
-    title: 'Ballon Pop',
-    image: require('../../assets/images/game.jpg'),
-    route: '/(games)/ballonpopGame',
-  },
- 
-  {
-    title: ' Whack-a-Mole',
-    image: require('../../assets/images/game.jpg'),
-    route: '/(games)/Whack-a-Mole',
-  },
-];
-
-export default function GamePage() {
+import { supabase } from '@/utils/Supabase';
+import dayjs from 'dayjs'; 
+import { Image } from 'react-native';
+export default function GameCenterPage() {
   const router = useRouter();
 
+ 
+
+  const [totalToday, setTotalToday] = useState(0);
+    const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+    const [showProfile, setShowProfile] = useState(false);
+  useEffect(() => {
+    
+    const lockOrientation = async () => {
+      await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
+    };
+    lockOrientation();
+  
+  }, []);
+
+  const games = [
+    { title: 'Flappy Bird', path: '/(games)/flappy',image: require('@/assets/images/flappy.png'), },
+    
+    
+    { title: 'Railroad Repair Reboot', path: '/(games)/railroad', image: require('@/assets/images/railway.png'), },
+    { title: 'guessFeeling', path: '/(games)/guessFeeling',image: require('@/assets/images/guessfeeling.png'), },
+    { title: 'Bridge Builder', path: '/(games)/bridgebuilder',image: require('@/assets/images/bridgebuilder.png'), },
+    
+    { title: 'bob-dog', path: '/(games)/bobdogiframe',image: require('@/assets/images/bobdog.png'), },
+    { title: 'Dominoes', path: '/(games)/dominoes',image: require('@/assets/images/dominoes.png'),},
+    { title: 'Watts of Trouble', path: '/(games)/Watts_of_Trouble',image: require('@/assets/images/watts.png'),},
+    { title: 'Sorting Box', path: '/(games)/sortingBox',image: require('@/assets/images/sort.png'),},
+    { title: '3 2 1 Snack', path: '/(games)/321snack',image: require('@/assets/images/321snack.png'), },
+    { title: 'Track Stars', path: '/(games)/trackStars',image: require('@/assets/images/trackstar.png'),},
+  ];
+ 
+   useEffect(() => {
+      const fetchAvatarAndStudyTime = async () => {
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        if (sessionError) {
+          console.error('Session error:', sessionError.message);
+          return;
+        }
+  
+        const userId = session?.user.id;
+        if (!userId) return;
+  
+        const { data: avatarData } = await supabase
+          .from('users')
+          .select('avatar_url')
+          .eq('user_id', userId)
+          .single();
+        
+        if (avatarData) {
+          setAvatarUrl(avatarData.avatar_url || null);
+        }
+  
+        const today = dayjs().startOf('day').toISOString();
+        const { data: studyData } = await supabase
+          .from('study_log')
+          .select('duration_sec')
+          .gte('created_at', today);
+  
+        if (studyData) {
+          const total = studyData.reduce((sum, row) => sum + row.duration_sec, 0);
+          setTotalToday(total);
+        }
+      };
+  
+      fetchAvatarAndStudyTime();
+    }, []);
+  
+    const formatTime = (s: number) => `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+  
   return (
+    
+    
     <View style={styles.container}>
-        <Text style={eduStyles.header}>Game Center</Text>
-        <TouchableOpacity style={styles.backButton} onPress={() => (router.back())}>
-            <Text style={styles.backText}>← back</Text>
-        </TouchableOpacity>
-
-        <FlatList
-            data={games}
-            numColumns={2}
-            keyExtractor={(item) => item.title}
-            contentContainerStyle={{ paddingBottom: 40 }}
-            columnWrapperStyle={{ justifyContent: 'space-between' }}
-            renderItem={({ item }) => (
-            <TouchableOpacity
-                style={styles.card}
-                onPress={() => router.push(item.route as Href)}
-
-            >
-                <Image source={item.image} style={styles.image} />
-                <Text style={styles.cardTitle}>{item.title}</Text>
+      
+      {/* 返回按钮 */}
+      <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+              <Ionicons name="arrow-back" size={24} color="#E5911B" />
+              <Text style={styles.backText}>Back</Text>
             </TouchableOpacity>
-            )}
-        />
-        </View>
-    );
-}
+          
+            <Text style={styles.title}>🎮 Game Zone</Text>
+            
+
+            <ScrollView contentContainerStyle={styles.grid}>
+              {games.map((game, index) => (
+                <TouchableOpacity
+                  key={index}
+                  style={styles.card}
+                  onPress={() => router.push(game.path as never)}
+                >
+                  <Image source={game.image} style={styles.cover} resizeMode="cover" />
+                  <Text style={styles.cardText}>{game.title}</Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          </View>
+        );
+      } 
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 60,
-    paddingHorizontal: 16,
-    backgroundColor: '#fff',
-  },
-  card: {
-    width: CARD_WIDTH,
-    marginBottom: 20,
-    borderRadius: 12,
-    backgroundColor: '#f9f9f9',
-    alignItems: 'center',
-    padding: 12,
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
-  image: {
+  cover: {
     width: '100%',
-    height: 100,
-    borderRadius: 8,
-    resizeMode: 'cover',
-    marginBottom: 8,
+    height: '70%',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
   },
-  cardTitle: {
-    fontSize: 16,
-    fontWeight: '600',
-    textAlign: 'center',
-    color: '#333',
-  },
+  header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 12 },
   backButton: {
     position: 'absolute',
-    top: 30,
-    left: 10,
+    top: 40,
+    left: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff4e6',
     paddingVertical: 6,
     paddingHorizontal: 12,
-    backgroundColor: '#444',
-    borderRadius: 8,
-    zIndex: 10,
+    borderRadius: 20,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOpacity: 0.08,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
   },
   backText: {
+    color: '#e67e22',
     fontSize: 16,
-    color: '#e2ac30',
-    fontWeight: 'bold',
+    fontWeight: '500',
+    marginLeft: 6,
   },
+  container: {
+    flex: 1,
+    backgroundColor: '#fffaf2',
+    paddingTop: 60,
+    paddingHorizontal: 16,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#e67e22',
+    alignSelf: 'center',
+  },
+  subtitle: {
+    fontSize: 16,
+    color: '#555',
+    alignSelf: 'center',
+    marginBottom: 20,
+  },
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    paddingBottom: 40,
+  },
+  card: {
+    width: '48%',
+    aspectRatio: 1,
+    backgroundColor: '#fff4e6',
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 6,
+    elevation: 4,
+  },
+  emoji: {
+    fontSize: 36,
+    marginBottom: 6,
+  },
+  cardText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#d35400',
+    textAlign: 'center',
+  },
+  searchInput: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    margin: 16,
+  },
+  avatar: { width: 48, height: 48, borderRadius: 24, backgroundColor: '#ccc' },
 });
-
-
