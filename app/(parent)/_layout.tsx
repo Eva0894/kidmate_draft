@@ -2,6 +2,21 @@ import { Stack } from 'expo-router';
 
 export default function MeLayout() {
   return (
+    <Stack
+      screenOptions={{
+        headerShown: false,
+        headerTitleAlign: 'center',
+        headerBackVisible: true, // ✅ 替代 headerBackTitleVisible
+        headerTintColor: '#D4A017',
+        headerStyle: {
+          backgroundColor: '#FDF8EC',
+        },
+        headerTitleStyle: {
+          fontWeight: 'bold',
+          color: '#333',
+        },
+      }}
+    />
 <Stack
   screenOptions={{
     headerShown: true,

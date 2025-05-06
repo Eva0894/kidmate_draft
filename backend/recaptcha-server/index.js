@@ -60,5 +60,5 @@ app.post('/api/login', async (req, res) => {
 
 // 启动服务
 app.listen(3000, '0.0.0.0', () => {
-  console.log('🚀 服务运行中: http://localhost:3000, 局域网: http://192.168.0.249:3000');
+  console.log('🚀 服务运行中: http://localhost:3000, 局域网: http://192.168.0.94:3000');
 });

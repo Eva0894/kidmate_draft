@@ -61,3 +61,11 @@ Additional features:
 Enjoyed this project? Learn to use React Native to build production-ready, native mobile apps for both iOS and Android based on your existing web development skills.
 
 <a href="https://galaxies.dev"><img src="banner.png" height="auto" width="100%"></a>
+
+# 启动指南
+
+## 启动 FastAPI（时长控制）
+```bash
+cd time-control-server
+source venv/bin/activate
+uvicorn main:app --reload

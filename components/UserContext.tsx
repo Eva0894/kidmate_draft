@@ -34,7 +34,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       } catch (e) {
         console.error('Unexpected error in fetchUser:', e);
       } finally {
-        setLoading(false);ß
+        setLoading(false);
       }
     };
 

@@ -1,0 +1,13 @@
+[
+    {
+      "user_id": "user123",
+      "date": "2025-05-01",
+      "duration_minutes": 45
+    },
+    {
+      "user_id": "user123",
+      "date": "2025-05-02",
+      "duration_minutes": 30
+    }
+  ]
+  
