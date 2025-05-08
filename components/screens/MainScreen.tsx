@@ -74,95 +74,117 @@ export default function MainScreen() {
   }
 
   return (
-    <ScrollView style={styles.container}>
-      {/* Header: Age selector + Logout */}
-      <View style={styles.topBar}>
-        <View style={{ position: 'relative' }}>
+    <View style={{ flex: 1 }}>
+      {/* Age dropdown 放在 ScrollView 外部，避免遮挡问题 */}
+      {showDropdown && (
+        <View
+          style={[
+            styles.dropdown,
+            {
+              position: 'absolute',
+              top: 70, // 根据你的实际布局可微调
+              left: 20,
+              zIndex: 100,
+            },
+          ]}
+        >
+          {AGE_OPTIONS.map((age) => (
+            <TouchableOpacity key={age} onPress={() => handleAgeSelect(age)}>
+              <Text style={styles.dropdownItem}>{age}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      )}
+  
+      {/* 主内容 ScrollView */}
+      <ScrollView style={styles.container}>
+        {/* Header: Age selector */}
+        <View style={styles.topBar}>
           <TouchableOpacity onPress={() => setShowDropdown(!showDropdown)} style={styles.ageTag}>
             <Text style={styles.ageText}>👤 {selectedAge} ⌄</Text>
           </TouchableOpacity>
-
-          {showDropdown && (
-            <View style={styles.dropdown}>
-              {AGE_OPTIONS.map((age) => (
-                <TouchableOpacity key={age} onPress={() => handleAgeSelect(age)}>
-                  <Text style={styles.dropdownItem}>{age}</Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          )}
+  
+          {/* 如果你想恢复退出按钮，可以放在这里 */}
+          {/* <TouchableOpacity onPress={handleSignOut} style={styles.logoutButton}>
+            <Text style={styles.logoutIcon}>⏏️</Text>
+          </TouchableOpacity> */}
         </View>
-
-        {/* <TouchableOpacity onPress={handleSignOut} style={styles.logoutButton}>
-          <Text style={styles.logoutIcon}>⏏️</Text>
-        </TouchableOpacity> */}
-      </View>
-
-      {/* Banner */}
-      <Image
-        source={require('@/assets/images/banner-image.png')}
-        style={styles.banner}
-      />
-      <Text style={styles.bannerText}>Hi! I'm your AI learning companion</Text>
-
-      {/* Navigation Icons */}
-      <View style={styles.iconRow}>
-        <TouchableOpacity onPress={() => router.push('/chat')}>
-          <Image source={require('@/assets/images/ai.png')} style={styles.iconImage} />
-          <Text style={styles.iconLabel}>AI</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity>
-          <Image source={require('@/assets/images/learning.png')} style={styles.iconImage} />
-          <Text style={styles.iconLabel}>Learning</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => router.push('/library')}>
-          <Image source={require('@/assets/images/library.png')} style={styles.iconImage} />
-          <Text style={styles.iconLabel}>Library</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => router.push('/reward')}>
-          <Image source={require('@/assets/images/reward.png')} style={styles.iconImage} />
-          <Text style={styles.iconLabel}>Reward</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Recommendation Header */}
-      <View style={styles.recommendHeader}>
-        <Text style={styles.recommendTitleText}>
-          Recommended Books for {selectedAge}
-        </Text>
-        <TouchableOpacity onPress={fetchRecommendedBooks} style={styles.refreshButton}>
-          <Text style={styles.refreshText}>🔄</Text>
-        </TouchableOpacity>
-      </View>
-
-      {/* Recommended Book List */}
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 40 }}>
-        {recommendedBooks.map((book) => (
-          <TouchableOpacity
-            key={book.id}
-            onPress={() => router.push(`/book/${book.id}`)}
-            style={styles.recommendCard}
-          >
-            <Image
-              source={{ uri: `${BACKEND_URL}${book.cover}` }}
-              style={styles.recommendCover}
-            />
-            <Text numberOfLines={2} style={styles.recommendBookTitle}>
-              {book.title}
-            </Text>
+  
+        {/* Banner */}
+        <Image
+          source={require('@/assets/images/banner-image.png')}
+          style={styles.banner}
+        />
+        <Text style={styles.bannerText}>Hi! I'm your AI learning companion</Text>
+  
+        {/* Navigation Icons */}
+        <View style={styles.iconRow}>
+          <TouchableOpacity onPress={() => router.push('/chat')}>
+            <Image source={require('@/assets/images/ai.png')} style={styles.iconImage} />
+            <Text style={styles.iconLabel}>AI</Text>
           </TouchableOpacity>
-        ))}
+  
+          <TouchableOpacity>
+            <Image source={require('@/assets/images/learning.png')} style={styles.iconImage} />
+            <Text style={styles.iconLabel}>Learning</Text>
+          </TouchableOpacity>
+  
+          <TouchableOpacity onPress={() => router.push('/library')}>
+            <Image source={require('@/assets/images/library.png')} style={styles.iconImage} />
+            <Text style={styles.iconLabel}>Library</Text>
+          </TouchableOpacity>
+  
+          <TouchableOpacity onPress={() => router.push('/reward')}>
+            <Image source={require('@/assets/images/reward.png')} style={styles.iconImage} />
+            <Text style={styles.iconLabel}>Reward</Text>
+          </TouchableOpacity>
+        </View>
+  
+        {/* Recommendation Header */}
+        <View style={styles.recommendHeader}>
+          <Text style={styles.recommendTitleText}>
+            Recommended Books for {selectedAge}
+          </Text>
+          <TouchableOpacity onPress={fetchRecommendedBooks} style={styles.refreshButton}>
+            <Text style={styles.refreshText}>🔄</Text>
+          </TouchableOpacity>
+        </View>
+  
+        {/* Recommended Book List */}
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 40 }}>
+          {recommendedBooks.map((book) => (
+            <TouchableOpacity
+              key={book.id}
+              onPress={() => router.push(`/book/${book.id}`)}
+              style={styles.recommendCard}
+            >
+              <Image
+                source={{ uri: `${BACKEND_URL}${book.cover}` }}
+                style={styles.recommendCover}
+              />
+              <Text numberOfLines={2} style={styles.recommendBookTitle}>
+                {book.title}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
       </ScrollView>
-    </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFFFFF', paddingTop: 20, paddingHorizontal: 20 },
-  loader: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  container: {
+    flex: 1,
+    backgroundColor: '#FAFAFA',
+    paddingTop: 20,
+    paddingHorizontal: 20,
+  },
+  loader: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   topBar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -170,15 +192,18 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   ageTag: {
-    backgroundColor: '#F0F0F0',
-    borderRadius: 18,
-    paddingHorizontal: 12,
-    paddingVertical: 5,
+    backgroundColor: '#FFF0D9',
+    borderRadius: 20,
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    borderWidth: 1,
+    borderColor: '#FFD580',
   },
   ageText: {
     fontSize: 14,
-    color: '#333',
-    fontWeight: '500',
+    color: '#444',
+    fontWeight: '600',
+    fontFamily: 'ChalkboardSE-Regular',
   },
   dropdown: {
     position: 'absolute',
@@ -192,27 +217,24 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 6,
-    zIndex: 999,
+    zIndex: 10,
   },
   dropdownItem: {
     paddingVertical: 8,
     fontSize: 14,
     color: '#333',
-  },
-  logoutButton: {
-    padding: 6,
-    marginRight: 4,
-  },
-  logoutIcon: {
-    fontSize: 20,
+    fontFamily: 'ChalkboardSE-Regular',
   },
   banner: {
     width: width - 40,
-    height: 140,
-    borderRadius: 20,
+    height: 120,
+    borderRadius: 16,
     marginTop: 10,
     alignSelf: 'center',
-    resizeMode: 'cover',
+    resizeMode: 'contain', 
+    backgroundColor: '#FFFDF4',
+    zIndex: 1,
+    position: 'relative',
   },
   bannerText: {
     textAlign: 'center',
@@ -220,11 +242,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: '#555',
+    fontFamily: 'ChalkboardSE-Regular',
   },
   iconRow: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginTop: 28,
+    marginBottom: 10,
   },
   iconImage: {
     width: 76,
@@ -233,6 +257,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF8E1',
     borderWidth: 1,
     borderColor: '#ddd',
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
   },
   iconLabel: {
     textAlign: 'center',
@@ -240,6 +268,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 14,
     color: '#333',
+    fontFamily: 'ChalkboardSE-Regular',
   },
   recommendHeader: {
     flexDirection: 'row',
@@ -252,13 +281,17 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: '#333',
+    fontFamily: 'ChalkboardSE-Regular',
   },
   refreshButton: {
-    paddingHorizontal: 8,
-    paddingVertical: 4,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    backgroundColor: '#FFECB3',
+    borderRadius: 20,
   },
   refreshText: {
-    fontSize: 20,
+    fontSize: 18,
+    fontWeight: '600',
   },
   recommendCard: {
     width: 120,
@@ -268,8 +301,12 @@ const styles = StyleSheet.create({
   recommendCover: {
     width: 100,
     height: 130,
-    borderRadius: 8,
+    borderRadius: 12,
     backgroundColor: '#eee',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 4 },
   },
   recommendBookTitle: {
     marginTop: 6,
@@ -278,5 +315,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#333',
     width: 100,
+    fontFamily: 'ChalkboardSE-Regular',
   },
 });

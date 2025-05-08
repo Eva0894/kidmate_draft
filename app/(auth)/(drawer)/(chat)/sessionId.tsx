@@ -9,6 +9,7 @@ import {
 import { useLocalSearchParams } from 'expo-router';
 import ChatMessage from '@/components/ChatMessage'; 
 
+// const BACKEND_HTTP = 'http://localhost:8000';
 const BACKEND_HTTP = 'http://localhost:8000';
 
 type Message = {

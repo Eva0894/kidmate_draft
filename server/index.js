@@ -2,15 +2,16 @@ import express from 'express';
 import axios from 'axios';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import qs from 'qs';
 
-dotenv.config(); // 加载 .env 配置
+dotenv.config(); 
 
 const app = express();
 const PORT = 3000;
 
 // 中间件
-app.use(cors()); // 允许跨域
-app.use(express.json()); // 解析 JSON 请求体
+app.use(cors());
+app.use(express.json());
 
 app.get('/', (req, res) => {
   res.send('✅ Server is running! You reached the backend.');
@@ -22,43 +23,52 @@ app.use((req, res, next) => {
   next();
 });
 
-// 登录接口（验证 reCAPTCHA）
+// 登录接口（验证 hCaptcha）
 app.post('/api/login', async (req, res) => {
   console.log('📩 收到 /api/login 请求');
   console.log('📦 请求内容:', req.body);
   const { token } = req.body;
 
+  console.log('🔍 前端传入的 token:', token);
+  console.log('🔍 从 .env 中读取的 HCAPTCHA_SECRET_KEY:', process.env.HCAPTCHA_SECRET_KEY);
+
   if (!token) {
-    return res.status(400).json({ success: false, message: 'Missing reCAPTCHA token' });
+    return res.status(400).json({ success: false, message: 'Missing hCaptcha token' });
   }
 
   try {
-    const { data } = await axios.post('https://www.google.com/recaptcha/api/siteverify', null, {
-      params: {
-        secret: process.env.RECAPTCHA_SECRET_KEY,
-        response: token,
-      },
-    });
 
-    console.log('Google reCAPTCHA 验证结果:', data);
+    const { data } = await axios.post('https://hcaptcha.com/siteverify',
+      qs.stringify({
+        secret: process.env.HCAPTCHA_SECRET_KEY,
+        response: token
+      }),
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }
+    );
+
+    console.log('🧠 hCaptcha 验证结果:', data);
 
     if (!data.success) {
       return res.status(403).json({
         success: false,
-        message: 'reCAPTCHA verification failed',
+        message: 'hCaptcha verification failed',
         errors: data['error-codes'],
       });
     }
 
-    return res.json({ success: true, message: 'Login verified via reCAPTCHA' });
+    return res.json({ success: true, message: 'Login verified via hCaptcha' });
 
   } catch (error) {
-    console.error('🚨 reCAPTCHA 验证出错:', error);
+    console.error('🚨 hCaptcha 验证出错:', error);
     return res.status(500).json({ success: false, message: 'Server error' });
   }
 });
 
 // 启动服务
 app.listen(3000, '0.0.0.0', () => {
-  console.log('🚀 服务运行中: http://localhost:3000, 局域网: http://192.168.0.249:3000');
+  console.log('🚀 服务运行中: http://localhost:3000');
 });

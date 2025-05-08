@@ -1,22 +1,23 @@
 {
     "name": "kidmate-server",
     "version": "1.0.0",
-    "description": "Google reCAPTCHA Backend login verification service",
+    "description": "hCaptcha Backend login verification service",
     "main": "index.js",
     "type": "module",
     "scripts": {
-      "start": "node index.js",
-      "dev": "nodemon index.js"
+        "start": "node index.js",
+        "dev": "nodemon index.js"
     },
     "dependencies": {
-      "axios": "^1.6.7",
-      "dotenv": "^16.3.1",
-      "express": "^4.18.2"
+        "axios": "^1.6.7",
+        "dotenv": "^16.3.1",
+        "express": "^4.18.2",
+        "qs": "^6.14.0"
     },
     "devDependencies": {
-      "nodemon": "^3.0.2"
+        "nodemon": "^3.0.2"
     },
     "keywords": [],
     "author": "kidmate",
     "license": "MIT"
-  }
+}

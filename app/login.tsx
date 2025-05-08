@@ -32,72 +32,72 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [showCaptcha, setShowCaptcha] = useState(false);
-  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
+  const [hcaptchaToken, setHcaptchaToken] = useState<string | null>(null);
 
   useEffect(() => {
-    if (recaptchaToken) {
+    if (hcaptchaToken) {
       console.log('🚀 触发 handleLogin()');
       handleLogin();
       console.log('✅ BASE_URL:', BASE_URL);
     }
-  }, [recaptchaToken]);
+  }, [hcaptchaToken]);
 
   const handleCaptchaMessage = (event: any) => {
     const token = event.nativeEvent.data;
-    console.log('✅ reCAPTCHA token:', token);
-    setRecaptchaToken(token);
+    console.log('✅ hCaptcha token:', token);  
+    setHcaptchaToken(token);                 
     setShowCaptcha(false);
     console.log('📡 正在请求:', `${BASE_URL}/api/login`);
   };
 
   const handleLogin = async () => {
-    if (!recaptchaToken) {
+    if (!hcaptchaToken) {
       Alert.alert('Please pass the human-machine verification first');
       setShowCaptcha(true);
       return;
     }
-  
+    
     setLoading(true);
-  
+    
     try {
       console.log('🚀 触发 handleLogin()');
-      console.log('✅ reCAPTCHA token:', recaptchaToken);
-  
-      // Step 1️⃣: 后端验证 reCAPTCHA
+      console.log('✅ hCaptcha token:', hcaptchaToken);
+    
+      // Step 1️⃣: 后端验证 hCaptcha
       const result = await post('/api/login', {
-        token: recaptchaToken,
-        email, // optional
+        token: hcaptchaToken,
+        email, 
       });
-  
+    
       if (!result.success) {
         Alert.alert('人机验证失败', result.message || '请重试');
         return;
       }
-  
+    
       // Step 2️⃣: Supabase 账号密码登录
-      console.log('🟢 reCAPTCHA 成功，开始 Supabase 登录:', email);
+      console.log('🟢 hCaptcha 成功，开始 Supabase 登录:', email);
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
-  
+    
       if (error) {
         console.log('🔴 登录失败:', error.message);
         Alert.alert('Login failed', error.message);
         return;
       }
-  
+    
       const sessionUser = data.session?.user;
-  
+    
       if (!sessionUser) {
         Alert.alert('Login error', 'No session user found.');
         return;
       }
-  
+    
       Alert.alert('Login Successfully! ', 'Welcome back!');
       console.log('✅ 登录成功, user ID:', sessionUser.id);
       router.replace('/(tabs)/main');
-  
+    
     } catch (err) {
       console.error('❌ 登录流程出错:', err);
       const error = err as Error;
@@ -155,14 +155,10 @@ const Login = () => {
 
         <Modal isVisible={showCaptcha}>
           <View style={{ flex: 1, backgroundColor: '#fff', borderRadius: 10, overflow: 'hidden' }}>
-            {/* <WebView
-              source={{ uri: 'https://kidmate-recaptcha-nmiht0pkh-evas-projects-d1ccc46f.vercel.app' }}
-              onMessage={handleCaptchaMessage}
-            /> */}
-            <WebView
-              source={{ uri: 'https://kidmate-recaptcha.vercel.app' }}
-              onMessage={handleCaptchaMessage}
-            />
+          <WebView
+            source={{ uri: 'https://hcaptcha-vercel-cl3wxii3c-evas-projects-d1ccc46f.vercel.app/hcaptcha.html' }}
+            onMessage={handleCaptchaMessage}
+          />
           </View>
         </Modal>
       </KeyboardAvoidingView>
