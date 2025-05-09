@@ -17,7 +17,7 @@ import * as FileSystem from 'expo-file-system';
 import * as Network from 'expo-network';
 
 const { width } = Dimensions.get('window');
-const BACKEND_URL = 'http://localhost:8000';
+const BACKEND_URL = 'http://10.16.112.171:8000';
 
 const categories = [
   { title: 'Story', image: require('../../assets/images/story.png') },

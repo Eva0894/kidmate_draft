@@ -1,49 +1,32 @@
-import Colors from '@/constants/Colors';
-import { Ionicons } from '@expo/vector-icons';
-import {Stack, useRouter} from 'expo-router';
-import { TouchableOpacity } from 'react-native';
+// app/(auth)/_layout.tsx
+import { Stack, useRouter, Slot } from 'expo-router';
+import { useEffect } from 'react';
+import * as Linking from 'expo-linking';
 
-const Layout = () => {
+export default function AuthLayout() {
   const router = useRouter();
-  
+
+  // ✅ Deep Link 监听，跳转到 reset-password 页面
+  useEffect(() => {
+    const handleDeepLink = ({ url }: { url: string }) => {
+      const parsed = Linking.parse(url);
+      console.log('📩 Deep Link URL:', url);
+      console.log('🔍 Parsed:', parsed);
+
+      if (parsed.path === 'reset-password') {
+        router.replace('/reset-password'); 
+      }
+    };
+
+    const subscription = Linking.addEventListener('url', handleDeepLink);
+    return () => subscription.remove();
+  }, []);
+
   return (
-    <Stack>
-      <Stack.Screen name="(drawer)" options={{ headerShown: false }} />
-      <Stack.Screen
-            name="(modal)/settings"
-            options={{
-              headerTitle: 'Settings',
-              presentation: 'modal',
-              headerShadowVisible: false,
-              headerStyle: { backgroundColor: Colors.selected },
-              headerRight: () => (
-                <TouchableOpacity
-                  onPress={() => router.back()}
-                  style={{ backgroundColor: Colors.greyLight, borderRadius: 20, padding: 4 }}>
-                  <Ionicons name="close-outline" size={16} color={Colors.grey} />
-                </TouchableOpacity>
-              ),
-            }}
-          />
-          <Stack.Screen
-            name="(modal)/image/[url]"
-            options={{
-              headerTitle: '',
-              presentation: 'fullScreenModal',
-              headerBlurEffect: 'dark',
-              headerStyle: { backgroundColor: 'rgba(0,0,0,0.4)' },
-              headerTransparent: true,
-              headerShadowVisible: false,
-              headerLeft: () => (
-                <TouchableOpacity
-                  onPress={() => router.back()}
-                  style={{ borderRadius: 20, padding: 4 }}>
-                  <Ionicons name="close-outline" size={28} color={'#fff'} />
-                </TouchableOpacity>
-              ),
-            }}
-          />
-    </Stack>
+    <Stack
+      screenOptions={{
+        headerShown: false, // 👈 隐藏顶部导航栏
+      }}
+    />
   );
 }
-export default Layout;

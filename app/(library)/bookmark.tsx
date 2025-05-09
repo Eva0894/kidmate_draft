@@ -8,7 +8,7 @@ import libStyles from './libStyles';
 
 const BACKEND_URL =
   Platform.OS === 'ios'
-    ? 'http://localhost:8000' // 你可以改成实际 IP
+    ? 'http://10.19.172.188:8000' // 你可以改成实际 IP
     : 'http://192.168.10.117:8000';
 
 type Bookmark = { book_id: string; page_index: number };

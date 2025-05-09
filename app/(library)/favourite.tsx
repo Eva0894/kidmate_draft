@@ -21,7 +21,7 @@ import { BASE_URL, post } from '@/utils/api';
 // 根据平台设置 API 地址
 const BACKEND_URL =
 Platform.OS === 'ios'
-  ? 'http://localhost:8000'
+  ? 'http://10.19.172.188:8000'
   : 'http://10.0.2.2:8000';
 
 console.log('Using API URL:', BACKEND_URL);
