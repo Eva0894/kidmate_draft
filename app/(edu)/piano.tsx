@@ -9,11 +9,11 @@ import * as FileSystem from 'expo-file-system';
 
 const BASE_URL = 'https://dgizrlyymkxenkeddmdj.supabase.co/storage/v1/object/public/piano-sounds';
 const noteSoundMap: Record<string, string> = {
-  'C2': `${BASE_URL}/D2.mp3`,
-  'D2': `${BASE_URL}/D2.mp3`,
-  'E2': `${BASE_URL}/E2.mp3`,
+  'C2': `${BASE_URL}/C2.wav`,
+  'D2': `${BASE_URL}/D2.wav`,
+  'E2': `${BASE_URL}/E2.wav`,
   'F2': `${BASE_URL}/F2.mp3`,
-  'G2': `${BASE_URL}/G2.mp3`,
+  'G2': `${BASE_URL}/G2.wav`,
   'A2': `${BASE_URL}/A2.mp3`,
   'B2': `${BASE_URL}/B2.mp3`,
 
@@ -80,9 +80,12 @@ export default function MusicScreen() {
       console.log('准备播放:', note);
       setActiveNote(note);
   
-      const localUri = `${FileSystem.cacheDirectory}${note}.mp3`;
+      // 动态提取文件扩展名
+      const extensionMatch = url.match(/\.(\w+)$/);
+      const extension = extensionMatch ? extensionMatch[1] : 'mp3';
+      const localUri = `${FileSystem.cacheDirectory}${note}.${extension}`;
   
-      // 如果已经缓存，直接用缓存文件
+      // 检查缓存
       const fileInfo = await FileSystem.getInfoAsync(localUri);
       if (!fileInfo.exists) {
         console.log('开始下载:', url);
