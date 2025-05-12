@@ -116,20 +116,6 @@ const Login = () => {
 
   return (
     <ImageBackground source={backgroundImage} style={styles.background}>
-      <TouchableOpacity
-        style={styles.loginButton}
-        onPress={() => {
-          console.log('🟢 点击登录按钮，打开 hCaptcha 验证');
-          setShowCaptcha(true);
-        }}
-        disabled={loading}
-      >
-        {loading ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text style={styles.loginButtonText}>Login</Text>
-        )}
-      </TouchableOpacity>
         <TouchableOpacity onPress={() => router.back()} >
           <Ionicons name="arrow-back" size={32} color="#E5911B" marginTop={40}/>
         </TouchableOpacity>
@@ -173,7 +159,32 @@ const Login = () => {
         <Modal isVisible={showCaptcha}>
           <View style={{ flex: 1, backgroundColor: '#fff', borderRadius: 10, overflow: 'hidden' }}>
           <WebView
-            source={{ uri: 'https://hcaptcha-vercel-cl3wxii3c-evas-projects-d1ccc46f.vercel.app/hcaptcha.html' }}
+            source={{ uri: 'https://hcaptcha-vercel.vercel.app/hcaptcha.html' }}
+            originWhitelist={['*']}
+            javaScriptEnabled={true}
+            domStorageEnabled={true}
+            startInLoadingState={true}
+            userAgent="Mozilla/5.0 (Linux; Android 10; Emulator) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.99 Mobile Safari/537.36"
+            onError={(syntheticEvent) => {
+              const { nativeEvent } = syntheticEvent;
+              console.error('WebView error: ', nativeEvent);
+            }}
+            onHttpError={(syntheticEvent) => {
+              const { nativeEvent } = syntheticEvent;
+              console.error('WebView HTTP error: ', nativeEvent);
+            }}
+            onLoadEnd={() => {
+              console.log('WebView finished loading.');
+            }}
+            onLoad={() => {
+              console.log('WebView started loading.');
+            }}
+            onLoadStart={() => {
+              console.log('WebView load start.');
+            }}
+            onNavigationStateChange={(navState) => {
+              console.log('WebView navigation state:', navState.url);
+            }}
             onMessage={handleCaptchaMessage}
           />
           </View>

@@ -9,7 +9,7 @@ export const getAuthBackendUrl = (): string => {
     if (Platform.OS === 'ios') {
       return Constants.expoConfig?.extra?.AUTH_BACKEND_URL || 'http://localhost:3000';
     } else if (Platform.OS === 'android') {
-      return 'http://10.0.2.2:3000';  // Android 模拟器特有
+      return Constants.expoConfig?.extra?.AUTH_BACKEND_URL_ANDROID || 'http://10.0.2.2:3000';
     }
   }
   return Constants.expoConfig?.extra?.AUTH_BACKEND_URL || 'http://localhost:3000';
@@ -21,12 +21,12 @@ export const getAuthBackendUrl = (): string => {
 export const getBackendUrl = (): string => {
   if (__DEV__) {
     if (Platform.OS === 'ios') {
-      return Constants.expoConfig?.extra?.BACKEND_URL || 'http://localhost:8000';
+      return Constants.expoConfig?.extra?.BOOK_BACKEND_URL || 'http://localhost:8000';
     } else if (Platform.OS === 'android') {
-      return 'http://10.0.2.2:8000';  // Android 模拟器特有
+      return Constants.expoConfig?.extra?.BOOK_BACKEND_URL_ANDROID || 'http://10.0.2.2:8000';
     }
   }
-  return Constants.expoConfig?.extra?.BACKEND_URL || 'http://localhost:8000';
+  return Constants.expoConfig?.extra?.BOOK_BACKEND_URL || 'http://localhost:8000';
 };
 
 /**
