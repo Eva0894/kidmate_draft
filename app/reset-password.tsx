@@ -28,21 +28,25 @@ export default function ResetPasswordPage() {
       Alert.alert('Invalid Email', 'Please enter a valid email address.');
       return;
     }
-
+  
     setLoading(true);
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      // redirectTo: 'kidmate://reset-password',
-      redirectTo: 'exp://192.168.0.249:8081/reset-password',//暂时
-      });
+      redirectTo: 'exp://192.168.0.249:8081/reset-password', // 暂时
+    });
     setLoading(false);
-
-    if (error?.message.includes('User not found')) {
-      Alert.alert('Error', 'The email address is not registered. Please check the email address.');
+  
+    if (error) {
+      if (error.message.includes('User not found')) {
+        Alert.alert('Invalid Email', 'The email address is not registered. Please enter a valid email.');
+      } else {
+        console.error('Unexpected error:', error.message);
+        Alert.alert('Error', 'Something went wrong. Please try again later.');
+      }
       return;
-    } else {
-      Alert.alert('Success', '📩 Password reset link sent. Please check your email.');
-      router.replace('/(auth)/login');
     }
+  
+    Alert.alert('Success', '📩 Password reset link sent. Please check your email.');
+    router.replace('/(auth)/login');
   };
 
   return (
