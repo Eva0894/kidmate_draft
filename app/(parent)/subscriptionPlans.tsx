@@ -12,7 +12,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { supabase } from '@/utils/Supabase';
-import { getUserIdSafe } from '@/utils/userHelpers';
+import { getUserIdSafe } from '../../utils/userHelpers';
 
 export default function SubscriptionPlansPage() {
   const router = useRouter();
@@ -65,7 +65,7 @@ export default function SubscriptionPlansPage() {
   const plans = [
     {
       name: 'Basic Plan',
-      price: '¥0 / month',
+      price: '$0 / month',
       color: '#8BC34A',
       features: [
         'Access first 2 books in each category',
@@ -90,7 +90,7 @@ export default function SubscriptionPlansPage() {
     },
     {
       name: 'Premium Plan',
-      price: '¥25 / quarter or ¥88 / year',
+      price: '$25 / quarter or $88 / year',
       color: '#42A5F5',
       features: [
         'Unlimited access to all books',

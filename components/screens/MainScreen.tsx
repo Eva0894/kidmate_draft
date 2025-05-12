@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -13,7 +13,6 @@ import { router } from 'expo-router';
 import { supabase } from '@/utils/Supabase';
 import { getBackendUrl } from '@/utils/api'; 
 
-
 const { width } = Dimensions.get('window');
 const BACKEND_URL = getBackendUrl();
 
@@ -27,6 +26,25 @@ type Book = {
 export default function MainScreen() {
   const [loading, setLoading] = useState(true);
   const [recommendedBooks, setRecommendedBooks] = useState<Book[]>([]);
+
+  // banner
+  const [currentBanner, setCurrentBanner] = useState(0);
+  const banners = [
+    require('@/assets/images/banner1.png'),
+    require('@/assets/images/ad1.png'),
+    require('@/assets/images/ad2.png'),
+  ];
+  const scrollViewRef = useRef<ScrollView>(null);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const nextIndex = (currentBanner + 1) % banners.length;
+      setCurrentBanner(nextIndex);
+      scrollViewRef.current?.scrollTo({ x: nextIndex * width, animated: true });
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [currentBanner, banners.length]);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -57,11 +75,48 @@ export default function MainScreen() {
   return (
     <ScrollView style={styles.container}>
       {/* Banner */}
-      <Image
-        source={require('@/assets/images/banner-image.png')}
-        style={styles.banner}
-        resizeMode="cover"
-      />
+      <ScrollView
+        ref={scrollViewRef}
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        onScroll={(event) => {
+          const index = Math.round(event.nativeEvent.contentOffset.x / width);
+          setCurrentBanner(index);
+        }}
+        scrollEventThrottle={16}
+        style={styles.bannerContainer}
+      >
+        {banners.map((banner, index) => (
+          <TouchableOpacity
+            key={index}
+            activeOpacity={0.9}
+            onPress={() => {
+              if (index === 1 || index === 2) {
+                router.push('/(parent)/subscription');
+              }
+            }}
+          >
+            <Image
+              source={banner}
+              style={styles.banner}
+              resizeMode="cover"
+            />
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+
+      <View style={styles.dotsContainer}>
+        {banners.map((_, index) => (
+          <View
+            key={index}
+            style={[
+              styles.dot,
+              currentBanner === index && styles.activeDot,
+            ]}
+          />
+        ))}
+      </View>
 
 
       {/* Icon Row */}
@@ -117,8 +172,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   banner: {
-    width: '100%',
-    height: 182,
+    width: width - 40, 
+    height: (width - 40) * 1024 / 1536, 
     borderRadius: 12,
     marginBottom: 16,
   },
@@ -197,5 +252,27 @@ const styles = StyleSheet.create({
     color: '#333',
     width: 100,
     fontFamily: Platform.select({ ios: 'ChalkboardSE-Regular', android: 'casual' }),
+  },
+  bannerContainer: {
+    width: '100%',
+    height: 260,
+    borderRadius: 12,
+    marginTop: 10,    
+    marginBottom: 10, 
+  },
+  dotsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 8,
+  },
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#ddd',
+    marginHorizontal: 4,
+  },
+  activeDot: {
+    backgroundColor: '#E5911B',
   },
 });
