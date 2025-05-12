@@ -38,7 +38,8 @@ const Login = () => {
     if (hcaptchaToken) {
       console.log('🚀 触发 handleLogin()');
       handleLogin();
-      console.log('✅ BASE_URL:', getAuthBackendUrl);
+      console.log('✅ hCaptcha token:', hcaptchaToken);
+      console.log('✅ BASE_URL:', getAuthBackendUrl());
     }
   }, [hcaptchaToken]);
 
@@ -115,6 +116,20 @@ const Login = () => {
 
   return (
     <ImageBackground source={backgroundImage} style={styles.background}>
+      <TouchableOpacity
+        style={styles.loginButton}
+        onPress={() => {
+          console.log('🟢 点击登录按钮，打开 hCaptcha 验证');
+          setShowCaptcha(true);
+        }}
+        disabled={loading}
+      >
+        {loading ? (
+          <ActivityIndicator color="#fff" />
+        ) : (
+          <Text style={styles.loginButtonText}>Login</Text>
+        )}
+      </TouchableOpacity>
         <TouchableOpacity onPress={() => router.back()} >
           <Ionicons name="arrow-back" size={32} color="#E5911B" marginTop={40}/>
         </TouchableOpacity>

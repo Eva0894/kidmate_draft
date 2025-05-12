@@ -14,6 +14,7 @@ import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/dat
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { supabase } from '../../utils/Supabase';
+import Modal from 'react-native-modal';
 
 
 export default function RegisterScreen() {
@@ -27,6 +28,7 @@ export default function RegisterScreen() {
   const [showPicker, setShowPicker] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [showPolicyModal, setShowPolicyModal] = useState(true);
 
 
   const handleRegister = async () => {
@@ -161,6 +163,27 @@ export default function RegisterScreen() {
               {loading ? 'Registering...' : 'Register'}
             </Text>
           </TouchableOpacity>
+          <Modal isVisible={showPolicyModal} backdropOpacity={0.7} animationIn="fadeInUp" animationOut="fadeOutDown">
+            <View style={styles.modalContainer}>
+              <Text style={styles.modalTitle}>Privacy & Terms</Text>
+              <Text style={styles.modalMessage}>
+                Please review and accept our Privacy Policy & Terms of Service to continue using the app.
+              </Text>
+
+              {/* View Full Policy Link */}
+              <TouchableOpacity onPress={() => router.push('/privacy')}>
+                <Text style={styles.policyLinkText}>View Full Policy</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.agreeButton} onPress={() => setShowPolicyModal(false)}>
+                <Text style={styles.agreeButtonText}>Agree and Continue</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.disagreeButton} onPress={() => router.replace('/')}>
+                <Text style={styles.disagreeButtonText}>Disagree and Exit</Text>
+              </TouchableOpacity>
+            </View>
+          </Modal>
         </View>
       </ScrollView>
     </ImageBackground>
@@ -233,5 +256,62 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 16,
     paddingTop: 16,
+  },
+  modalContainer: {
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    padding: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 16,
+    textAlign: 'center',
+    color: '#333',
+  },
+  modalMessage: {
+    fontSize: 16,
+    color: '#666',
+    textAlign: 'center',
+    marginBottom: 24,
+    lineHeight: 22,
+  },
+  agreeButton: {
+    backgroundColor: '#E5911B',
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 30,
+    width: '100%',
+    marginBottom: 12,
+  },
+  agreeButtonText: {
+    color: '#fff',
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  disagreeButton: {
+    borderColor: '#E5911B',
+    borderWidth: 1,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 30,
+    width: '100%',
+  },
+  disagreeButtonText: {
+    color: '#E5911B',
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  policyLinkText: {
+    color: '#E5911B',
+    textDecorationLine: 'underline',
+    marginBottom: 16,
+    fontSize: 14,
+    textAlign: 'center',
+    fontWeight: '500',
   },
 });

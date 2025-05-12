@@ -50,6 +50,11 @@ export const getBookWsUrl = (): string => {
  * @param baseUrl 可选自定义 URL（默认用 Auth 后端）
  */
 export const post = async (path: string, data: any, baseUrl: string = getAuthBackendUrl()) => {
+  // print the request URL
+  const finalPath = path.startsWith('/') ? path : `/${path}`;
+  const finalUrl = `${baseUrl}${finalPath}`;
+  console.log('🟢 实际请求地址:', finalUrl);
+  console.log('📦 请求数据:', data);
   try {
     const res = await fetch(`${baseUrl}${path}`, {
       method: 'POST',
