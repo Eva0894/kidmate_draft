@@ -1,33 +1,57 @@
-// utils/api.ts
+import Constants from 'expo-constants';
 import { Platform } from 'react-native';
 
-// Dynamically obtain the backend address
-export const getBackendUrl = () => {
+/**
+ * 登录/注册/验证码（Node.js 服务，3000 端口）
+ */
+export const getAuthBackendUrl = (): string => {
   if (__DEV__) {
-    // Development Environment
     if (Platform.OS === 'ios') {
-      // return 'http://192.168.0.249:3000';
-      return 'http://localhost:3000';
-    } else {
-      return 'http://10.0.2.2:3000';
+      return Constants.expoConfig?.extra?.AUTH_BACKEND_URL || 'http://localhost:3000';
+    } else if (Platform.OS === 'android') {
+      return 'http://10.0.2.2:3000';  // Android 模拟器特有
     }
-  } else {
-    // Production Environment
-    return 'https://your-production-api.com'; // Change to my domain name after going online
   }
+  return Constants.expoConfig?.extra?.AUTH_BACKEND_URL || 'http://localhost:3000';
 };
 
-export const BASE_URL = getBackendUrl();
+/**
+ * 图书/阅读相关（FastAPI 服务，8000 端口）
+ */
+export const getBackendUrl = (): string => {
+  if (__DEV__) {
+    if (Platform.OS === 'ios') {
+      return Constants.expoConfig?.extra?.BACKEND_URL || 'http://localhost:8000';
+    } else if (Platform.OS === 'android') {
+      return 'http://10.0.2.2:8000';  // Android 模拟器特有
+    }
+  }
+  return Constants.expoConfig?.extra?.BACKEND_URL || 'http://localhost:8000';
+};
 
 /**
- * 封装POST请求
+ * WebSocket 地址获取（Node.js）
+ */
+export const getAuthWsUrl = (): string => {
+  return Constants.expoConfig?.extra?.AUTH_BACKEND_WS || 'ws://localhost:3000';
+};
+
+/**
+ * WebSocket 地址获取（FastAPI）
+ */
+export const getBookWsUrl = (): string => {
+  return Constants.expoConfig?.extra?.BACKEND_WS || 'ws://localhost:8000';
+};
+
+/**
+ * 通用 POST 请求封装（可用于登录）
  * @param path 接口路径，比如 '/api/login'
  * @param data 请求体
- * @returns 返回JSON对象
+ * @param baseUrl 可选自定义 URL（默认用 Auth 后端）
  */
-export const post = async (path: string, data: any) => {
+export const post = async (path: string, data: any, baseUrl: string = getAuthBackendUrl()) => {
   try {
-    const res = await fetch(`${BASE_URL}${path}`, {
+    const res = await fetch(`${baseUrl}${path}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
@@ -42,7 +66,6 @@ export const post = async (path: string, data: any) => {
     const result = await res.json();
     console.log('✅ 返回结果:', result);
     return result;
-
   } catch (error) {
     console.error('❌ 请求失败:', error);
     throw error;

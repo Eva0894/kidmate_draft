@@ -5,11 +5,13 @@ import {
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import libStyles from './libStyles';
+import { getBackendUrl } from '@/utils/api'; 
 
-const BACKEND_URL =
-  Platform.OS === 'ios'
-    ? 'http://10.19.172.188:8000' // 你可以改成实际 IP
-    : 'http://192.168.10.117:8000';
+// const BACKEND_URL =
+//   Platform.OS === 'ios'
+//     ? 'http://localhost:8000' 
+//     : 'http://192.168.10.117:8000';
+const BACKEND_URL = getBackendUrl();
 
 type Bookmark = { book_id: string; page_index: number };
 type Book = { id: string; title: string; cover?: string };
@@ -61,7 +63,7 @@ export default function BookmarksScreen() {
         style={styles.item}
         onPress={() =>
           router.push({
-            pathname: '/(library)/bookId',
+            pathname: '/(library)/[bookId]',
             params: { bookId: item.book_id, page: String(item.page_index) },
           })
         }

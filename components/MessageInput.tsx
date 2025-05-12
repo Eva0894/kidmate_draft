@@ -9,8 +9,9 @@ import {
 import { FontAwesome } from '@expo/vector-icons';
 import * as FileSystem from 'expo-file-system';
 import { Audio } from 'expo-av';
+import { getBackendUrl } from '@/utils/api';
 
-const BACKEND_URL = 'http://localhost:8000'; // 你的后端地址
+const BACKEND_URL = getBackendUrl();
 
 export type Props = {
   onShouldSend: (message: string) => void;

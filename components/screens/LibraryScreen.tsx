@@ -15,9 +15,10 @@ import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import * as FileSystem from 'expo-file-system';
 import * as Network from 'expo-network';
+import { getBackendUrl } from '@/utils/api'; 
 
 const { width } = Dimensions.get('window');
-const BACKEND_URL = 'http://10.16.112.171:8000';
+const BACKEND_URL = getBackendUrl();
 
 const categories = [
   { title: 'Story', image: require('../../assets/images/story.png') },
@@ -100,7 +101,7 @@ export default function LibraryScreen() {
   const handleRecentPress = async (bookId: string, pageIndex: number) => {
     if (!isOffline) {
       router.push({
-        pathname: '/(library)/bookId',
+        pathname: '/(library)/[bookId]',
         params: {
           bookId,
           page: String(pageIndex || 0),
@@ -119,7 +120,7 @@ export default function LibraryScreen() {
     }
 
     router.push({
-      pathname: '/(library)/bookId',
+      pathname: '/(library)/[bookId]',
       params: {
         bookId,
         page: String(pageIndex || 0),
@@ -161,11 +162,13 @@ export default function LibraryScreen() {
           <TouchableOpacity
             key={index}
             style={styles.catItem}
+            // onPress={() =>
+            //   router.push({
+            //     pathname: '/(library)/category/[category]',
+            //     params: { category: cat.title.toLowerCase() },
+            //   })
             onPress={() =>
-              router.push({
-                pathname: '/(library)/[category]',
-                params: { category: cat.title.toLowerCase() },
-              })
+              router.push(`/(library)/category/${cat.title.toLowerCase()}`)
             }
           >
             <Image source={cat.image} style={styles.catImage} />

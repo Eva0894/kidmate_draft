@@ -8,9 +8,9 @@ import {
 } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import ChatMessage from '@/components/ChatMessage'; 
+import { getBackendUrl } from '@/utils/api';
 
-// const BACKEND_HTTP = 'http://localhost:8000';
-const BACKEND_HTTP = 'http://localhost:8000';
+const BACKEND_HTTP = getBackendUrl();
 
 type Message = {
   role: 'user' | 'bot';

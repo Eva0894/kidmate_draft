@@ -20,7 +20,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { WebView } from 'react-native-webview';
 import Modal from 'react-native-modal';
 import { useEffect } from 'react';
-import { BASE_URL, post } from '@/utils/api';
+import { getAuthBackendUrl, post } from '@/utils/api';
 
 const backgroundImage = require('@/assets/images/login-bg.jpg');
 
@@ -38,7 +38,7 @@ const Login = () => {
     if (hcaptchaToken) {
       console.log('🚀 触发 handleLogin()');
       handleLogin();
-      console.log('✅ BASE_URL:', BASE_URL);
+      console.log('✅ BASE_URL:', getAuthBackendUrl);
     }
   }, [hcaptchaToken]);
 

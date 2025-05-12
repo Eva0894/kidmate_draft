@@ -17,9 +17,12 @@ import MessageInput from '@/components/MessageInput';
 import MessageIdeas from '@/components/MessageIdeas';
 import ChatMessage from '@/components/ChatMessage';
 import { supabase } from '@/utils/Supabase';
+import { getBackendUrl, getBookWsUrl } from '@/utils/api';
 
-const BACKEND_WS = 'ws://localhost:8000/api/chat/ws/chat';
-const BACKEND_HTTP = 'http://localhost:8000';
+// const BACKEND_WS = 'ws://localhost:8000/api/chat/ws/chat';
+// const BACKEND_HTTP = 'http://localhost:8000';
+const BACKEND_HTTP = getBackendUrl();
+const BACKEND_WS = `${getBookWsUrl()}/api/chat/ws/chat`;
 
 type Message = {
   role: 'user' | 'bot';

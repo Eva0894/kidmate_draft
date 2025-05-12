@@ -13,16 +13,22 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import { getBackendUrl } from '@/utils/api'; 
 
-const BACKEND_URL =
-  Platform.OS === 'ios'
-    ? 'http://10.19.172.188:8000'
-    : 'http://10.0.2.2:8000';
+const BACKEND_URL = getBackendUrl();
 
 const { width } = Dimensions.get('window');
 
+// ✅ 添加类型定义
+type Book = {
+  id: string;
+  title: string;
+  cover: string;
+  // 可以根据需要继续添加字段，例如 age_group, summary 等
+};
+
 export default function SearchScreen() {
-  const [books, setBooks] = useState([]);
+  const [books, setBooks] = useState<Book[]>([]);
   const [searchText, setSearchText] = useState('');
   const router = useRouter();
 
@@ -37,12 +43,12 @@ export default function SearchScreen() {
     book.title.toLowerCase().includes(searchText.toLowerCase())
   );
 
-  const renderItem = ({ item }) => (
+  const renderItem = ({ item }: { item: Book }) => (
     <TouchableOpacity
       style={styles.bookCard}
       onPress={() =>
         router.push({
-          pathname: '/(library)/bookId',
+          pathname: '/(library)/[bookId]',
           params: {
             bookId: item.id,
             page: '0',

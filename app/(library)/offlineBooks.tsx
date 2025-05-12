@@ -79,7 +79,7 @@ export default function OfflineBooksScreen() {
             style={styles.bookCard}
             onPress={() => {
               router.push({
-                pathname: '/(library)/bookId',
+                pathname: '/(library)/[bookId]',
                 params: { bookId: item.id, offline: 'true' }, // 👈 离线标志
               });
             }}

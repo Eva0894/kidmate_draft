@@ -12,7 +12,7 @@ import * as Network from 'expo-network';
 import { Ionicons } from '@expo/vector-icons';
 import libStyles from './libStyles';
 
-const BACKEND_URL = "http://10.19.172.188:8000";
+const BACKEND_URL = "http://192.168.10.120:8000";
 const { width, height } = Dimensions.get('window');
 
 export default function BookReaderPage() {

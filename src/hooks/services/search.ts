@@ -12,12 +12,15 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import { getBackendUrl } from '@/utils/api';
+import { Book } from '@/types/book'; 
 
-const BACKEND_URL = 'http://localhost:8000'; 
+const BACKEND_URL = getBackendUrl(); 
 const { width } = Dimensions.get('window');
 
 export default function SearchScreen() {
-  const [books, setBooks] = useState([]);
+  // const [books, setBooks] = useState([]);
+  const [books, setBooks] = useState<Book[]>([]);
   const [searchText, setSearchText] = useState('');
   const router = useRouter();
 
@@ -30,11 +33,11 @@ export default function SearchScreen() {
   }, []);
 
   // 过滤搜索内容（忽略大小写）
-  const filteredBooks = books.filter((book) =>
+  const filteredBooks = books.filter((book: Book) =>
     book.title.toLowerCase().includes(searchText.toLowerCase())
   );
 
-  const renderItem = ({ item }) => (
+  const renderItem = ({ item }: { item: Book }) => (
     <TouchableOpacity
       style={styles.bookCard}
       onPress={() => router.push(`/book/${item.id}`)}

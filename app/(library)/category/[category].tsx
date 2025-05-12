@@ -12,9 +12,11 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import libStyles from './libStyles';
+import libStyles from '../libStyles';
+import { getBackendUrl } from '@/utils/api'; 
 
-const BACKEND_URL = "http://localhost:8000"; // ✅ 局域网 IP
+const BACKEND_URL = getBackendUrl();
+
 const { width } = Dimensions.get('window');
 
 const CATEGORIES = ['story', 'science', 'plant', 'animal', 'art', 'sport'];
@@ -98,7 +100,7 @@ export default function CategoryScreen() {
       <TouchableOpacity
         style={styles.bookCard}
         onPress={() => router.push({
-          pathname: '/(library)/bookId',
+          pathname: '/(library)/[bookId]',
           params: { bookId: item.id },
         })}
       >

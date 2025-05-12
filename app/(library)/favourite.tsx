@@ -15,14 +15,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import libStyles from './libStyles';
-import { BASE_URL, post } from '@/utils/api';
+import { getBackendUrl } from '@/utils/api'; 
 
-
-// 根据平台设置 API 地址
-const BACKEND_URL =
-Platform.OS === 'ios'
-  ? 'http://10.19.172.188:8000'
-  : 'http://10.0.2.2:8000';
+const BACKEND_URL = getBackendUrl();
 
 console.log('Using API URL:', BACKEND_URL);
 
@@ -80,7 +75,7 @@ export default function FavoritesScreen() {
               style={styles.bookCard}
               onPress={() =>
                 router.push({
-                  pathname: '/bookId' as const,
+                  pathname: '/[bookId]' as const,
                   params: { bookId: String(item.id), page: '0' },
                 })
               }

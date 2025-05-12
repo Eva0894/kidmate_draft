@@ -9,8 +9,9 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { useRouter } from 'expo-router'; 
+import { getBackendUrl } from '@/utils/api';
 
-const BACKEND_HTTP = 'http://localhost:8000';
+const BACKEND_HTTP = getBackendUrl();
 
 type ChatSession = {
   session_id: string;
