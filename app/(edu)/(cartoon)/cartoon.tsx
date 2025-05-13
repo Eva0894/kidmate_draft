@@ -16,6 +16,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import ProfilePopover from '@/components/ProfilePopover';
 import { supabase } from '@/utils/Supabase';
 import eduStyles from '../eduStyles';
+import dayjs from 'dayjs'; 
 
 const categories = [
   { title: 'educational cartoon', slug: 'educationalcartoon', image: require('../../../assets/images/3_7.jpg') },
@@ -25,17 +26,16 @@ const categories = [
 ];
 
 export default function CartoonPage() {
-  const [totalToday] = useState(0);
+  const router = useRouter();
+  const [totalToday, setTotalToday] = useState(0);
   const [byCategory] = useState<{ [key: string]: number }>({});
-  const [profile, setProfile] = useState<{ username: string; email: string } | null>(null);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [showProfile, setShowProfile] = useState(false);
+
   const [searchText, setSearchText] = useState('');
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [showSearch, setShowSearch] = useState(false);
   const [recentCartoons, setRecentCartoons] = useState<any[]>([]);
-  const router = useRouter();
-
-  const formatTime = (s: number) => `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
 
   // ✅ 替代 useEffect，用 focus 刷新 recentCartoons
   useFocusEffect(
@@ -75,6 +75,45 @@ export default function CartoonPage() {
     search();
   }, [searchText]);
 
+  useEffect(() => {
+    const fetchAvatarAndStudyTime = async () => {
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError) {
+        console.error('Session error:', sessionError.message);
+        return;
+      }
+
+      const userId = session?.user.id;
+      if (!userId) return;
+
+      const { data: avatarData } = await supabase
+        .from('users')
+        .select('avatar_url')
+        .eq('user_id', userId)
+        .single();
+      
+      if (avatarData) {
+        setAvatarUrl(avatarData.avatar_url || null);
+      }
+
+      const today = dayjs().startOf('day').toISOString();
+      const { data: studyData } = await supabase
+        .from('study_log')
+        .select('duration_sec')
+        .gte('created_at', today);
+
+      if (studyData) {
+        const total = studyData.reduce((sum, row) => sum + row.duration_sec, 0);
+        setTotalToday(total);
+      }
+    };
+
+    fetchAvatarAndStudyTime();
+  }, []);
+
+  const formatTime = (s: number) => `${String(Math.floor(s / 60)).padStart(2, '0')}:${String(s % 60).padStart(2, '0')}`;
+
+
   return (
     <TouchableWithoutFeedback onPress={() => setShowProfile(false)}>
       <View style={styles.container}>
@@ -84,7 +123,11 @@ export default function CartoonPage() {
           </TouchableOpacity>
 
           <TouchableOpacity onPress={() => setShowProfile((prev) => !prev)}>
-            <Ionicons name="person-circle" size={48} color="#E5911B" />
+            {avatarUrl ? (
+              <Image source={{ uri: avatarUrl }} style={styles.avatar} />
+            ) : (
+              <Ionicons name="person-circle" size={48} color="#E5911B" />
+            )}
           </TouchableOpacity>
 
           <Text style={styles.timer}>Today: {formatTime(totalToday)}</Text>
@@ -97,7 +140,7 @@ export default function CartoonPage() {
             <Ionicons name="heart" size={32} color='red' />
           </TouchableOpacity>
         </View>
-
+                
         <ProfilePopover visible={showProfile} />
 
         {showSearch && (
@@ -299,5 +342,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 4,
     right: 4,
+  },
+  avatar: { 
+    width: 48, 
+    height: 48, 
+    borderRadius: 24, 
+    backgroundColor: '#ccc' 
   },
 });

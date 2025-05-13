@@ -8,8 +8,6 @@ import { Ionicons } from '@expo/vector-icons';
 import * as FileSystem from 'expo-file-system';
 import { useRouter } from 'expo-router';
 
-const router = useRouter();
-
 const BASE_URL = 'https://dgizrlyymkxenkeddmdj.supabase.co/storage/v1/object/public/piano-sounds';
 const noteSoundMap: Record<string, string> = {
   'C2': `${BASE_URL}/C2.wav`,
@@ -55,6 +53,7 @@ const whiteNotes = [
 export default function MusicScreen() {
   const navigation = useNavigation();
   const [activeNote, setActiveNote] = useState<string | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const initialize = async () => {
@@ -117,7 +116,7 @@ export default function MusicScreen() {
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.backButton} onPress={() => router.push('/eduPage')}>
-        <Ionicons name='arrow-back' size={32} color="#E5911B" marginTop={40}/>
+        <Ionicons name='arrow-back' style={styles.backIcon}/>
       </TouchableOpacity>
       <Text style={styles.title}>🎹 Play Your Music!</Text>
       <ScrollView horizontal contentContainerStyle={styles.piano}>
@@ -147,10 +146,10 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     paddingHorizontal: 12,
   },
-  backText: {
-    fontSize: 16,
+  backIcon: {
+    fontSize: 32,
     color: '#e2ac30',
-    fontWeight: 'bold',
+    marginTop: 68,
   },
   container: {
     flex: 1,

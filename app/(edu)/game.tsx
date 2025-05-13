@@ -80,13 +80,10 @@ export default function GameCenterPage() {
       
       {/* 返回按钮 */}
       <TouchableOpacity style={styles.backButton} onPress={() => router.push('/eduPage')}>
-              <Ionicons name="arrow-back" size={24} color="#E5911B" />
-              <Text style={styles.backText}>Back</Text>
-            </TouchableOpacity>
+        <Ionicons name="arrow-back" size={24} color="#E5911B" />
+        </TouchableOpacity>
           
-            <Text style={styles.title}>🎮 Game Zone</Text>
-            
-
+        <Text style={styles.title}>🎮 Game Zone</Text>
             <ScrollView contentContainerStyle={styles.grid}>
               {games.map((game, index) => (
                 <TouchableOpacity
@@ -113,7 +110,7 @@ const styles = StyleSheet.create({
   header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 12 },
   backButton: {
     position: 'absolute',
-    top: 40,
+    top: 60,
     left: 16,
     flexDirection: 'row',
     alignItems: 'center',

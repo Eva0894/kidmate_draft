@@ -254,7 +254,7 @@ const DrawingPage = () => {
     <View style={{ flex: 1 }}>
 
       <View style={styles.topBar}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+        <TouchableOpacity onPress={() => router.push('/eduPage')} style={styles.backButton}>
          <Ionicons name="arrow-back" size={28} color="#E5911B" />
         </TouchableOpacity>
 

@@ -15,6 +15,7 @@ import { useRouter } from 'expo-router';
 import ProfilePopover from '@/components/ProfilePopover';
 import eduStyles from '../eduStyles';
 import { supabase } from '@/utils/Supabase';
+import dayjs from 'dayjs'; 
 
 const categories = [
   { title: 'phonics', image: require('../../../assets/images/3_7.jpg') },
@@ -26,10 +27,11 @@ const categories = [
 ];
 
 export default function SongPage() {
-  const [totalToday] = useState(0);
+  const [totalToday, setTotalToday] = useState(0);
   const [byCategory] = useState<{ [key: string]: number }>({});
-  const [profile, setProfile] = useState<{ username: string; email: string } | null>(null);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [showProfile, setShowProfile] = useState(false);
+
   const [showSearch, setShowSearch] = useState(false);
   const [searchText, setSearchText] = useState('');
   const [recentSongs, setRecentSongs] = useState<any[]>([]);
@@ -53,6 +55,43 @@ export default function SongPage() {
     fetchAllSongs();
   }, []);
 
+    useEffect(() => {
+      const fetchAvatarAndStudyTime = async () => {
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        if (sessionError) {
+          console.error('Session error:', sessionError.message);
+          return;
+        }
+  
+        const userId = session?.user.id;
+        if (!userId) return;
+  
+        const { data: avatarData } = await supabase
+          .from('users')
+          .select('avatar_url')
+          .eq('user_id', userId)
+          .single();
+        
+        if (avatarData) {
+          setAvatarUrl(avatarData.avatar_url || null);
+        }
+  
+        const today = dayjs().startOf('day').toISOString();
+        const { data: studyData } = await supabase
+          .from('study_log')
+          .select('duration_sec')
+          .gte('created_at', today);
+  
+        if (studyData) {
+          const total = studyData.reduce((sum, row) => sum + row.duration_sec, 0);
+          setTotalToday(total);
+        }
+      };
+  
+      fetchAvatarAndStudyTime();
+    }, []);
+  
+
   const filteredSongs = allSongs.filter((song) =>
     song.title.toLowerCase().includes(searchText.toLowerCase())
   );
@@ -66,11 +105,12 @@ export default function SongPage() {
           <TouchableOpacity onPress={() => router.push('/eduPage')}>
             <Ionicons name="arrow-back" size={28} color="#E5911B" />
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => setShowProfile((prev) => !prev)}
-            style={{ alignSelf: 'center' }}
-          >
-            <Ionicons name="person-circle" size={48} color="#E5911B" />
+          <TouchableOpacity onPress={() => setShowProfile((prev) => !prev)}>
+            {avatarUrl ? (
+              <Image source={{ uri: avatarUrl }} style={styles.avatar} />
+            ) : (
+              <Ionicons name="person-circle" size={48} color="#E5911B" />
+            )}
           </TouchableOpacity>
           <Text style={styles.timer}>Today: {formatTime(totalToday)}</Text>
           <TouchableOpacity onPress={() => setShowSearch((prev) => !prev)}>
@@ -271,5 +311,11 @@ const styles = StyleSheet.create({
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
       android: 'casual',}),
+  },
+  avatar: { 
+    width: 48, 
+    height: 48, 
+    borderRadius: 24, 
+    backgroundColor: '#ccc' 
   },
 });

@@ -44,20 +44,25 @@ export default function ProfilePopover({ visible }: ProfilePopoverProps) {
 const styles = StyleSheet.create({
   card: {
     marginTop: 10,
-    backgroundColor: '#fffbe8',
-    paddingVertical: 8,
-    paddingHorizontal: 14,
-    borderRadius: 10,
+    backgroundColor: '#FFF7E6',  // 更柔和的浅橙色背景
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 16,            // 更大的圆角
     shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    shadowOpacity: 0.12,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 8,
+    elevation: 4,
     alignItems: 'center',
-    maxWidth: 200,
+    maxWidth: 240,     
+    borderWidth: 1,
+    borderColor: '#FFE0B2',     
   },
+  
   text: {
-    fontSize: 15,
+    fontSize: 16,        
     fontWeight: '600',
-    color: '#333',
+    color: '#4B3B2B',        
+    letterSpacing: 0.5,       
   },
 });
