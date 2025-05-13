@@ -25,7 +25,7 @@ export default function AuthLayout() {
   return (
     <Stack
       screenOptions={{
-        headerShown: false, // 👈 隐藏顶部导航栏
+        // headerShown: false, // 👈 隐藏顶部导航栏
       }}
     />
   );

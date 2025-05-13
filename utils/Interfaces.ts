@@ -1,22 +1,23 @@
-export enum Role {
-    User = 0,
-    Bot = 1,
-  }
-  
-  // export interface Message {
-  //   role: Role;
-  //   content: string;
-  //   imageUrl?: string;
-  //   prompt?: string;
-  // }
-  
-  export interface Chat {
-    id: number;
-    title: string;
-  }
 
-  export type Message = {
-    role: 'user' | 'bot';
-    content: string;
-    image?: string;
-  };
+
+export enum Role {
+  User = 'user',
+  Bot = 'bot',
+}
+
+export interface Message {
+  role: Role;            
+  content: string;
+  image?: string;
+}
+
+export interface RawMessage {
+  role: 'user' | 'bot';  
+  text: string;
+  image?: string;
+}
+
+export interface Chat {
+  id: number;
+  title: string;
+}
