@@ -58,7 +58,7 @@ export default function RegisterScreen() {
           password,
           firstName,
           lastName,
-          dob: dob.toISOString(), // 一定要转成字符串
+          dob: dob.toISOString(), 
         },
       });
 

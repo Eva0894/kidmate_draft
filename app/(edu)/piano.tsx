@@ -6,6 +6,9 @@ import { useNavigation } from '@react-navigation/native';
 import { IconTypes } from 'react-native-ios-context-menu';
 import { Ionicons } from '@expo/vector-icons';
 import * as FileSystem from 'expo-file-system';
+import { useRouter } from 'expo-router';
+
+const router = useRouter();
 
 const BASE_URL = 'https://dgizrlyymkxenkeddmdj.supabase.co/storage/v1/object/public/piano-sounds';
 const noteSoundMap: Record<string, string> = {
@@ -113,7 +116,7 @@ export default function MusicScreen() {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+      <TouchableOpacity style={styles.backButton} onPress={() => router.push('/eduPage')}>
         <Ionicons name='arrow-back' size={32} color="#E5911B" marginTop={40}/>
       </TouchableOpacity>
       <Text style={styles.title}>🎹 Play Your Music!</Text>

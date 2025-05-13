@@ -62,10 +62,10 @@ export default function SongPage() {
   return (
     <TouchableWithoutFeedback onPress={() => setShowProfile(false)}>
       <View style={styles.container}>
-        <TouchableOpacity style={eduStyles.backButton} onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={28} color="#E5911B" />
-        </TouchableOpacity>
         <View style={styles.header}>
+          <TouchableOpacity onPress={() => router.push('/eduPage')}>
+            <Ionicons name="arrow-back" size={28} color="#E5911B" />
+          </TouchableOpacity>
           <TouchableOpacity
             onPress={() => setShowProfile((prev) => !prev)}
             style={{ alignSelf: 'center' }}

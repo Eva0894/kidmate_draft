@@ -9,9 +9,6 @@ import dayjs from 'dayjs';
 import { Image } from 'react-native';
 export default function GameCenterPage() {
   const router = useRouter();
-
- 
-
   const [totalToday, setTotalToday] = useState(0);
     const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
     const [showProfile, setShowProfile] = useState(false);
@@ -25,9 +22,7 @@ export default function GameCenterPage() {
   }, []);
 
   const games = [
-    { title: 'Flappy Bird', path: '/(games)/flappy',image: require('@/assets/images/flappy.png'), },
-    
-    
+    { title: 'Flappy Bird', path: '/(games)/flappy',image: require('@/assets/images/flappy.png'), }, 
     { title: 'Railroad Repair Reboot', path: '/(games)/railroad', image: require('@/assets/images/railway.png'), },
     { title: 'guessFeeling', path: '/(games)/guessFeeling',image: require('@/assets/images/guessfeeling.png'), },
     { title: 'Bridge Builder', path: '/(games)/bridgebuilder',image: require('@/assets/images/bridgebuilder.png'), },
@@ -84,7 +79,7 @@ export default function GameCenterPage() {
     <View style={styles.container}>
       
       {/* 返回按钮 */}
-      <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+      <TouchableOpacity style={styles.backButton} onPress={() => router.push('/eduPage')}>
               <Ionicons name="arrow-back" size={24} color="#E5911B" />
               <Text style={styles.backText}>Back</Text>
             </TouchableOpacity>

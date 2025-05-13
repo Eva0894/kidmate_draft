@@ -67,7 +67,7 @@ const Login = () => {
       const result = await post('/api/login', {
         token: hcaptchaToken,
         email, 
-      });
+      }, getAuthBackendUrl());
     
       if (!result.success) {
         Alert.alert('人机验证失败', result.message || '请重试');

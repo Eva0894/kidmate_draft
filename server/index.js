@@ -3,6 +3,7 @@ import axios from 'axios';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import qs from 'qs';
+import sendResetEmailHandler from './send-reset-email.js';
 
 dotenv.config(); 
 
@@ -67,6 +68,9 @@ app.post('/api/login', async (req, res) => {
     return res.status(500).json({ success: false, message: 'Server error' });
   }
 });
+
+// 发送重置密码邮件
+app.post('/api/send-reset-email', sendResetEmailHandler);
 
 // 启动服务
 app.listen(3000, '0.0.0.0', () => {

@@ -104,11 +104,10 @@ export default function CoursePage() {
     <CourseTimeProvider>
       <TouchableWithoutFeedback onPress={() => setShowProfile(false)}>
         <View style={styles.container}>
-          <TouchableOpacity style={eduStyles.backButton} onPress={() => router.back()}>
-            <Ionicons name="arrow-back" size={28} color="#E5911B" />
-          </TouchableOpacity>
-
           <View style={styles.header}>
+              <TouchableOpacity onPress={() => router.push('/eduPage')} style={styles.icon}>
+                <Ionicons name="arrow-back" size={28} color="#E5911B" />
+              </TouchableOpacity>
             <TouchableOpacity onPress={() => setShowProfile((prev) => !prev)}>
               {avatarUrl ? (
                 <Image source={{ uri: avatarUrl }} style={styles.avatar} />

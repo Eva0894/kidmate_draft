@@ -31,13 +31,13 @@ export default function ResetPasswordPage() {
   
     setLoading(true);
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: 'exp://192.168.0.249:8081/reset-password', // 暂时
+      redirectTo: 'https://your-vercel-domain.vercel.app/reset-password-confirm',  // 改成你的 Vercel 页面
     });
     setLoading(false);
   
     if (error) {
       if (error.message.includes('User not found')) {
-        Alert.alert('Invalid Email', 'The email address is not registered. Please enter a valid email.');
+        Alert.alert('Invalid Email', 'The email address is not registered.');
       } else {
         console.error('Unexpected error:', error.message);
         Alert.alert('Error', 'Something went wrong. Please try again later.');
