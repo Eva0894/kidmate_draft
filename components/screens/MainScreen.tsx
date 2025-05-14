@@ -12,6 +12,8 @@ import {
 import { router } from 'expo-router';
 import { supabase } from '@/utils/Supabase';
 import { getBackendUrl } from '@/utils/api'; 
+import { Ionicons } from '@expo/vector-icons';
+import AnimatedRefreshButton from '@/components/AnimatedRefreshButton';
 
 const { width } = Dimensions.get('window');
 const BACKEND_URL = getBackendUrl();
@@ -145,9 +147,12 @@ export default function MainScreen() {
       {/* Recommended Books */}
       <View style={styles.recommendHeader}>
         <Text style={styles.recommendTitleText}>Recommended Books</Text>
-        <TouchableOpacity onPress={fetchRecommendedBooks} style={styles.refreshButton}>
-          <Text style={styles.refreshText}>🔄</Text>
-        </TouchableOpacity>
+        {/* <TouchableOpacity onPress={fetchRecommendedBooks} style={styles.refreshButton}>
+          <Text style={styles.refreshText}>
+            <Ionicons name="refresh" size={24}></Ionicons>
+          </Text>
+        </TouchableOpacity> */}
+        <AnimatedRefreshButton onRefresh={fetchRecommendedBooks} />
       </View>
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 40 }}>
@@ -223,7 +228,7 @@ const styles = StyleSheet.create({
   recommendTitleText: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#E5911B',
+    color: '#666666',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
       android: 'monospace',}),
@@ -233,7 +238,7 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   refreshText: {
-    fontSize: 20,
+    fontSize: 30,
   },
   recommendCard: {
     width: 120,

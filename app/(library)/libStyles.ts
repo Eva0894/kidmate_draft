@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import { StyleSheet } from 'react-native';
 
 const libStyles = StyleSheet.create({
@@ -15,7 +16,9 @@ const libStyles = StyleSheet.create({
       marginTop: 30,
       marginBottom: 20,
       fontWeight: '800',
-      fontFamily: 'Cochin',
+      fontFamily: Platform.select({
+        ios: 'ChalkboardSE-Regular',
+        android: 'monospace',}),
       textShadowColor: '#444',
       textShadowOffset: { width: 1, height: 1 },
       textShadowRadius: 3,
