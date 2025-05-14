@@ -8,7 +8,8 @@ import sendResetEmailHandler from './send-reset-email.js';
 dotenv.config(); 
 
 const app = express();
-const PORT = 3000;
+// const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // 中间件
 app.use(cors());
@@ -73,6 +74,9 @@ app.post('/api/login', async (req, res) => {
 app.post('/api/send-reset-email', sendResetEmailHandler);
 
 // 启动服务
-app.listen(3000, '0.0.0.0', () => {
-  console.log('🚀 服务运行中: http://localhost:3000');
+// app.listen(3000, '0.0.0.0', () => {
+//   console.log('🚀 服务运行中: http://localhost:3000');
+// });
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 服务运行中: http://localhost:${PORT}`);
 });
