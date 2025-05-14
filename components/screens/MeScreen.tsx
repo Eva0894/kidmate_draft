@@ -39,7 +39,7 @@ export default function MeSreen() {
     const [loading, setLoading] = useState(false);
     const t = useT();
     const [modalVisible, setModalVisible] = useState(false);
-    const [isDarkMode, setIsDarkMode] = useState(Appearance.getColorScheme() === 'dark');
+    // const [isDarkMode, setIsDarkMode] = useState(Appearance.getColorScheme() === 'dark');
 
     const [userId, setUserId] = useState<string | null>(null);
     useEffect(() => {
@@ -139,11 +139,11 @@ export default function MeSreen() {
       <Text style={styles.privacyTitle}>Privacy</Text>
       <View style={styles.section}>{privacy.map(renderItem)}</View>
 
-      <TouchableOpacity style={styles.themeToggle} onPress={toggleTheme}>
+      {/* <TouchableOpacity style={styles.themeToggle} onPress={toggleTheme}>
         <Text style={styles.themeText}>
           Dark Mode: {theme === 'dark' ? 'On' : 'Off'}
         </Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       <TouchableOpacity
         style={styles.logoutToggle}
