@@ -33,6 +33,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [showCaptcha, setShowCaptcha] = useState(false);
   const [hcaptchaToken, setHcaptchaToken] = useState<string | null>(null);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     if (hcaptchaToken) {
@@ -109,7 +110,8 @@ const Login = () => {
 
   const handleForgotPassword = () => {
     if (!email) {
-      Alert.alert('Tip', 'Please enter the email address you used when registering');
+      setShowModal(true);
+      return;
     }
     router.push('/reset-password');
   };
@@ -117,7 +119,7 @@ const Login = () => {
   return (
     <ImageBackground source={backgroundImage} style={styles.background}>
         <TouchableOpacity onPress={() => router.back()} >
-          <Ionicons name="arrow-back" size={32} color="#E5911B" marginTop={40}/>
+          <Ionicons name="arrow-back" size={28} color="#E5911B" marginTop={40}/>
         </TouchableOpacity>
         <Image source={require('@/assets/images/logo-login.jpg')} style={styles.logo} />   
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : undefined} style={styles.container}>     
@@ -152,8 +154,26 @@ const Login = () => {
           </TouchableOpacity>
         </View>
         <TouchableOpacity onPress={handleForgotPassword}>
-          <Text style={{ color: Colors.primary, marginTop: 10, fontFamily: 'ChalkboardSE-Regular' }}>Forgot Password?</Text>
+          <Text style={{ 
+            color: Colors.primary, 
+            marginTop: 10, 
+            fontFamily: Platform.select({
+              ios: 'ChalkboardSE-Regular',
+              android: 'casual',}), 
+            }}>Forgot Password?</Text>
         </TouchableOpacity>
+        {/* 自定义提示 Modal */}
+        <Modal isVisible={showModal}>
+          <View style={styles.modalBackground}>
+            <View style={styles.modalContainer}>
+              <Text style={styles.modalTitle}>Tip</Text>
+              <Text style={styles.modalText}>Please enter the email address you used when registering</Text>
+              <TouchableOpacity onPress={() => setShowModal(false)} style={styles.modalButton}>
+                <Text style={styles.modalButtonText}>OK</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
 
 
         <Modal isVisible={showCaptcha}>
@@ -212,7 +232,9 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     textAlign: 'center',
     marginBottom: 24,
-    fontFamily: 'ChalkboardSE-Regular',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'casual',}),
     color: '#444',
   },
   input: {
@@ -223,7 +245,9 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 10,
     backgroundColor: '#fff',
-    fontFamily: 'ChalkboardSE-Regular',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'casual',}),
     fontSize: 16,
   },
   loginButton: {
@@ -236,7 +260,9 @@ const styles = StyleSheet.create({
   loginButtonText: {
     color: '#fff',
     fontSize: 20,
-    fontFamily: 'ChalkboardSE-Regular',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'casual',}),
     textShadowColor: 'rgba(0, 0, 0, 0.2)',
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 1,
@@ -247,6 +273,51 @@ const styles = StyleSheet.create({
     height: 100,
     alignSelf: 'center',
     marginVertical: 20,
+    borderRadius: 50, // 变圆形，如果不需要可以删除
+    overflow: 'hidden',
+    backgroundColor: 'transparent', // 防止容器背景影响
+  },
+  modalBackground: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    // backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  modalContainer: {
+    width: '80%',
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: 20,
+    marginBottom: 10,
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'casual',
+      default: 'sans-serif',
+    }),
+  },
+  modalText: {
+    fontSize: 16,
+    textAlign: 'center',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'casual',
+      default: 'sans-serif',
+    }),
+  },
+  modalButton: {
+    marginTop: 15,
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    backgroundColor: '#FFC107',
+    borderRadius: 8,
+  },
+  modalButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
   },
 });
 

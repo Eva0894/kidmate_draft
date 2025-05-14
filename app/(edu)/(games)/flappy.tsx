@@ -70,6 +70,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { WebView } from 'react-native-webview';
 import { useRouter } from 'expo-router';
 import { useNavigation } from '@react-navigation/native';
+import { Platform } from 'react-native';
 
 export default function FlappyGamePage() {
   const router = useRouter();
@@ -81,8 +82,8 @@ export default function FlappyGamePage() {
 
      {/* 返回按钮 */}
                <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-                  <Ionicons name="arrow-back" size={24} color="#E5911B" />
-                  <Text style={styles.backText}>Back</Text>
+                  <Ionicons name="arrow-back" size={28} color="#E5911B" />
+                  
                 </TouchableOpacity>
 
 
@@ -134,7 +135,7 @@ const styles = StyleSheet.create({
         left: 16,
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#fff4e6',
+        
         paddingVertical: 6,
         paddingHorizontal: 12,
         borderRadius: 20,
@@ -166,6 +167,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color: '#D38300',
+    fontFamily: Platform.select({
+          ios: 'ChalkboardSE-Regular',
+          android: 'monospace',}),
   },
   webview: { flex: 1 },
   overlay: {
@@ -185,6 +189,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 16,
     textAlign: 'center',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
   modalBtnRow: {
     flexDirection: 'row',
@@ -199,6 +206,9 @@ const styles = StyleSheet.create({
   modalButtonText: {
     color: '#fff',
     fontWeight: 'bold',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
 });
 

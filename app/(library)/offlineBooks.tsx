@@ -124,11 +124,15 @@ const styles = StyleSheet.create({
     marginLeft: 4,
   },
   header: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: 'bold',
     color: '#E5911B',
     marginBottom: 12,
     marginLeft: 4,
+    textAlign: 'center',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
   bookList: {
     paddingBottom: 60,
@@ -147,8 +151,12 @@ const styles = StyleSheet.create({
   },
   bookTitle: {
     marginTop: 6,
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: '600',
     textAlign: 'center',
+    color: '#E5911B',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
 });

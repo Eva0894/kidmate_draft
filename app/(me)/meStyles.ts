@@ -1,4 +1,5 @@
 // meStyles.ts
+import { Platform } from 'react-native';
 import { StyleSheet } from 'react-native';
 
 const meStyles = StyleSheet.create({
@@ -12,8 +13,11 @@ const meStyles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
-    color: '#333',
-    fontFamily: 'ChalkboardSE-Regular',
+    color: '#E5911B',
+    textAlign: 'center',
+    fontFamily: Platform.select({
+          ios: 'ChalkboardSE-Regular',
+          android: 'monospace',}),
   },
   section: {
     backgroundColor: '#fff',
@@ -27,15 +31,20 @@ const meStyles = StyleSheet.create({
     elevation: 3,
   },
   sectionText: {
-    fontSize: 16,
-    color: '#444',
+    fontSize: 18,
+    color: '#333',
     lineHeight: 24,
-    fontFamily: 'ChalkboardSE-Regular',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
   listItem: {
-    fontSize: 16,
+    fontSize: 14,
     paddingVertical: 6,
-    color: '#555',
+    color: '#333',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
   row: {
     flexDirection: 'row',
@@ -46,12 +55,14 @@ const meStyles = StyleSheet.create({
     borderColor: '#eee',
   },
   rowText: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#333',
-    fontFamily: 'ChalkboardSE-Regular',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
   arrow: {
-    fontSize: 18,
+    fontSize: 28,
     color: '#E5911B',
   },
   // title: {
@@ -72,21 +83,28 @@ const meStyles = StyleSheet.create({
     fontWeight: '600',
     marginTop: 20,
     marginBottom: 8,
-    color: '#222',
-    fontFamily: 'ChalkboardSE-Regular',
+    color: '#333',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
   content: {
-    fontSize: 16,
+    fontSize: 14,
     lineHeight: 24,
-    color: '#444',
-    fontFamily: 'ChalkboardSE-Regular',
+    color: '#333',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
   sectionLabel: {
     fontSize: 18,
     fontWeight: '600',
     marginTop: 20,
     marginBottom: 8,
-    color: '#222',
+    color: '#333',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
   contactBox: {
     backgroundColor: '#fce9c6',
@@ -96,8 +114,10 @@ const meStyles = StyleSheet.create({
   },
   contactLine: {
     fontSize: 16,
-    color: '#222',
-    fontFamily: 'ChalkboardSE-Regular',
+    color: '#333',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
   contactText: {
     fontSize: 16,

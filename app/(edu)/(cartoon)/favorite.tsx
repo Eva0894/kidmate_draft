@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     color: '#E5911B',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
   },
   grid: {
     flexDirection: 'row',
@@ -101,6 +101,6 @@ const styles = StyleSheet.create({
     color: '#E5911B',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
   },
 });

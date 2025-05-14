@@ -7,6 +7,7 @@ import { IconTypes } from 'react-native-ios-context-menu';
 import { Ionicons } from '@expo/vector-icons';
 import * as FileSystem from 'expo-file-system';
 import { useRouter } from 'expo-router';
+import { Platform } from 'react-native';
 
 const BASE_URL = 'https://dgizrlyymkxenkeddmdj.supabase.co/storage/v1/object/public/piano-sounds';
 const noteSoundMap: Record<string, string> = {
@@ -147,8 +148,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   backIcon: {
-    fontSize: 32,
-    color: '#e2ac30',
+    fontSize: 28,
+    color: '#E5911B',
     marginTop: 68,
   },
   container: {
@@ -158,12 +159,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: 28,
-    color: '#ffcc00',
+    fontSize: 24,
+    color: '#E5911B',
     marginTop: 80,
     marginBottom: 20,
     fontWeight: '800',
-    fontFamily: 'Cochin',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
     textShadowColor: '#444',
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 3,

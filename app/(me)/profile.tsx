@@ -17,6 +17,7 @@ import { useRouter } from 'expo-router';
 import { useTheme } from '@/components/ThemeContext';
 import { useT } from '@/utils/useT';
 import meStyles from './meStyles';
+import { Platform } from 'react-native';
 
 
 export default function ProfilePage() {
@@ -106,11 +107,11 @@ export default function ProfilePage() {
       <ScrollView style={{ flex: 1, backgroundColor: isDarkMode ? '#1e1e1e' : '#fff9ef', padding: 20 }}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
           <TouchableOpacity onPress={() => router.push('/me')}>
-            <Ionicons name="arrow-back" size={32} color="#E5911B" />
+            <Ionicons name="arrow-back" size={28} color="#E5911B" />
           </TouchableOpacity>
           <Text style={meStyles.header}>Profile</Text>
           <TouchableOpacity onPress={() => setEditable(true)}>
-            <Ionicons name="create-outline" size={24} color="#cc8400" />
+            <Ionicons name="create-outline" size={32} color="#E5911B" />
           </TouchableOpacity>
         </View>
 
@@ -119,8 +120,10 @@ export default function ProfilePage() {
         <LabelInput label={t('last_name')} value={lastName} onChangeText={setLastName} editable={editable} dark={isDarkMode} />
         <LabelInput label={t('email')} value={email} onChangeText={setEmail} editable={editable} dark={isDarkMode} />
 
-        <Text style={{ fontWeight: 'bold', marginTop: 16, color: isDarkMode ? '#fff' : '#222', fontFamily: 'ChalkboardSE-Regular',
-          fontSize: 16, }}>{t('birthday')}</Text>
+        <Text style={{ fontWeight: 'bold', marginTop: 16, color: isDarkMode ? '#fff' : '#222', fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
+          fontSize: 18, }}>{t('birthday')}</Text>
         <TouchableOpacity
           onPress={() => editable && setShowDatePicker(true)}
           style={{
@@ -163,21 +166,29 @@ export default function ProfilePage() {
         )}
 
         <View style={{ marginTop: 40, }}>
-          <Text style={{ fontWeight: 'bold', marginBottom: 8, color: isDarkMode ? '#fff' : '#222', fontFamily: 'ChalkboardSE-Regular',
-          fontSize: 16 }}>Language</Text>
+          <Text style={{ fontWeight: 'bold', marginBottom: 8, color: isDarkMode ? '#fff' : '#222', fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
+          fontSize: 18 }}>Language</Text>
           <View style={{ flexDirection: 'row', gap: 16 }}>
             <TouchableOpacity onPress={() => setLanguage('en')} style={{ marginRight: 16 }}>
-              <Text style={{ color: language === 'en' ? '#cc8400' : '#999',fontFamily: 'ChalkboardSE-Regular',
+              <Text style={{ color: language === 'en' ? '#E5911B' : '#999',fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
           fontSize: 14}}>English</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => setLanguage('zh')}>
-              <Text style={{ color: language === 'zh' ? '#cc8400' : '#999',fontFamily: 'ChalkboardSE-Regular',
+              <Text style={{ color: language === 'zh' ? '#E5911B' : '#999',fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
           fontSize: 14 }}>中文</Text>
             </TouchableOpacity>
           </View>
 
           <View style={{ marginTop: 24, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Text style={{ fontWeight: 'bold', color: isDarkMode ? '#fff' : '#222', fontFamily: 'ChalkboardSE-Regular',
+            <Text style={{ fontWeight: 'bold', color: isDarkMode ? '#fff' : '#222', fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
           fontSize: 18 }}>Dark Mode</Text>
             <Switch value={isDarkMode} onValueChange={() => setIsDarkMode(!isDarkMode)} />
           </View>
@@ -203,8 +214,10 @@ function LabelInput({
 }) {
   return (
     <View style={{ marginBottom: 16 }}>
-      <Text style={{ fontWeight: 'bold', color: dark ? '#fff' : '#333', fontFamily: 'ChalkboardSE-Regular',
-          fontSize: 16, }}>{label}</Text>
+      <Text style={{ fontWeight: 'bold', color: dark ? '#fff' : '#333', fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
+          fontSize: 18, }}>{label}</Text>
       <TextInput
         value={value}
         editable={editable}
@@ -218,7 +231,9 @@ function LabelInput({
           marginTop: 8,
           borderRadius: 8,
           color: dark ? '#fff' : '#000',
-          fontFamily: 'ChalkboardSE-Regular',
+          fontFamily: Platform.select({
+                ios: 'ChalkboardSE-Regular',
+                android: 'monospace',}),
           fontSize: 18,
         }}
       />

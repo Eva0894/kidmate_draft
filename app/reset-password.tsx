@@ -107,7 +107,9 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     textAlign: 'center',
     marginBottom: 44,
-    fontFamily: 'ChalkboardSE-Regular',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'casual',}),
     color: '#444',
   },
   input: {

@@ -187,14 +187,14 @@ const styles = StyleSheet.create({
     paddingLeft: 8,
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
   },
   activeCategoryText: {
     fontWeight: 'bold',
     color: '#E5911B',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
   },
   content: {
     flex: 1,
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
     color: '#E5911B',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
   },
   bookList: {
     paddingBottom: 80,
@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
     color:'#E5911B',
   },
   favIcon: {

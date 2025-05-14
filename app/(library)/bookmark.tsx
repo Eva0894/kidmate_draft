@@ -138,8 +138,7 @@ const styles = StyleSheet.create({
     color: '#E5911B',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',
-    }),
+      android: 'monospace',}),
   },
   statusText: {
     textAlign: 'center',
@@ -167,8 +166,7 @@ const styles = StyleSheet.create({
     color: '#E5911B',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',
-    }),
+      android: 'monospace',}),
   },
   pageText: {
     fontSize: 12,

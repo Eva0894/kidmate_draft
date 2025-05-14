@@ -9,6 +9,7 @@ import {
   Alert,
 } from 'react-native';
 import { supabase } from '../utils/Supabase';
+import { Platform } from 'react-native';
 
 interface ParentPinModalProps {
   visible: boolean;
@@ -114,6 +115,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 10,
     textAlign: 'center',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
   modalInput: {
     borderWidth: 1,
@@ -121,9 +125,12 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 10,
     marginBottom: 15,
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
   confirmButton: {
-    backgroundColor: '#28a745',
+    backgroundColor: '#E5911B',
     padding: 12,
     borderRadius: 8,
     alignItems: 'center',
@@ -132,6 +139,9 @@ const styles = StyleSheet.create({
   confirmButtonText: {
     color: '#fff',
     fontSize: 16,
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
   cancelButton: {
     padding: 10,
@@ -139,6 +149,9 @@ const styles = StyleSheet.create({
   },
   cancelButtonText: {
     color: '#999',
-    fontSize: 14,
+    fontSize: 16,
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
 });

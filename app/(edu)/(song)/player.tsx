@@ -582,7 +582,7 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
   },
   cover: {
     width: 200,
@@ -598,7 +598,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
   },
   time: {
     fontSize: 14,

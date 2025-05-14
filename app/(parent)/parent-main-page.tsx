@@ -86,8 +86,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',
-    }),
+      android: 'monospace',}),
   },
   sectionGroup: {
     gap: 16,
@@ -108,8 +107,7 @@ const styles = StyleSheet.create({
     color: '#E5911B',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',
-    }),
+      android: 'monospace',}),
   },
   backButton: {
     flexDirection: 'row',

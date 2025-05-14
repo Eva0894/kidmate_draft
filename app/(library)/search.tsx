@@ -127,8 +127,7 @@ const styles = StyleSheet.create({
     color: '#E5911B',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',
-    }),
+      android: 'monospace',}),
   },
   searchContainer: {
     flexDirection: 'row',
@@ -147,8 +146,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',
-    }),
+      android: 'monospace',}),
   },
   booksList: {
     paddingBottom: 60,
@@ -173,7 +171,6 @@ const styles = StyleSheet.create({
     color: '#E5911B',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',
-    }),
+      android: 'monospace',}),
   },
 });

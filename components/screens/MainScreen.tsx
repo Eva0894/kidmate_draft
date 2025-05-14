@@ -183,7 +183,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: '#555',
-    fontFamily: Platform.select({ ios: 'ChalkboardSE-Regular', android: 'casual' }),
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
   iconRow: {
     flexDirection: 'row',
@@ -206,9 +208,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 6,
     fontWeight: '600',
-    fontSize: 14,
-    color: '#333',
-    fontFamily: Platform.select({ ios: 'ChalkboardSE-Regular', android: 'casual' }),
+    fontSize: 18,
+    color: '#E5911B',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
   recommendHeader: {
     flexDirection: 'row',
@@ -217,10 +221,12 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   recommendTitleText: {
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: 'bold',
     color: '#E5911B',
-    fontFamily: Platform.select({ ios: 'ChalkboardSE-Regular', android: 'casual' }),
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
   refreshButton: {
     paddingHorizontal: 8,
@@ -247,11 +253,13 @@ const styles = StyleSheet.create({
   recommendBookTitle: {
     marginTop: 6,
     textAlign: 'center',
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: '500',
-    color: '#333',
+    color: '#E5911B',
     width: 100,
-    fontFamily: Platform.select({ ios: 'ChalkboardSE-Regular', android: 'casual' }),
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
   bannerContainer: {
     width: '100%',

@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
     color: '#E5911B',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
     textAlign:'center',
   },
   backButton: {
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
     color:'#E5911B'
   },
 });

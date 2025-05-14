@@ -6,6 +6,7 @@ import NotificationToggle from '@/components/NotificationToggle';
 import { supabase } from '@/utils/Supabase';
 import Constants from 'expo-constants';
 import meStyles from './meStyles';
+import { Platform } from 'react-native';
 
 export default function NotificationPage() {
   const router = useRouter();
@@ -40,7 +41,7 @@ export default function NotificationPage() {
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()}>
-          <Ionicons name="arrow-back" size={32} color="#E5911B" />
+          <Ionicons name="arrow-back" size={28} color="#E5911B" />
         </TouchableOpacity>
         <Text style={meStyles.header}>Notifications</Text>
         <View style={{ width: 24 }} />
@@ -81,9 +82,12 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   headerTitle: {
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: 'bold',
     color: '#222',
+    fontFamily: Platform.select({
+          ios: 'ChalkboardSE-Regular',
+          android: 'monospace',}),
   },
   toggleContainer: {
     marginBottom: 20,
@@ -104,13 +108,19 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   title: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '600',
     marginBottom: 4,
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
   time: {
     fontSize: 12,
     color: '#999',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
   empty: {
     fontSize: 14,

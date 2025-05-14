@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Platform } from 'react-native';
 import {
   View,
   Text,
@@ -124,7 +125,9 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: 'bold',
-    fontFamily: 'ChalkboardSE-Regular',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
     textAlign: 'center',
   },
 });

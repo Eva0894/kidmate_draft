@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
     marginLeft: 6,
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
   },
   songItem: {
     flexDirection: 'row',
@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
   },
   playBtn: {
     paddingHorizontal: 8,
