@@ -63,7 +63,7 @@ export default function OfflineBooksScreen() {
   return (
     <View style={styles.container}>
       {/* 返回按钮 */}
-      <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
+      <TouchableOpacity style={styles.backButton} onPress={() => router.push('/library')}>
         <Ionicons name="arrow-back" size={28} color="#E5911B" />
       </TouchableOpacity>
 

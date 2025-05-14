@@ -97,7 +97,7 @@ export default function BookmarksScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.headerRow}>
-        <TouchableOpacity onPress={() => router.back()} style={libStyles.backButton}>
+        <TouchableOpacity onPress={() => router.push('/library')} style={libStyles.backButton}>
           <Ionicons name="arrow-back" size={28} color="#E5911B" />
         </TouchableOpacity>
         <Text style={styles.header}>🔖 My Bookmarks</Text>

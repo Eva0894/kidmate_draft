@@ -214,7 +214,8 @@ const styles = StyleSheet.create({
     marginTop: 6,
     fontWeight: '600',
     fontSize: 18,
-    color: '#E5911B',
+    // color: '#E5911B',
+    color: '#666666',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
       android: 'monospace',}),
@@ -228,7 +229,8 @@ const styles = StyleSheet.create({
   recommendTitleText: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#666666',
+    // color: '#666666',
+    color: '#E5911B',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
       android: 'monospace',}),
@@ -260,7 +262,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 14,
     fontWeight: '500',
-    color: '#E5911B',
+    // color: '#E5911B',
+    color: '#666666',
     width: 100,
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
