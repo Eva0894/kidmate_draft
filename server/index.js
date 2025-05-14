@@ -3,8 +3,9 @@ import axios from 'axios';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import qs from 'qs';
-import sendResetEmailHandler from './send-reset-email.js';
 import fs from 'fs';
+// import sendResetEmailHandler from './send-reset-email.js';
+import sendResetEmailHandler from './send-email-smtp.js';
 
 dotenv.config(); 
 
@@ -81,5 +82,3 @@ app.post('/api/send-reset-email', sendResetEmailHandler);
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 服务运行中: http://localhost:${PORT}`);
 });
-
-fs.writeFileSync('/home/LogFiles/test.log', '✅ App started\n', { flag: 'a' });
