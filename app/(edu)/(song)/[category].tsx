@@ -18,7 +18,7 @@ const CATEGORY_MAP: Record<string, number> = {
   phonics: 1,
   number: 2,
   nursery: 3,
-  rename: 4,
+  magic: 4,
   fun: 5,
   soft: 6,
 };
