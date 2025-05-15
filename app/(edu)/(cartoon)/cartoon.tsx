@@ -271,13 +271,17 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   categoryTitle: {
-    fontSize: 18,
-    marginTop: 6,
+    fontSize: 14,
+    marginTop: 4,
     fontWeight: '600',
     color: '#E5911B',
+    textAlign: 'center',   
+    width: 100,          
+    flexWrap: 'wrap',    
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'monospace',}),
+      android: 'monospace',
+    }),
   },
   duration: {
     fontSize: 16,

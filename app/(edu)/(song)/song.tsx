@@ -189,7 +189,9 @@ export default function SongPage() {
 
           <Text style={styles.sectionTitle}>Recent</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+    
             {recentSongs.map((song, index) => (
+              <View key={song.id} style ={{width:120, marginRight: 12}}>
               <TouchableOpacity
                 key={song.id}
                 onPress={() =>
@@ -209,6 +211,7 @@ export default function SongPage() {
                   <Ionicons name="heart" size={18} color="#f44336" style={styles.starIcon} />
                 )}
               </TouchableOpacity>
+              </View>
             ))}
           </ScrollView>
         </ScrollView>
