@@ -115,6 +115,11 @@ const Login = () => {
     }
     router.push('/reset-password');
   };
+  
+  const handleOkPress = () => {
+    setShowModal(false);
+    router.push('/reset-password');
+  };
 
   return (
     <ImageBackground source={backgroundImage} style={styles.background}>
@@ -168,7 +173,7 @@ const Login = () => {
             <View style={styles.modalContainer}>
               <Text style={styles.modalTitle}>Tip</Text>
               <Text style={styles.modalText}>Please enter the email address you used when registering</Text>
-              <TouchableOpacity onPress={() => setShowModal(false)} style={styles.modalButton}>
+              <TouchableOpacity onPress={handleOkPress} style={styles.modalButton}>
                 <Text style={styles.modalButtonText}>OK</Text>
               </TouchableOpacity>
             </View>

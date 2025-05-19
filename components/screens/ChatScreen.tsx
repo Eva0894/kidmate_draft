@@ -14,8 +14,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MessageInput from '@/components/MessageInput';
 import ChatMessage from '@/components/ChatMessage';
 import { supabase } from '@/utils/Supabase';
-import { Role } from '../../utils/Interfaces';
-import { downloadImage } from '../../utils/downloadImage'; 
+import { Role } from '@/utils/Interfaces';
+import { downloadImage } from '@/utils/downloadImage'; 
 
 const BACKEND_WS = 'ws://localhost:8000/api/chat/ws/chat';
 const BACKEND_HTTP = 'http://localhost:8000';
@@ -156,74 +156,79 @@ export default function Page() {
     );
   };
 
-  const getCompletion = async (message: string) => {
-    if (!message.trim()) return;
+const getCompletion = async (message: string) => {
+  if (!message.trim()) return;
 
-    setMessages((prev) => [
-      ...prev,
-      { role: 'user', content: message },
-      { role: 'bot', content: 'dear friends, I am thinking...' },
-    ]);
+  setMessages((prev) => [
+    ...prev,
+    { role: 'user', content: message },
+    { role: 'bot', content: 'dear friends, I am thinking...' },
+  ]);
 
-    if (isImagePrompt(message)) {
-      try {
-        const res = await fetch(`${BACKEND_HTTP}/api/chat/generate_image`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            prompt: message,
-            model: 'dall-e-3',
-            size: '1024x1024',
-            quality: 'standard',
-            n: 1,
-          }),
-        });
+  if (isImagePrompt(message)) {
+    try {
+      const res = await fetch(`${BACKEND_HTTP}/api/chat/generate_image`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          prompt: message,
+          user_id: user?.id,
+          model: 'dall-e-3',
+          size: '1024x1024',
+          quality: 'standard',
+          n: 1,
+        }),
+      });
 
-        const data = await res.json();
-        const imageUrl = data.images?.[0];
+      const data = await res.json();
+      const imageUrl = data.images?.[0];
 
-        if (!imageUrl) throw new Error('No image returned');
+      if (!imageUrl) throw new Error('No image returned');
 
-        // ✅ 下载并替换为本地路径
-        const localUri = await downloadImage(imageUrl, `image_${Date.now()}`);
+      const localUri = await downloadImage(imageUrl, `image_${Date.now()}`);
 
-        setMessages((prev) => {
-          const updated = [...prev];
-          updated[updated.length - 1] = {
-            role: 'bot',
-            content: '',
-            image: localUri,
-          };
-          return updated;
-        });
-      } catch (err) {
-        console.warn('Image generation or download failed:', err);
-        setMessages((prev) => {
-          const updated = [...prev];
-          updated[updated.length - 1] = {
-            role: 'bot',
-            content: 'Image generation failed, please try again later.',
-          };
-          return updated;
-        });
-      }
-      return;
-    }
-
-    fullMessageRef.current = '';
-    if (wsRef.current?.readyState === WebSocket.OPEN) {
-      wsRef.current.send(message);
-    } else {
       setMessages((prev) => {
         const updated = [...prev];
         updated[updated.length - 1] = {
           role: 'bot',
-          content: 'Connection error, AI temporarily unresponsive.',
+          content: '',
+          image: localUri,
+        };
+        return updated;
+      });
+    } catch (err) {
+      console.warn('Image generation or download failed:', err);
+      setMessages((prev) => {
+        const updated = [...prev];
+        updated[updated.length - 1] = {
+          role: 'bot',
+          content: 'Image generation failed, please try again later.',
         };
         return updated;
       });
     }
-  };
+    return;
+  }
+
+  fullMessageRef.current = '';
+
+  if (wsRef.current?.readyState === WebSocket.OPEN) {
+    wsRef.current.send(JSON.stringify({
+      user_id: user?.id,
+      message: message,
+    }));
+  } else {
+    setMessages((prev) => {
+      const updated = [...prev];
+      updated[updated.length - 1] = {
+        role: 'bot',
+        content: 'Connection error, AI temporarily unresponsive.',
+      };
+      return updated;
+    });
+  }
+};
+
 
   const handleImagePress = (url: string) => {
     setModalImage(url);

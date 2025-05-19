@@ -14,6 +14,8 @@ import { supabase } from '@/utils/Supabase';
 import { getBackendUrl } from '@/utils/api'; 
 import { Ionicons } from '@expo/vector-icons';
 import AnimatedRefreshButton from '@/components/AnimatedRefreshButton';
+import { getAuthBackendUrl, getBookBackendUrl, getBookWsUrl } from '@/utils/apiConfig';
+
 
 const { width } = Dimensions.get('window');
 const BACKEND_URL = getBackendUrl();

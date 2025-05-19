@@ -4,16 +4,12 @@
     "strict": true,
     "paths": {
       "@/*": [
-        "./*",
-        // "expo-sqlite/next", ["node_modules/expo-sqlite/next"]
+        "./*"
       ]
-    },
-
+    }
   },
   "include": [
     "**/*.ts",
-    "**/*.tsx",
-    ".expo/types/**/*.ts",
-    "expo-env.d.ts"
+    "**/*.tsx"
   ]
 }

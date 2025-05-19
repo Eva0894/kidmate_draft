@@ -13,9 +13,11 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { getBackendUrl } from '@/utils/api'; 
 
-const BACKEND_URL = getBackendUrl();
+const BACKEND_URL =
+  Platform.OS === 'ios'
+    ? 'http://localhost:8000'
+    : 'http://10.0.2.2:8000';
 
 const { width } = Dimensions.get('window');
 
@@ -127,7 +129,8 @@ const styles = StyleSheet.create({
     color: '#E5911B',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'monospace',}),
+      android: 'casual',
+    }),
   },
   searchContainer: {
     flexDirection: 'row',
@@ -146,7 +149,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'monospace',}),
+      android: 'casual',
+    }),
   },
   booksList: {
     paddingBottom: 60,
@@ -171,6 +175,7 @@ const styles = StyleSheet.create({
     color: '#E5911B',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'monospace',}),
+      android: 'casual',
+    }),
   },
 });

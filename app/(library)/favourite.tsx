@@ -1,4 +1,3 @@
-// favorites.tsx
 import React, { useEffect, useState } from 'react';
 import {
   View,
@@ -14,39 +13,52 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import libStyles from './libStyles';
-import { getBackendUrl } from '@/utils/api'; 
+import { supabase } from '@/utils/Supabase';
 
-const BACKEND_URL = getBackendUrl();
-
-console.log('Using API URL:', BACKEND_URL);
-
+const BACKEND_URL = Platform.OS === 'ios' ? 'http://localhost:8000' : 'http://10.0.2.2:8000';
 const { width } = Dimensions.get('window');
-
-type Book = { id: number; title: string; cover?: string };
 
 export default function FavoritesScreen() {
   const router = useRouter();
-  const [books, setBooks] = useState<Book[]>([]);
-  const [favoriteIds, setFavoriteIds] = useState<number[]>([]);
+  const [books, setBooks] = useState<any[]>([]);
+  const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
 
   useEffect(() => {
-    fetch(`${BACKEND_URL}/books`)
-      .then(res => res.json())
-      .then(setBooks)
-      .catch(console.error);
+    const fetchFavorites = async () => {
+      const { data: userData } = await supabase.auth.getUser();
+      const userId = userData?.user?.id;
+      if (!userId) return;
 
-    fetch(`${BACKEND_URL}/books/favorites`)
-      .then(res => res.json())
-      .then(setFavoriteIds)
-      .catch(console.error);
+      try {
+        const resBooks = await fetch(`${BACKEND_URL}/books`);
+        const bookList = await resBooks.json();
+        setBooks(bookList);
+
+        const resFav = await fetch(`${BACKEND_URL}/books/favorites?user_id=${userId}`);
+        const favIds = await resFav.json();
+        if (Array.isArray(favIds)) {
+          setFavoriteIds(favIds);
+        } else {
+          setFavoriteIds([]);
+        }
+      } catch (err) {
+        console.error('Failed to fetch favorites or books:', err);
+        setFavoriteIds([]);
+      }
+    };
+
+    fetchFavorites();
   }, []);
 
   const favoriteBooks = books.filter((book) => favoriteIds.includes(book.id));
 
-  const removeFromFavorites = async (bookId: number) => {
+  const removeFromFavorites = async (bookId: string) => {
+    const { data: userData } = await supabase.auth.getUser();
+    const userId = userData?.user?.id;
+    if (!userId) return;
+
     try {
-      await fetch(`${BACKEND_URL}/books/favorite`, {
+      await fetch(`${BACKEND_URL}/books/favorite?user_id=${userId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ book_id: bookId, is_favorite: false }),
@@ -60,14 +72,20 @@ export default function FavoritesScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
-        <TouchableOpacity onPress={() => router.push('/(tabs)/library')} style={styles.backButton}>
+        <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
           <Ionicons name="arrow-back" size={28} color="#E5911B" />
         </TouchableOpacity>
-        <Text style={styles.header}>❤️ My Favorites</Text>
+        <Text style={styles.header}>My Favorites</Text>
       </View>
+
+      {favoriteBooks.length === 0 ? (
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyText}>No favorite books found.</Text>
+        </View>
+      ) : (
         <FlatList
           data={favoriteBooks}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item) => item.id}
           numColumns={2}
           contentContainerStyle={styles.bookList}
           renderItem={({ item }) => (
@@ -75,7 +93,7 @@ export default function FavoritesScreen() {
               style={styles.bookCard}
               onPress={() =>
                 router.push({
-                  pathname: '/[bookId]' as const,
+                  pathname: '/(library)/[bookId]',
                   params: { bookId: String(item.id), page: '0' },
                 })
               }
@@ -94,17 +112,14 @@ export default function FavoritesScreen() {
                 )
               }
             >
-              <Image
-                source={{ uri: `${BACKEND_URL}${item.cover}` }}
-                style={styles.bookCover}
-              />
+              <Image source={{ uri: `${BACKEND_URL}${item.cover}` }} style={styles.bookCover} />
               <Text style={styles.bookTitle} numberOfLines={2}>
                 {item.title}
               </Text>
             </TouchableOpacity>
           )}
         />
-      
+      )}
     </SafeAreaView>
   );
 }
@@ -114,33 +129,27 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-
   headerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingTop: 0,
     paddingBottom: 8,
     paddingHorizontal: 16,
-
   },
   header: {
-    flex:1,  
+    flex: 1,
     paddingTop: 8,
     fontSize: 24,
     fontWeight: 'bold',
     color: '#E5911B',
-    fontFamily: Platform.select({
-      ios: 'ChalkboardSE-Regular',
-      android: 'monospace',}),
-    textAlign:'center',
+    fontFamily: Platform.select({ ios: 'ChalkboardSE-Regular', android: 'casual' }),
+    textAlign: 'center',
   },
   backButton: {
     position: 'absolute',
     flexDirection: 'row',
     paddingHorizontal: 16,
-    paddingTop: 1,
-    left: 16,
-    zIndex: 10,
+    paddingTop: 16,
   },
   bookList: { paddingBottom: 80 },
   bookCard: {
@@ -160,9 +169,17 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     textAlign: 'center',
-    fontFamily: Platform.select({
-      ios: 'ChalkboardSE-Regular',
-      android: 'monospace',}),
-    color:'#E5911B'
+    fontFamily: Platform.select({ ios: 'ChalkboardSE-Regular', android: 'casual' }),
+    color: '#E5911B',
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 80,
+  },
+  emptyText: {
+    fontSize: 16,
+    color: '#999',
   },
 });
