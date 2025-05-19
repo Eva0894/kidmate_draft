@@ -228,7 +228,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#E5911B',
     textAlign: 'center',
-    fontFamily: Platform.select({ ios: 'ChalkboardSE-Regular', android: 'casual' }),
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
   sectionTitle: {
     fontSize: 18,
@@ -236,7 +238,9 @@ const styles = StyleSheet.create({
     color: '#E5911B',
     marginBottom: 8,
     marginTop: 12,
-    fontFamily: Platform.select({ ios: 'ChalkboardSE-Regular', android: 'casual' }),
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
   banner: {
     width: '100%',
@@ -277,7 +281,9 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     textAlign: 'center',
     color: '#E5911B',
-    fontFamily: Platform.select({ ios: 'ChalkboardSE-Regular', android: 'casual' }),
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
   recentList: {
     paddingVertical: 8,
@@ -299,7 +305,9 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     textAlign: 'center',
     color: '#E5911B',
-    fontFamily: Platform.select({ ios: 'ChalkboardSE-Regular', android: 'casual' }),
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
   progressText: {
     fontSize: 12,

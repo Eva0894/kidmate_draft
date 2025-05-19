@@ -433,9 +433,8 @@ const styles = StyleSheet.create({
     color: '#E5911B',
     textAlign: 'center',
     fontFamily: Platform.select({
-        ios: 'Chalkboard SE',
-        android: 'casual',
-    }),
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
   badgeCounter: {
     flexDirection: 'row',
@@ -480,9 +479,8 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#E5911B',
     fontFamily: Platform.select({
-      ios: 'Chalkboard SE',
-      android: 'casual',
-  })
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
   activeCategoryText: {
     color: 'white',
@@ -515,9 +513,8 @@ const styles = StyleSheet.create({
     color: '#E5911B',
     marginLeft: 8,
     fontFamily: Platform.select({
-      ios: 'Chalkboard SE',
-      android: 'casual',
-  })
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
   badgesGrid: {
     flexDirection: 'row',

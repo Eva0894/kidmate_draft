@@ -34,6 +34,7 @@ export default function OfflineBooksScreen() {
               const book = JSON.parse(jsonStr);
               return book;
             } catch (e) {
+              console.warn(`⚠️ Failed to parse book ${bookId}:`, e);
               return null;
             }
           })
@@ -62,7 +63,6 @@ export default function OfflineBooksScreen() {
 
   return (
     <View style={styles.container}>
-      {/* 返回按钮 */}
       <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
         <Ionicons name="arrow-back" size={28} color="#E5911B" />
       </TouchableOpacity>
@@ -74,13 +74,18 @@ export default function OfflineBooksScreen() {
         keyExtractor={(item) => item.id}
         numColumns={3}
         contentContainerStyle={styles.bookList}
+        ListEmptyComponent={() => (
+          <Text style={{ textAlign: 'center', marginTop: 40, color: '#999' }}>
+            No offline books found.
+          </Text>
+        )}
         renderItem={({ item }) => (
           <TouchableOpacity
             style={styles.bookCard}
             onPress={() => {
               router.push({
                 pathname: '/(library)/[bookId]',
-                params: { bookId: item.id, offline: 'true' }, // 👈 离线标志
+                params: { bookId: item.id, offline: 'true' },
               });
             }}
             onLongPress={() => {
@@ -116,11 +121,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    padding: 12,
+    paddingHorizontal: 12,
+    paddingTop: Platform.OS === 'ios' ? 16 : 8,
   },
   backButton: {
-    marginTop: Platform.OS === 'ios' ? 50 : 20,
-    marginBottom: 10,
+    marginTop: Platform.OS === 'ios' ? 0 : 0,
+    marginBottom: 4,
     marginLeft: 4,
   },
   header: {

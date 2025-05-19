@@ -9,7 +9,7 @@ export default function PrivacyPolicy() {
   return (
     <View style={{ flex: 1, backgroundColor: '#fff8ee' }}>
       <TouchableOpacity onPress={() => router.back()} style={meStyles.backButton}>
-        <Ionicons name="arrow-back" size={32} color="#E5911B" />
+        <Ionicons name="arrow-back" size={28} color="#E5911B" />
         {/* <Text style={meStyles.backText}>Back</Text> */}
       </TouchableOpacity>
 

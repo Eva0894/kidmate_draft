@@ -18,7 +18,7 @@ const CATEGORY_MAP: Record<string, number> = {
   phonics: 1,
   number: 2,
   nursery: 3,
-  rename: 4,
+  magic: 4,
   fun: 5,
   soft: 6,
 };
@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
     marginLeft: 6,
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
   },
   songItem: {
     flexDirection: 'row',
@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
   },
   playBtn: {
     paddingHorizontal: 8,

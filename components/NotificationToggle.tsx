@@ -3,6 +3,7 @@ import { View, Text, Switch, Alert } from 'react-native';
 // import * as Device from 'expo-device';
 import { supabase } from '@/utils/Supabase';
 import Constants from 'expo-constants';
+import { Platform } from 'react-native';
 
 export default function NotificationToggle() {
   const [enabled, setEnabled] = useState(false);
@@ -84,7 +85,9 @@ export default function NotificationToggle() {
 
   return (
     <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 12 }}>
-      <Text style={{ fontSize: 16, color: '#333', fontWeight: '600' }}>Enable Push Notifications</Text>
+      <Text style={{ fontSize: 18, color: '#E5911B', fontWeight: '600',fontFamily: Platform.select({
+            ios: 'ChalkboardSE-Regular',
+            android: 'monospace',}), }}>Enable Push Notifications</Text>
       <Switch value={enabled} onValueChange={toggleNotifications} />
     </View>
   );

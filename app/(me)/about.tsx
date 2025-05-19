@@ -5,6 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import meStyles from './meStyles';
+import { Platform } from 'react-native';
 
 export default function AboutPage() {
   const navigation = useNavigation();
@@ -20,7 +21,7 @@ export default function AboutPage() {
   return (
     <View style={{ flex: 1, backgroundColor: '#fff8ee' }}>
       <TouchableOpacity onPress={() => router.back()} style={meStyles.backButton}>
-        <Ionicons name="arrow-back" size={32} color="#E5911B" />
+        <Ionicons name="arrow-back" size={28} color="#E5911B" />
         {/* <Text style={meStyles.backText}>Back</Text> */}
       </TouchableOpacity>
 
@@ -55,13 +56,19 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   versionText: {
-    fontSize: 15,
+    fontSize: 18,
     fontWeight: 'bold',
     color: '#333',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
   copyRight: {
-    fontSize: 13,
+    fontSize: 14,
     color: '#666',
     marginTop: 6,
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
 });

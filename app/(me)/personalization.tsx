@@ -12,6 +12,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '../../utils/Supabase';
 import { useRouter } from 'expo-router';
 import meStyles from './meStyles';
+import { Platform } from 'react-native';
 
 const INTEREST_OPTIONS = ['Story', 'Science', 'Plant', 'Animal', 'Art', 'Sport'];
 const ACTIVITY_OPTIONS = [
@@ -128,14 +129,17 @@ export default function PersonalizationPage() {
       <ScrollView contentContainerStyle={{ padding: 20 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
         <TouchableOpacity onPress={() => router.back()} style={{ position: 'absolute', left: 0 }}>
-          <Ionicons name="arrow-back" size={24} color="#c08700" />
+          <Ionicons name="arrow-back" size={28} color="#E5911B" />
         </TouchableOpacity>
 
           {/* Title */}
           <Text style={{
-            fontSize: 22,
+            fontSize: 24,
             fontWeight: '600',
-            fontFamily: 'ChalkboardSE-Regular',
+            color: '#E5911B',
+            fontFamily: Platform.select({
+                  ios: 'ChalkboardSE-Regular',
+                  android: 'monospace',}),
             textAlign: 'center',
           }}>
             Personalization
@@ -143,7 +147,7 @@ export default function PersonalizationPage() {
 
           {/* edit button */}
           <TouchableOpacity onPress={() => setEditing(!editing)} style={{ position: 'absolute', right: 0 }}>
-            <Ionicons name={editing ? 'checkmark' : 'create-outline'} size={24} color="#c08700" />
+            <Ionicons name={editing ? 'checkmark' : 'create-outline'} size={32} color="#E5911B" />
           </TouchableOpacity>
         </View>
 
@@ -164,7 +168,9 @@ export default function PersonalizationPage() {
                   style={[
                     styles.interestText,
                     selected && styles.interestTextSelected,
-                    { fontFamily: 'ChalkboardSE-Regular' }
+                    { fontFamily: Platform.select({
+                      ios: 'ChalkboardSE-Regular',
+                      android: 'monospace',}), }
                   ]}
                 >
                   {option}
@@ -191,7 +197,9 @@ export default function PersonalizationPage() {
                   style={[
                     styles.interestText,
                     selected && styles.interestTextSelected,
-                    { fontFamily: 'ChalkboardSE-Regular' }
+                    { fontFamily: Platform.select({
+                      ios: 'ChalkboardSE-Regular',
+                      android: 'monospace',}), }
                   ]}
                 >
                   {option}
@@ -213,8 +221,10 @@ export default function PersonalizationPage() {
 
 const styles = StyleSheet.create({
   label: {
-    fontSize: 16,
-    fontFamily: 'ChalkboardSE-Regular',
+    fontSize: 18,
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
     marginBottom: 8,
   },
   interestsContainer: {
@@ -254,7 +264,9 @@ const styles = StyleSheet.create({
   saveButtonText: {
     color: '#fff',
     fontSize: 16,
-    fontFamily: 'ChalkboardSE-Regular',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
     fontWeight: '600',
   },
 });

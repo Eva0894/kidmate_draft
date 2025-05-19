@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
     textAlign: 'center',
   },
   row: {
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     paddingRight: 6,
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
   },
 });
 

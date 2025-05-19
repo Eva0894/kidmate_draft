@@ -13,10 +13,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import libStyles from '../libStyles';
-import { getBackendUrl } from '@/utils/api'; 
+import { supabase } from '@/utils/Supabase';
 
-const BACKEND_URL = getBackendUrl();
-
+const BACKEND_URL = "http://localhost:8000"; 
 const { width } = Dimensions.get('window');
 
 const CATEGORIES = ['story', 'science', 'plant', 'animal', 'art', 'sport'];
@@ -35,7 +34,6 @@ export default function CategoryScreen() {
     fetch(`${BACKEND_URL}/books`)
       .then(res => res.json())
       .then(data => {
-        console.log('📚 所有图书:', data);
         const filtered = data.filter(
           (book: any) =>
             book.category &&
@@ -47,27 +45,41 @@ export default function CategoryScreen() {
   }, [selectedCategory]);
 
   useEffect(() => {
-    fetch(`${BACKEND_URL}/books/favorites`)
-      .then(async res => {
-        const text = await res.text();
-        try {
-          const json = JSON.parse(text);
-          setFavoriteIds(json || []);
-        } catch (e) {
-          console.error("❌ 无法解析 JSON，原始内容:", text);
+    const fetchFavorites = async () => {
+      const { data: userData } = await supabase.auth.getUser();
+      const userId = userData?.user?.id;
+      if (!userId) return;
+
+      try {
+        const res = await fetch(`${BACKEND_URL}/books/favorites?user_id=${userId}`);
+        if (!res.ok) {
+          const errorText = await res.text();
+          console.error('❌ 获取收藏失败:', errorText);
+          return;
         }
-      })
-      .catch(err => console.error('Failed to fetch favorites:', err));
+        const json = await res.json();
+        const ids = Array.isArray(json) ? json : json.data || [];
+        setFavoriteIds(ids);
+      } catch (err) {
+        console.error('❌ 网络请求错误:', err);
+      }
+    };
+
+    fetchFavorites();
   }, []);
 
   const toggleFavorite = async (bookId: string) => {
+    const { data: userData } = await supabase.auth.getUser();
+    const userId = userData?.user?.id;
+    if (!userId) return;
+
     const isFav = favoriteIds.includes(bookId);
     const newFavs = isFav
       ? favoriteIds.filter((id) => id !== bookId)
       : [...favoriteIds, bookId];
     setFavoriteIds(newFavs);
 
-    await fetch(`${BACKEND_URL}/books/favorite`, {
+    await fetch(`${BACKEND_URL}/books/favorite?user_id=${userId}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ book_id: bookId, is_favorite: !isFav }),
@@ -162,9 +174,7 @@ export default function CategoryScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1, flexDirection: 'row',backgroundColor: '#fff',
-   },
+  container: { flex: 1, flexDirection: 'row', backgroundColor: '#fff' },
   sidebar: {
     width: 100,
     backgroundColor: '#f0f0f0',
@@ -185,16 +195,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#888',
     paddingLeft: 8,
-    fontFamily: Platform.select({
-      ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+    fontFamily: Platform.select({ ios: 'ChalkboardSE-Regular', android: 'casual' }),
   },
   activeCategoryText: {
     fontWeight: 'bold',
     color: '#E5911B',
-    fontFamily: Platform.select({
-      ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+    fontFamily: Platform.select({ ios: 'ChalkboardSE-Regular', android: 'casual' }),
   },
   content: {
     flex: 1,
@@ -208,13 +214,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 12,
     color: '#E5911B',
-    fontFamily: Platform.select({
-      ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+    fontFamily: Platform.select({ ios: 'ChalkboardSE-Regular', android: 'casual' }),
   },
-  bookList: {
-    paddingBottom: 80,
-  },
+  bookList: { paddingBottom: 80 },
   bookCard: {
     width: (width - 140) / 2,
     alignItems: 'center',
@@ -233,10 +235,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     textAlign: 'center',
-    fontFamily: Platform.select({
-      ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
-    color:'#E5911B',
+    fontFamily: Platform.select({ ios: 'ChalkboardSE-Regular', android: 'casual' }),
+    color: '#E5911B',
   },
   favIcon: {
     position: 'absolute',

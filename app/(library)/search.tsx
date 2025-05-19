@@ -13,9 +13,11 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { getBackendUrl } from '@/utils/api'; 
 
-const BACKEND_URL = getBackendUrl();
+const BACKEND_URL =
+  Platform.OS === 'ios'
+    ? 'http://localhost:8000'
+    : 'http://10.0.2.2:8000';
 
 const { width } = Dimensions.get('window');
 

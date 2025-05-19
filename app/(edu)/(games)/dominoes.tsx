@@ -19,8 +19,8 @@ export default function RosieSlimeShopGame() {
     <View style={styles.container}>
       {/* 返回按钮 */}
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-        <Ionicons name="arrow-back" size={24} color="#E5911B" />
-        <Text style={styles.backText}>Back</Text>
+        <Ionicons name="arrow-back" size={28} color="#E5911B" />
+        
       </TouchableOpacity>
       <WebView
         source={{ uri:'https://springroll-tc.pbskids.org/ad61936a-e6fa-407c-87fb-6224fb4c69c7/873cf6aed279d3aaec3a01f5f36e06243ea9fd79/release/index.html?playOptions=%7B%22language%22%3A%22en-US%22%2C%22game_guid%22%3A%22ad61936a-e6fa-407c-87fb-6224fb4c69c7%22%7D' }}
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
         left: 16,
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#fff4e6',
+        
         paddingVertical: 6,
         paddingHorizontal: 12,
         borderRadius: 20,

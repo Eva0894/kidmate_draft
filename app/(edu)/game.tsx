@@ -7,6 +7,7 @@ import * as ScreenOrientation from 'expo-screen-orientation';
 import { supabase } from '@/utils/Supabase';
 import dayjs from 'dayjs'; 
 import { Image } from 'react-native';
+import { Platform } from 'react-native';
 export default function GameCenterPage() {
   const router = useRouter();
   const [totalToday, setTotalToday] = useState(0);
@@ -80,7 +81,7 @@ export default function GameCenterPage() {
       
       {/* 返回按钮 */}
       <TouchableOpacity style={styles.backButton} onPress={() => router.push('/eduPage')}>
-        <Ionicons name="arrow-back" size={24} color="#E5911B" />
+        <Ionicons name="arrow-back" size={28} color="#E5911B" />
         </TouchableOpacity>
           
         <Text style={styles.title}>🎮 Game Zone</Text>
@@ -114,7 +115,7 @@ const styles = StyleSheet.create({
     left: 16,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff4e6',
+    
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderRadius: 20,
@@ -137,16 +138,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   title: {
-    fontSize: 28,
+    fontSize: 24,
     fontWeight: 'bold',
-    color: '#e67e22',
+    color: '#E5911B',
     alignSelf: 'center',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: 18,
     color: '#555',
     alignSelf: 'center',
     marginBottom: 20,
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
   grid: {
     flexDirection: 'row',
@@ -175,8 +182,11 @@ const styles = StyleSheet.create({
   cardText: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#d35400',
+    color: '#E5911B',
     textAlign: 'center',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
   searchInput: {
     borderWidth: 1,
@@ -185,6 +195,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     margin: 16,
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
   avatar: { width: 48, height: 48, borderRadius: 24, backgroundColor: '#ccc' },
 });

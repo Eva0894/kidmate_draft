@@ -24,6 +24,7 @@ import AvatarUploader from '@/components/AvatarUploader';
 import { ActivityIndicator } from 'react-native';
 import * as FileSystem from 'expo-file-system';
 import { Buffer } from 'buffer';
+import { Platform } from 'react-native';
 
 
 export default function MeSreen() {
@@ -38,7 +39,7 @@ export default function MeSreen() {
     const [loading, setLoading] = useState(false);
     const t = useT();
     const [modalVisible, setModalVisible] = useState(false);
-    const [isDarkMode, setIsDarkMode] = useState(Appearance.getColorScheme() === 'dark');
+    // const [isDarkMode, setIsDarkMode] = useState(Appearance.getColorScheme() === 'dark');
 
     const [userId, setUserId] = useState<string | null>(null);
     useEffect(() => {
@@ -138,11 +139,11 @@ export default function MeSreen() {
       <Text style={styles.privacyTitle}>Privacy</Text>
       <View style={styles.section}>{privacy.map(renderItem)}</View>
 
-      <TouchableOpacity style={styles.themeToggle} onPress={toggleTheme}>
+      {/* <TouchableOpacity style={styles.themeToggle} onPress={toggleTheme}>
         <Text style={styles.themeText}>
           Dark Mode: {theme === 'dark' ? 'On' : 'Off'}
         </Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       <TouchableOpacity
         style={styles.logoutToggle}
@@ -161,26 +162,34 @@ export default function MeSreen() {
       <Modal visible={showPinInput} transparent animationType="slide">
         <View style={{ flex: 1, justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.3)' }}>
           <View style={{ backgroundColor: '#fff', margin: 30, borderRadius: 10, padding: 20 }}>
-            <Text style={{ marginBottom: 10, fontSize: 16, fontWeight: '500' }}>Please Enter Parent PIN:</Text>
+            <Text style={{ marginBottom: 10, fontSize: 18, fontWeight: '500' ,fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),}}>Please Enter Parent PIN:</Text>
             <TextInput
               placeholder="4 digits"
               secureTextEntry
               keyboardType="number-pad"
               value={inputPin}
               onChangeText={setInputPin}
-              style={{ borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 10, marginBottom: 10 }}
+              style={{ borderWidth: 1, borderColor: '#ccc', borderRadius: 8, padding: 10, marginBottom: 10 ,fontFamily: Platform.select({
+                ios: 'ChalkboardSE-Regular',
+                android: 'monospace',}),}}
             />
             <TouchableOpacity
-              style={{ backgroundColor: '#D4A017', padding: 10, borderRadius: 8, alignItems: 'center' }}
+              style={{ backgroundColor: '#E5911B', padding: 10, borderRadius: 8, alignItems: 'center' }}
               onPress={enableParentMode}
             >
-              <Text style={{ color: '#fff', fontWeight: '600' }}>Confirm to Enter Parent Mode</Text>
+              <Text style={{ color: '#fff', fontWeight: '600', fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}), fontSize: 16}}>Confirm to Enter Parent Mode</Text>
             </TouchableOpacity>
             <TouchableOpacity
               onPress={() => setShowPinInput(false)}
               style={{ marginTop: 10, padding: 10, alignItems: 'center' }}
             >
-              <Text style={{ color: '#888' }}>Cancel</Text>
+              <Text style={{ color: '#999',fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}), fontSize:16 }}>Cancel</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -212,7 +221,9 @@ const styles = StyleSheet.create({
   itemText: {
     fontSize: 18,
     color: '#222',
-    fontFamily: 'ChalkboardSE-Regular',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
   arrow: {
     fontSize: 18,
@@ -225,7 +236,9 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
     color: '#222',
-    fontFamily: 'ChalkboardSE-Regular',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
   logoutToggle: {
     marginVertical: 30,
@@ -239,7 +252,9 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 20,
     fontWeight: '600',
-    fontFamily: 'ChalkboardSE-Regular',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
   themeToggle: {
     marginVertical: 30,
@@ -250,7 +265,9 @@ const styles = StyleSheet.create({
     color: '#222',
     fontSize: 16,
     fontWeight: '600',
-    fontFamily: 'ChalkboardSE-Regular',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
   avatarImage: {
     width: 100,

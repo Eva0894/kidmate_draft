@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
     color: '#E5911B',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
   },
   banner: {
     width: '100%',
@@ -271,13 +271,17 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   categoryTitle: {
-    fontSize: 18,
-    marginTop: 6,
+    fontSize: 14,
+    marginTop: 4,
     fontWeight: '600',
     color: '#E5911B',
+    textAlign: 'center',   
+    width: 100,          
+    flexWrap: 'wrap',    
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',
+    }),
   },
   duration: {
     fontSize: 16,
@@ -294,7 +298,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
   },
   resultItem: {
     paddingVertical: 8,
@@ -305,7 +309,7 @@ const styles = StyleSheet.create({
     color: '#333',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
   },
   bookItem: {
     width: 120,
@@ -324,7 +328,7 @@ const styles = StyleSheet.create({
     color: '#E5911B',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
   },
   progressBarContainer: {
     height: 6,

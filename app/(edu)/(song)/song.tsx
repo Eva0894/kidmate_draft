@@ -130,8 +130,10 @@ export default function SongPage() {
             onChangeText={setSearchText}
           />
         )}
+        
         {showSearch && searchText !== '' && (
           <View style={{ marginTop: 10 }}>
+            <Text style={styles.sectionTitle}>Search Results</Text>
             {filteredSongs.map((song, index) => (
               <TouchableOpacity
                 key={song.id}
@@ -146,6 +148,7 @@ export default function SongPage() {
                   })
                 }
               >
+            
                 <Text style={styles.searchResultTitle}>{song.title}</Text>
               </TouchableOpacity>
             ))}
@@ -186,7 +189,9 @@ export default function SongPage() {
 
           <Text style={styles.sectionTitle}>Recent</Text>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+    
             {recentSongs.map((song, index) => (
+              <View key={song.id} style ={{width:120, marginRight: 12}}>
               <TouchableOpacity
                 key={song.id}
                 onPress={() =>
@@ -206,6 +211,7 @@ export default function SongPage() {
                   <Ionicons name="heart" size={18} color="#f44336" style={styles.starIcon} />
                 )}
               </TouchableOpacity>
+              </View>
             ))}
           </ScrollView>
         </ScrollView>
@@ -265,7 +271,7 @@ const styles = StyleSheet.create({
     color: '#E5911B',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
   },
   duration: {
     fontSize: 12,
@@ -284,7 +290,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
   },
   starIcon: {
     position: 'absolute',
@@ -300,17 +306,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
   },
   searchResultTitle: {
     padding: 8,
     fontSize: 16,
     borderBottomColor: '#ccc',
     borderBottomWidth: 1,
-    color: '#E5911B',
+    color: '#333',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
   },
   avatar: { 
     width: 48, 

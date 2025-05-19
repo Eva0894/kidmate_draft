@@ -120,9 +120,8 @@ const styles = StyleSheet.create({
     color: '#E5911B',
     textAlign:'center',
     fontFamily: Platform.select({
-          ios: 'ChalkboardSE-Regular',
-          android: 'casual',
-        }),
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
   label: {
     fontSize: 18,
@@ -130,8 +129,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',
-    }),
+      android: 'monospace',}),
   },
   input: {
     backgroundColor: '#fff',
@@ -143,8 +141,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',
-    }),
+      android: 'monospace',}),
   },
   button: {
     backgroundColor: '#FFD700',
@@ -158,7 +155,6 @@ const styles = StyleSheet.create({
     color: '#333',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',
-    }),
+      android: 'monospace',}),
   },
 });

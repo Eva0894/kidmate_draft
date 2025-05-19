@@ -152,9 +152,8 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     textAlign: 'center',
     fontFamily: Platform.select({
-          ios: 'ChalkboardSE-Regular',
-          android: 'casual',
-        }),
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
   card: {
     borderWidth: 2,
@@ -173,8 +172,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',
-    }),
+      android: 'monospace',}),
   },
   planPrice: {
     fontSize: 16,
@@ -188,8 +186,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',
-    }),
+      android: 'monospace',}),
   },
   subscribeButton: {
     marginTop: 12,
@@ -203,8 +200,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',
-    }),
+      android: 'monospace',}),
   },
 });
 

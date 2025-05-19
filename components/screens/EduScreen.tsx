@@ -39,7 +39,7 @@ const options = [
   },
   {
     title: 'Course',
-    image: require('../../assets/images/Course.png'),
+    image: require('../../assets/images/Course-cover.png'),
     route: '/course',
   },
   {
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     marginTop: 30,
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
   },
   optionsContainer: {
     paddingHorizontal: 16,
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
   },
   progressBox: {
     backgroundColor: '#FFF8E1',
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     color: '#E5911B',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
   },
   progressSubtitle: {
     fontSize: 14,

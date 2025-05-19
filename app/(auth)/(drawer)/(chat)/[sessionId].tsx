@@ -6,11 +6,12 @@ import {
   SafeAreaView,
   FlatList,
   TouchableOpacity,
+  Text,
 } from 'react-native';
 import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import ChatMessage from '@/components/ChatMessage';
 import { Ionicons } from '@expo/vector-icons';
-import { Role } from '../../../../utils/Interfaces';
+import { Role } from '@/utils/Interfaces';
 import * as FileSystem from 'expo-file-system';
 
 const BACKEND_HTTP = 'http://13.236.67.206:8000';
@@ -26,25 +27,29 @@ export default function SessionDetailPage() {
   const { sessionId } = useLocalSearchParams();
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const router = useRouter();
 
-  // ✅ 将 ./images/xxx.png 映射为 file://... 路径
+  // 映射本地图像路径
   const resolveImagePath = (path?: string) => {
-    if (path?.startsWith('./images/')) {
+    if (!path) return undefined;
+    if (path.startsWith('./images/')) {
       const filename = path.replace('./images/', '');
       return `file://${FileSystem.documentDirectory}generated/${filename}`;
     }
-    return path; // 兼容远程图片
+    return path;
   };
 
   useEffect(() => {
     const fetchSession = async () => {
       try {
         const res = await fetch(`${BACKEND_HTTP}/api/chat/session/${sessionId}`);
+        if (!res.ok) throw new Error('Network error');
         const data = await res.json();
         setMessages(data.messages || []);
       } catch (err) {
         console.warn('❌ Failed to fetch chat session:', err);
+        setError(true);
       } finally {
         setLoading(false);
       }
@@ -64,15 +69,18 @@ export default function SessionDetailPage() {
           ),
         }}
       />
+
       {loading ? (
         <ActivityIndicator size="large" color="#888" />
+      ) : error ? (
+        <Text style={styles.errorText}>Failed to load chat session. Please try again later.</Text>
       ) : (
         <FlatList
           data={messages}
           keyExtractor={(_, index) => index.toString()}
           renderItem={({ item }) => (
             <ChatMessage
-              role={item.role as Role}
+              role={item.role === 'user' ? Role.User : Role.Bot}
               content={item.text}
               image={resolveImagePath(item.image)}
             />
@@ -89,5 +97,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     paddingHorizontal: 12,
+  },
+  errorText: {
+    color: '#f00',
+    fontSize: 16,
+    marginTop: 40,
+    textAlign: 'center',
   },
 });

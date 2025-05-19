@@ -19,8 +19,8 @@ export default function RosieSlimeShopGame() {
     <View style={styles.container}>
      {/* 返回按钮 */}
            <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-             <Ionicons name="arrow-back" size={24} color="#E5911B" />
-             <Text style={styles.backText}>Back</Text>
+             <Ionicons name="arrow-back" size={28} color="#E5911B" />
+             
            </TouchableOpacity>
       <WebView
         source={{ uri: 'https://springroll-tc.pbskids.org/donkey-hodie-bob-dog-game/8f7623bf1651f23b647771f5680e0aba5648c793/release/index.html?playOptions=%7B%22game_guid%22%3A%22d7a862c0-8e99-11ec-b231-63fc11309bf1%22%2C%22language%22%3A%22en%22%7D' }}
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
         left: 16,
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#fff4e6',
+        
         paddingVertical: 6,
         paddingHorizontal: 12,
         borderRadius: 20,

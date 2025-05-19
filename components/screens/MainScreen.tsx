@@ -12,6 +12,10 @@ import {
 import { router } from 'expo-router';
 import { supabase } from '@/utils/Supabase';
 import { getBackendUrl } from '@/utils/api'; 
+import { Ionicons } from '@expo/vector-icons';
+import AnimatedRefreshButton from '@/components/AnimatedRefreshButton';
+import { getAuthBackendUrl, getBookBackendUrl, getBookWsUrl } from '@/utils/apiConfig';
+
 
 const { width } = Dimensions.get('window');
 const BACKEND_URL = getBackendUrl();
@@ -145,9 +149,12 @@ export default function MainScreen() {
       {/* Recommended Books */}
       <View style={styles.recommendHeader}>
         <Text style={styles.recommendTitleText}>Recommended Books</Text>
-        <TouchableOpacity onPress={fetchRecommendedBooks} style={styles.refreshButton}>
-          <Text style={styles.refreshText}>🔄</Text>
-        </TouchableOpacity>
+        {/* <TouchableOpacity onPress={fetchRecommendedBooks} style={styles.refreshButton}>
+          <Text style={styles.refreshText}>
+            <Ionicons name="refresh" size={24}></Ionicons>
+          </Text>
+        </TouchableOpacity> */}
+        <AnimatedRefreshButton onRefresh={fetchRecommendedBooks} />
       </View>
 
       <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginBottom: 40 }}>
@@ -183,7 +190,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: '#555',
-    fontFamily: Platform.select({ ios: 'ChalkboardSE-Regular', android: 'casual' }),
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
   iconRow: {
     flexDirection: 'row',
@@ -206,9 +215,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 6,
     fontWeight: '600',
-    fontSize: 14,
-    color: '#333',
-    fontFamily: Platform.select({ ios: 'ChalkboardSE-Regular', android: 'casual' }),
+    fontSize: 18,
+    // color: '#E5911B',
+    color: '#666666',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
   recommendHeader: {
     flexDirection: 'row',
@@ -217,17 +229,20 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   recommendTitleText: {
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: 'bold',
+    // color: '#666666',
     color: '#E5911B',
-    fontFamily: Platform.select({ ios: 'ChalkboardSE-Regular', android: 'casual' }),
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
   refreshButton: {
     paddingHorizontal: 8,
     paddingVertical: 4,
   },
   refreshText: {
-    fontSize: 20,
+    fontSize: 30,
   },
   recommendCard: {
     width: 120,
@@ -247,11 +262,14 @@ const styles = StyleSheet.create({
   recommendBookTitle: {
     marginTop: 6,
     textAlign: 'center',
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: '500',
-    color: '#333',
+    // color: '#E5911B',
+    color: '#666666',
     width: 100,
-    fontFamily: Platform.select({ ios: 'ChalkboardSE-Regular', android: 'casual' }),
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',}),
   },
   bannerContainer: {
     width: '100%',
