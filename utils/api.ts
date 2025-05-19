@@ -21,12 +21,12 @@ export const getAuthBackendUrl = (): string => {
 export const getBackendUrl = (): string => {
   if (__DEV__) {
     if (Platform.OS === 'ios') {
-      return Constants.expoConfig?.extra?.BOOK_BACKEND_URL || 'http://localhost:8000';
+      return Constants.expoConfig?.extra?.BOOK_BACKEND_URL || 'http://13.236.67.206:8000';
     } else if (Platform.OS === 'android') {
-      return Constants.expoConfig?.extra?.BOOK_BACKEND_URL_ANDROID || 'http://10.0.2.2:8000';
+      return Constants.expoConfig?.extra?.BOOK_BACKEND_URL_ANDROID || 'http://13.236.67.206:8000';
     }
   }
-  return Constants.expoConfig?.extra?.BOOK_BACKEND_URL || 'http://localhost:8000';
+  return Constants.expoConfig?.extra?.BOOK_BACKEND_URL || 'http://13.236.67.206:8000';
 };
 
 /**
@@ -40,7 +40,7 @@ export const getAuthWsUrl = (): string => {
  * WebSocket 地址获取（FastAPI）
  */
 export const getBookWsUrl = (): string => {
-  return Constants.expoConfig?.extra?.BACKEND_WS || 'ws://localhost:8000';
+  return Constants.expoConfig?.extra?.BACKEND_WS || 'ws://13.236.67.206:8000';
 };
 
 /**

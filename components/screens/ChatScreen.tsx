@@ -17,8 +17,8 @@ import { supabase } from '@/utils/Supabase';
 import { Role } from '../../utils/Interfaces';
 import { downloadImage } from '../../utils/downloadImage'; 
 
-const BACKEND_WS = 'ws://localhost:8000/api/chat/ws/chat';
-const BACKEND_HTTP = 'http://localhost:8000';
+const BACKEND_WS = 'ws://13.236.67.206:8000/api/chat/ws/chat';
+const BACKEND_HTTP = 'http://13.236.67.206:8000';
 
 type Message = {
   role: 'user' | 'bot';

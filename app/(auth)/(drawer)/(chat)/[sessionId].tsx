@@ -13,7 +13,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Role } from '../../../../utils/Interfaces';
 import * as FileSystem from 'expo-file-system';
 
-const BACKEND_HTTP = 'http://localhost:8000';
+const BACKEND_HTTP = 'http://13.236.67.206:8000';
 
 type Message = {
   role: 'user' | 'assistant';

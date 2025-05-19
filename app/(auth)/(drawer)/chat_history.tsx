@@ -12,7 +12,7 @@ import { useRouter, Stack } from 'expo-router';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 
-const BACKEND_HTTP = 'http://localhost:8000';
+const BACKEND_HTTP = 'http://13.236.67.206:8000';
 
 type ChatSession = {
   session_id: string;

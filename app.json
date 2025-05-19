@@ -19,7 +19,12 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.eva0894.kidmate",
-      "permissions": ["NOTIFICATIONS"]
+      "permissions": ["NOTIFICATIONS"],
+      "infoPlist": {
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true
+        }
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -27,7 +32,8 @@
         "backgroundColor": "#ffffff",
         "permissions": ["NOTIFICATIONS"]
       },
-      "package": "com.eva0894.kidmate"
+      "package": "com.eva0894.kidmate",
+      "usesCleartextTraffic": true
     },
     "web": {
       "bundler": "metro",
