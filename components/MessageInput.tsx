@@ -9,9 +9,9 @@ import {
 import { FontAwesome } from '@expo/vector-icons';
 import * as FileSystem from 'expo-file-system';
 import { Audio } from 'expo-av';
-import { getBackendUrl } from '@/utils/api';
+import { getBookBackendUrl } from '@/utils/apiConfig';
 
-const BACKEND_URL = getBackendUrl();
+const BACKEND_URL = getBookBackendUrl();
 
 export type Props = {
   onShouldSend: (message: string) => void;

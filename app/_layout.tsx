@@ -6,6 +6,7 @@ import { StyleSheet } from 'react-native';
 import { LanguageProvider } from '../components/LanguageProvider';
 import { UserProvider } from '../components/UserContext';
 import { useUsage } from '../src/hooks/useUsage';
+import { ThemeProvider } from '@/components/ThemeContext';
 
 export default function RootLayout() {
   useUsage(); // ✅ 启用全局时长控制
@@ -13,15 +14,17 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
-        <LanguageProvider>
-          <AppProviders>
-            <SafeAreaView style={styles.safeArea} edges={['top', 'right', 'left']}>
-              <UserProvider>
-                <Slot />
-              </UserProvider>
-            </SafeAreaView>
-          </AppProviders>
-        </LanguageProvider>
+      <ThemeProvider>
+          <LanguageProvider>
+            <AppProviders>
+              <SafeAreaView style={styles.safeArea} edges={['top', 'right', 'left']}>
+                <UserProvider>
+                  <Slot />
+                </UserProvider>
+              </SafeAreaView>
+            </AppProviders>
+          </LanguageProvider>
+        </ThemeProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

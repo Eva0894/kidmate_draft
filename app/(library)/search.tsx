@@ -13,18 +13,15 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { getBackendUrl } from '@/utils/api'; 
+import { getBookBackendUrl } from '@/utils/apiConfig';
 
-const BACKEND_URL = getBackendUrl();
-
+const BACKEND_URL = getBookBackendUrl();
 const { width } = Dimensions.get('window');
 
-// ✅ 添加类型定义
 type Book = {
   id: string;
   title: string;
   cover: string;
-  // 可以根据需要继续添加字段，例如 age_group, summary 等
 };
 
 export default function SearchScreen() {

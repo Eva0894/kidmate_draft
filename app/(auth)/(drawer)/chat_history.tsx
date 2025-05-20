@@ -11,8 +11,10 @@ import {
 import { useRouter, Stack } from 'expo-router';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
+import { supabase } from '@/utils/Supabase'; 
+import { getBookBackendUrl } from '@/utils/apiConfig';
 
-const BACKEND_HTTP = 'http://13.236.67.206:8000';
+const BACKEND_URL = getBookBackendUrl();
 
 type ChatSession = {
   session_id: string;
@@ -28,9 +30,16 @@ export default function ChatHistoryPage() {
 
   const fetchHistory = async () => {
     try {
-      const res = await fetch(`${BACKEND_HTTP}/api/chat/chat_history`);
-      const data = await res.json();
-      setHistory(data);
+      const { data } = await supabase.auth.getUser(); 
+      const userId = data?.user?.id;
+      if (!userId) {
+        console.warn('No user logged in');
+        return;
+      }
+
+      const res = await fetch(`${BACKEND_URL}/api/chat/chat_history?user_id=${userId}`);
+      const dataJson = await res.json();
+      setHistory(dataJson);
     } catch (err) {
       console.warn('Failed to get the conversation history:', err);
     } finally {
@@ -50,7 +59,7 @@ export default function ChatHistoryPage() {
         style: 'destructive',
         onPress: async () => {
           try {
-            await fetch(`${BACKEND_HTTP}/api/chat/chat_history/${session_id}`, {
+            await fetch(`${BACKEND_URL}/api/chat/chat_history/${session_id}`, {
               method: 'DELETE',
             });
             setHistory((prev) => prev.filter((item) => item.session_id !== session_id));
@@ -65,7 +74,7 @@ export default function ChatHistoryPage() {
   const renderItem = ({ item }: { item: ChatSession }) => (
     <TouchableOpacity
       style={styles.card}
-      onPress={() => router.push(`/(auth)/(chat)/${item.session_id}`)} // ✅ 使用正确动态路由
+      onPress={() => router.push(`/(auth)/(chat)/${item.session_id}`)}
       onLongPress={() => deleteHistory(item.session_id)}
     >
       <Text style={styles.preview}>{item.preview || '（无内容）'}</Text>
@@ -91,6 +100,8 @@ export default function ChatHistoryPage() {
       <View style={styles.container}>
         {loading ? (
           <ActivityIndicator size="large" color="#888" style={{ marginTop: 30 }} />
+        ) : history.length === 0 ? (
+          <Text style={styles.emptyText}>No chat history</Text>
         ) : (
           <FlatList
             data={history}
@@ -125,5 +136,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#666',
     marginTop: 6,
+  },
+  emptyText: {
+    textAlign: 'center',
+    fontSize: 16,
+    color: '#888',
+    marginTop: 40,
   },
 });

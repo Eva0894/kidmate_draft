@@ -7,15 +7,13 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useNavigation } from '@react-navigation/native';
 import { Audio } from 'expo-av';
 import * as FileSystem from 'expo-file-system';
-// import NetInfo from '@react-native-community/netinfo';
 import * as Network from 'expo-network';
 import { Ionicons } from '@expo/vector-icons';
 import libStyles from './libStyles';
 import { supabase } from '@/utils/Supabase';
-import { trackBookCompletion, isBookCompleted } from '@/utils/readingAchievements';
-import { getBackendUrl } from '@/utils/api';
+import { getBookBackendUrl } from '@/utils/apiConfig';
 
-const BACKEND_URL = getBackendUrl(); 
+const BACKEND_URL = getBookBackendUrl();
 const { width, height } = Dimensions.get('window');
 
 export default function BookReaderPage() {
@@ -26,35 +24,15 @@ export default function BookReaderPage() {
 
   const router = useRouter();
   const navigation = useNavigation();
+  const flatListRef = useRef<FlatList<any>>(null);
 
-  type BookPage = {
-    text: string;
-    image?: string;
-    audio?: string;
-  };
-  
-  const [pages, setPages] = useState<BookPage[]>([]);
+  const [pages, setPages] = useState<any[]>([]);
   const [bookData, setBookData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
-  const [isCompleted, setIsCompleted] = useState(false);
-  const [userId, setUserId] = useState<string | null>(null);
-  const flatListRef = useRef<FlatList<any>>(null);
 
   useEffect(() => {
-    const loadBookAndUser = async () => {
-      // 获取当前用户
-      const { data: { user }, error: userError } = await supabase.auth.getUser();
-      if (userError) {
-        console.error('❌ get user failed:', userError.message);
-      } else if (user) {
-        setUserId(user.id);
-        
-        // 检查书籍是否已完成
-        const completed = await isBookCompleted(user.id, bookId);
-        setIsCompleted(completed);
-      }
-    
+    const loadBook = async () => {
       if (isOffline) {
         try {
           const path = `${FileSystem.documentDirectory}offline/${bookId}/book.json`;
@@ -69,12 +47,6 @@ export default function BookReaderPage() {
           setLoading(false);
         }
       } else {
-        // const netState = await NetInfo.fetch();
-        // if (!netState.isConnected) {
-        //   Alert.alert('Network Error', 'Please download the book for offline use.');
-        //   router.back();
-        //   return;
-        // }
         const netState = await Network.getNetworkStateAsync();
         if (!netState.isConnected) {
           Alert.alert('Network Error', 'Please download the book for offline use.');
@@ -111,7 +83,7 @@ export default function BookReaderPage() {
       }
     };
 
-    loadBookAndUser();
+    loadBook();
   }, [bookId, isOffline]);
 
   const handleSaveOffline = async () => {
@@ -124,13 +96,10 @@ export default function BookReaderPage() {
       const coverPath = `${bookDir}/cover.jpg`;
       await FileSystem.downloadAsync(`${BACKEND_URL}${bookData.cover}`, coverPath);
 
-      const pageInfos = await Promise.all(bookData.pages.map(async (page:any, idx:any) => {
+      const pageInfos = await Promise.all(bookData.pages.map(async (page: any, idx: number) => {
         const imgPath = `${bookDir}/page_${idx + 1}.jpg`;
         await FileSystem.downloadAsync(`${BACKEND_URL}${page.image}`, imgPath);
-        return {
-          image: imgPath,
-          text: page.text,
-        };
+        return { image: imgPath, text: page.text };
       }));
 
       const offlineMeta = {
@@ -146,7 +115,7 @@ export default function BookReaderPage() {
 
       Alert.alert('Success', 'Book saved for offline use!');
     } catch (err) {
-      console.error(' Failed to save offline:', err);
+      console.error('Failed to save offline:', err);
       Alert.alert('Error', 'Failed to save book offline.');
     }
   };
@@ -156,8 +125,12 @@ export default function BookReaderPage() {
       Alert.alert('Offline Mode', 'Bookmarks not supported in offline mode.');
       return;
     }
+    const { data: userData } = await supabase.auth.getUser();
+    const userId = userData?.user?.id;
+    if (!userId) return;
+
     try {
-      await fetch(`${BACKEND_URL}/books/bookmarks`, {
+      await fetch(`${BACKEND_URL}/books/bookmarks?user_id=${userId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ book_id: bookId, page_index: currentPageIndex }),
@@ -165,20 +138,6 @@ export default function BookReaderPage() {
       Alert.alert('Success', 'Bookmark saved!');
     } catch (err) {
       Alert.alert('Error', 'Failed to save bookmark.');
-    }
-  };
-
-  // 标记书籍为已读完成
-  const handleMarkAsCompleted = async () => {
-    if (!userId || isOffline) return;
-    
-    try {
-      await trackBookCompletion(userId, bookId);
-      setIsCompleted(true);
-      Alert.alert('Success', 'Book marked as completed!');
-    } catch (error) {
-      console.error('mark book completed failed:', error);
-      Alert.alert('Error', 'mark book completed failed, please try again later.');
     }
   };
 
@@ -246,38 +205,21 @@ export default function BookReaderPage() {
         renderItem={renderPage}
         keyExtractor={(_, i) => i.toString()}
         showsHorizontalScrollIndicator={false}
-        onMomentumScrollEnd={(e) => {
+        onMomentumScrollEnd={async (e) => {
           const index = Math.round(e.nativeEvent.contentOffset.x / width);
           setCurrentPageIndex(index);
           if (!isOffline) {
-            fetch(`${BACKEND_URL}/books/reading-log`, {
+            const { data: userData } = await supabase.auth.getUser();
+            const userId = userData?.user?.id;
+            if (!userId) return;
+            fetch(`${BACKEND_URL}/books/reading-log?user_id=${userId}`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({ book_id: bookId, page_index: index }),
             });
-            
-            // 当用户翻到最后一页并且书籍尚未标记为已读时，提示是否标记为已读
-            if (index === pages.length - 1 && !isCompleted && userId) {
-              Alert.alert(
-                'Congratulations!',
-                'You have finished this book, whether to mark it as completed?',
-                [
-                  { text: 'Cancel', style: 'cancel' },
-                  { 
-                    text: 'Mark as completed', 
-                    style: 'default',
-                    onPress: handleMarkAsCompleted
-                  }
-                ]
-              );
-            }
           }
         }}
-        getItemLayout={(_, index) => ({
-          length: width,
-          offset: width * index,
-          index,
-        })}
+        getItemLayout={(_, index) => ({ length: width, offset: width * index, index })}
         onScrollToIndexFailed={({ index }) => {
           setTimeout(() => {
             flatListRef.current?.scrollToIndex({ index, animated: false });
@@ -292,19 +234,6 @@ export default function BookReaderPage() {
         <TouchableOpacity style={[styles.smallButton, { backgroundColor: '#FF9800' }]} onPress={handleBookmark}>
           <Text style={styles.buttonText}>🔖 Bookmark</Text>
         </TouchableOpacity>
-        {!isOffline && !isCompleted && (
-          <TouchableOpacity 
-            style={[styles.smallButton, { backgroundColor: '#4CAF50' }]} 
-            onPress={handleMarkAsCompleted}
-          >
-            <Text style={styles.buttonText}>✅ Mark as completed</Text>
-          </TouchableOpacity>
-        )}
-        {!isOffline && isCompleted && (
-          <View style={[styles.smallButton, { backgroundColor: '#CCCCCC' }]}>
-            <Text style={styles.buttonText}>✓ Completed</Text>
-          </View>
-        )}
       </View>
     </View>
   );

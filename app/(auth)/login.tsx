@@ -20,7 +20,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { WebView } from 'react-native-webview';
 import Modal from 'react-native-modal';
 import { useEffect } from 'react';
-import { getAuthBackendUrl, post } from '@/utils/api';
+import { post } from '@/utils/api';
+import { getAuthBackendUrl } from '@/utils/apiConfig'; 
 
 const backgroundImage = require('@/assets/images/login-bg.jpg');
 

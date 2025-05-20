@@ -127,7 +127,7 @@ export default function PersonalizationPage() {
     >
       <ScrollView contentContainerStyle={{ padding: 20 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 20 }}>
-        <TouchableOpacity onPress={() => router.back()} style={{ position: 'absolute', left: 0 }}>
+        <TouchableOpacity onPress={() => router.replace('/(tabs)/me')} style={{ position: 'absolute', left: 0 }}>
           <Ionicons name="arrow-back" size={24} color="#c08700" />
         </TouchableOpacity>
 

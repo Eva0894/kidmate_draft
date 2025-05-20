@@ -57,9 +57,7 @@ export default function MeSreen() {
   const settings = [
     { title: 'Profile', path: '/(me)/profile' },
     { title: 'Personalization', path: '/(me)/personalization' },
-    { title: 'Language', path: '/(me)/language' },
     { title: 'Notifications', path: '/(me)/notification' },
-    // { title: 'Security', path: '/(me)/security' },
     { title: 'Set Parent Pin', path: '', onPress: () => setShowPinModal(true)},
     { title: 'Parent Mode', path: '', onPress: () => !isLocked && setShowPinInput(true) },
   ];
@@ -138,11 +136,11 @@ export default function MeSreen() {
       <Text style={styles.privacyTitle}>Privacy</Text>
       <View style={styles.section}>{privacy.map(renderItem)}</View>
 
-      <TouchableOpacity style={styles.themeToggle} onPress={toggleTheme}>
+      {/* <TouchableOpacity style={styles.themeToggle} onPress={toggleTheme}>
         <Text style={styles.themeText}>
           Dark Mode: {theme === 'dark' ? 'On' : 'Off'}
         </Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       <TouchableOpacity
         style={styles.logoutToggle}

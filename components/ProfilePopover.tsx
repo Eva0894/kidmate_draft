@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Platform } from 'react-native';
 import { supabase } from '@/utils/Supabase';
 import { Ionicons } from '@expo/vector-icons';
-import { Platform } from 'react-native';
-import iconSet from '@expo/vector-icons/build/Fontisto';
 
 interface ProfilePopoverProps {
   visible: boolean;
@@ -38,60 +36,57 @@ export default function ProfilePopover({ visible }: ProfilePopoverProps) {
 
   return (
     <View style={styles.card}>
-      <Text 
-        style={styles.text}>
-        <Ionicons name="person-outline" style={styles.icon} />
-        {profile.username}
-      </Text>
-      
-      <Text 
-        style={styles.text}>
-        📧 {profile.email}
-      </Text>
+      <Ionicons name="person-outline" style={styles.icon} />
+      <View style={styles.textContainer}>
+        <Text style={styles.username}>{profile.username}</Text>
+        <Text style={styles.email}>📮 {profile.email}</Text>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   card: {
-    marginTop: 10,
-    backgroundColor: '#FFF7E6', 
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFF7E6',
     paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 16,    
+    paddingHorizontal: 16,
+    borderRadius: 12,
     shadowColor: '#000',
-    shadowOpacity: 0.12,
-    shadowOffset: { width: 0, height: 4 },
-    shadowRadius: 8,
-    elevation: 4,
-    maxWidth: 240,     
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 6,
+    elevation: 3,
     borderWidth: 1,
-    borderColor: '#FFE0B2',  
-    alignItems: 'flex-start',  
-    flexDirection: 'row',  
+    borderColor: '#FFE0B2',
+    maxWidth: 300,
+    marginTop: 10,
   },
-  
-  text: {
+  icon: {
+    fontSize: 28,
+    color: '#E5911B',
+    marginRight: 12,
+  },
+  textContainer: {
+    flexDirection: 'column',
+  },
+  username: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: '600',
     color: '#4B3B2B',
-    letterSpacing: 0.5,
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
       android: 'casual',
-    }),                      
+    }),
   },
-  icon: {
-    fontSize: 20,
-    color: '#E5911B',
-    marginRight: 8,
-  },
-  iconLabel: {
-    textAlign: 'center',
-    marginTop: 6,
-    fontWeight: '600',
+  email: {
     fontSize: 14,
-    color: '#333',
-    fontFamily: Platform.select({ ios: 'ChalkboardSE-Regular', android: 'casual' }),
+    color: '#555',
+    marginTop: 4,
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'casual',
+    }),
   },
 });

@@ -9,9 +9,8 @@ export default function InfoListPage() {
 
   return (
     <View style={{ flex: 1, backgroundColor: '#fff8ee' }}>
-      <TouchableOpacity style={meStyles.backButton} onPress={() => router.back()}>
+      <TouchableOpacity style={meStyles.backButton} onPress={() => router.replace('/(tabs)/me')}>
         <Ionicons name="arrow-back" size={32} color="#E5911B" />
-        {/* <Text style={meStyles.backText}>Back</Text> */}
       </TouchableOpacity>
 
       <ScrollView contentContainerStyle={meStyles.container}>

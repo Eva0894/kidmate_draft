@@ -132,6 +132,7 @@ export default function SongPage() {
         )}
         {showSearch && searchText !== '' && (
           <View style={{ marginTop: 10 }}>
+            <Text style={styles.sectionTitle}>Search Results</Text>
             {filteredSongs.map((song, index) => (
               <TouchableOpacity
                 key={song.id}

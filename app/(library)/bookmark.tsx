@@ -1,17 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import {
-  View, Text, FlatList, TouchableOpacity, Alert, StyleSheet, Image, Platform,
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  Alert,
+  StyleSheet,
+  Image,
+  Platform,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import libStyles from './libStyles';
-import { getBackendUrl } from '@/utils/api'; 
+import { supabase } from '@/utils/Supabase';
+import { getBookBackendUrl } from '@/utils/apiConfig';
 
-// const BACKEND_URL =
-//   Platform.OS === 'ios'
-//     ? 'http://localhost:8000' 
-//     : 'http://192.168.10.117:8000';
-const BACKEND_URL = getBackendUrl();
+const BACKEND_URL = getBookBackendUrl();
 
 type Bookmark = { book_id: string; page_index: number };
 type Book = { id: string; title: string; cover?: string };
@@ -23,31 +27,58 @@ export default function BookmarksScreen() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    Promise.all([
-      fetch(`${BACKEND_URL}/books/bookmarks`).then(res => res.json()),
-      fetch(`${BACKEND_URL}/books`).then(res => res.json()),
-    ])
-      .then(([bookmarkData, bookData]) => {
-        setBookmarks(bookmarkData);
-        setBooks(bookData);
-      })
-      .catch(err => {
+    const fetchBookmarks = async () => {
+      const { data: userData } = await supabase.auth.getUser();
+      const userId = userData?.user?.id;
+      if (!userId) return;
+
+      try {
+        const [bookmarkRes, bookRes] = await Promise.all([
+          fetch(`${BACKEND_URL}/books/bookmarks?user_id=${userId}`),
+          fetch(`${BACKEND_URL}/books`),
+        ]);
+
+        if (!bookmarkRes.ok || !bookRes.ok) {
+          const errorText = await bookmarkRes.text();
+          console.error('❌ 请求书签或图书失败:', errorText);
+          Alert.alert('Error', 'Failed to fetch data.');
+          return;
+        }
+
+        const [bookmarkData, bookData] = await Promise.all([
+          bookmarkRes.json(),
+          bookRes.json(),
+        ]);
+
+        setBookmarks(Array.isArray(bookmarkData) ? bookmarkData : []);
+        setBooks(Array.isArray(bookData) ? bookData : []);
+      } catch (err) {
         console.error('❌ Failed to load bookmarks:', err);
         Alert.alert('Error', 'Unable to load bookmarks.');
-      })
-      .finally(() => setLoading(false));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBookmarks();
   }, []);
 
-  const getBookInfo = (id: string) => books.find(b => b.id === id);
+  const getBookInfo = (id: string) => books.find((b) => b.id === id);
 
   const handleDelete = async (bookId: string, pageIndex: number) => {
+    const { data: userData } = await supabase.auth.getUser();
+    const userId = userData?.user?.id;
+    if (!userId) return;
+
     try {
-      await fetch(`${BACKEND_URL}/books/bookmarks/delete`, {
+      await fetch(`${BACKEND_URL}/books/bookmarks/delete?user_id=${userId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ book_id: bookId, page_index: pageIndex }),
       });
-      setBookmarks(prev => prev.filter(b => !(b.book_id === bookId && b.page_index === pageIndex)));
+      setBookmarks((prev) =>
+        prev.filter((b) => !(b.book_id === bookId && b.page_index === pageIndex))
+      );
     } catch (err) {
       console.error('Failed to delete bookmark:', err);
       Alert.alert('Error', 'Failed to delete bookmark.');
@@ -79,10 +110,7 @@ export default function BookmarksScreen() {
         }
       >
         {book.cover && (
-          <Image
-            source={{ uri: `${BACKEND_URL}${book.cover}` }}
-            style={styles.cover}
-          />
+          <Image source={{ uri: `${BACKEND_URL}${book.cover}` }} style={styles.cover} />
         )}
         <View style={{ flex: 1 }}>
           <Text style={styles.itemText} numberOfLines={1}>

@@ -39,7 +39,7 @@ export default function NotificationPage() {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()}>
+        <TouchableOpacity onPress={() => router.replace('/(tabs)/me')}>
           <Ionicons name="arrow-back" size={32} color="#E5911B" />
         </TouchableOpacity>
         <Text style={meStyles.header}>Notifications</Text>
