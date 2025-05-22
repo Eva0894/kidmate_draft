@@ -93,7 +93,7 @@ const cardSize = (screenWidth - 48) / 2;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#fff8e1',
     paddingTop: 20,
   },
   header: {

@@ -220,7 +220,8 @@ export default function MainScreen() {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    backgroundColor: '#fff',
+    // backgroundColor: '#fff',
+    backgroundColor: '#fff8e1',
   },
   banner: {
     width: width - 40, 

@@ -18,6 +18,7 @@ import * as MediaLibrary from 'expo-media-library';
 import { useRouter } from 'expo-router';
 import { supabase } from '@/utils/Supabase';
 import { v4 as uuidv4 } from 'uuid';
+import { Ionicons } from '@expo/vector-icons'; 
 
 const numColumns = 2;
 const screenWidth = Dimensions.get('window').width;
@@ -356,7 +357,7 @@ export default function ViewSavedDrawings() {
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()}>
-          <Text style={styles.backButton}>← Back</Text>
+          <Ionicons name="arrow-back" style={styles.backButton}/>
         </TouchableOpacity>
         <Text style={styles.title}>My Drawings</Text>
         <Text style={{ width: 28 }} />
@@ -404,16 +405,9 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     zIndex: 10,
     color: '#e2ac30',
-    fontSize: 16,
+    fontSize: 28,
     fontWeight: 'bold',
     textAlign: 'center',
-    borderWidth: 1,
-    borderColor: '#e2ac30',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
   },
   title: {
     fontSize: 28,
@@ -421,7 +415,10 @@ const styles = StyleSheet.create({
     marginTop: 30,
     marginBottom: 20,
     fontWeight: '800',
-    fontFamily: 'Cochin',
+    fontFamily: Platform.select({
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',
+    }),
     textShadowColor: '#444',
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 3,
