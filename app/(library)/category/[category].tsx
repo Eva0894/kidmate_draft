@@ -196,12 +196,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#888',
     paddingLeft: 8,
-    fontFamily: Platform.select({ ios: 'ChalkboardSE-Regular', android: 'casual' }),
+    fontFamily: Platform.select({ ios: 'ChalkboardSE-Regular', android: 'monospace' }),
   },
   activeCategoryText: {
     fontWeight: 'bold',
     color: '#E5911B',
-    fontFamily: Platform.select({ ios: 'ChalkboardSE-Regular', android: 'casual' }),
+    fontFamily: Platform.select({ ios: 'ChalkboardSE-Regular', android: 'monospace' }),
   },
   content: {
     flex: 1,
@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 12,
     color: '#E5911B',
-    fontFamily: Platform.select({ ios: 'ChalkboardSE-Regular', android: 'casual' }),
+    fontFamily: Platform.select({ ios: 'ChalkboardSE-Regular', android: 'monospace' }),
   },
   bookList: { paddingBottom: 80 },
   bookCard: {
@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     textAlign: 'center',
-    fontFamily: Platform.select({ ios: 'ChalkboardSE-Regular', android: 'casual' }),
+    fontFamily: Platform.select({ ios: 'ChalkboardSE-Regular', android: 'monospace' }),
     color: '#E5911B',
   },
   favIcon: {

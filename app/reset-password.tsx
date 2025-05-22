@@ -14,7 +14,6 @@ import {
 import { supabase } from '@/utils/Supabase';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import Colors from '@/constants/Colors';
 
 const backgroundImage = require('@/assets/images/login-bg.jpg');
 
@@ -28,13 +27,15 @@ export default function ResetPasswordPage() {
       Alert.alert('Invalid Email', 'Please enter a valid email address.');
       return;
     }
-  
+
     setLoading(true);
+
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: 'https://your-vercel-domain.vercel.app/reset-password-confirm',  // 改成你的 Vercel 页面
+      redirectTo: 'kidmate://reset-password-confirm',
     });
+
     setLoading(false);
-  
+
     if (error) {
       if (error.message.includes('User not found')) {
         Alert.alert('Invalid Email', 'The email address is not registered.');
@@ -44,7 +45,7 @@ export default function ResetPasswordPage() {
       }
       return;
     }
-  
+
     Alert.alert('Success', '📩 Password reset link sent. Please check your email.');
     router.replace('/(auth)/login');
   };

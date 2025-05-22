@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
     padding: 16,
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
 
   },
   viewButtonContainer: {
@@ -324,7 +324,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
   },
   topBar: {
     flexDirection: 'row',
@@ -339,7 +339,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
     marginTop: -40,
   },
   seeMyWorkButton: {
@@ -352,7 +352,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontFamily: Platform.select({
           ios: 'ChalkboardSE-Regular',
-          android: 'casual',}),
+          android: 'monospace',}),
   },
   customButton: {
   flexDirection: 'row',  // 横向排列

@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     textAlign:'center',
     fontFamily: Platform.select({
           ios: 'ChalkboardSE-Regular',
-          android: 'casual',
+          android: 'monospace',
         }),
   },
   label: {
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',
+      android: 'monospace',
     }),
   },
   input: {
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',
+      android: 'monospace',
     }),
   },
   button: {
@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     color: '#333',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',
+      android: 'monospace',
     }),
   },
 });

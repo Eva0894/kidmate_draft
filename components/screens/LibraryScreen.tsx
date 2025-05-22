@@ -16,6 +16,7 @@ import { Ionicons } from '@expo/vector-icons';
 import * as FileSystem from 'expo-file-system';
 import * as Network from 'expo-network';
 import { getBookBackendUrl } from '@/utils/apiConfig';
+import { supabase } from '@/utils/Supabase'; // ✅ 获取登录用户信息
 
 const { width } = Dimensions.get('window');
 const BACKEND_URL = getBookBackendUrl();
@@ -34,45 +35,68 @@ export default function LibraryScreen() {
   const [isOffline, setIsOffline] = useState(false);
 
   useEffect(() => {
-    const checkNetwork = async () => {
-      const state = await Network.getNetworkStateAsync();
-      setIsOffline(!state.isConnected);
-    };
+    const fetchData = async () => {
+      const net = await Network.getNetworkStateAsync();
+      setIsOffline(!net.isConnected);
 
-    checkNetwork(); // 初次检查
-    const interval = setInterval(checkNetwork, 10000); // 每 10 秒检查一次
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.getUser();
+      if (!user || error) {
+        console.warn("User not logged in");
+        return;
+      }
 
-    fetch(`${BACKEND_URL}/books/reading-log`)
-      .then(res => res.json())
-      .then(async (logs) => {
+      const userId = user.id;
+      try {
+        const res = await fetch(`${BACKEND_URL}/books/reading-log?user_id=${userId}`);
+        const logs = await res.json();
+
         const enriched = await Promise.all(
           logs.map(async (log: any) => {
             if (!log.book_id) return null;
             try {
               const res = await fetch(`${BACKEND_URL}/books/${log.book_id}`);
               const book = await res.json();
+              const pagesLength = Array.isArray(book.pages) ? book.pages.length : 1;
+              const coverUrl = book.cover?.startsWith('http')
+                ? book.cover
+                : `${BACKEND_URL}${book.cover}`;
               return {
                 book_id: log.book_id,
                 page_index: log.page_index,
-                total_pages: book.pages.length,
+                total_pages: pagesLength,
                 books: {
                   title: book.title,
-                  cover_url: `${BACKEND_URL}${book.cover}`,
+                  cover_url: coverUrl,
                 },
               };
             } catch (e) {
-              console.error('Failed to load book:', log.book_id);
+              console.error('Failed to load book:', log.book_id, e);
               return null;
             }
           })
         );
-        setRecents(enriched.filter(Boolean));
-      });
 
+        setRecents(enriched.filter(Boolean));
+      } catch (err) {
+        console.error('Failed to fetch reading log:', err);
+      }
+    };
+
+    fetchData();
+    const interval = setInterval(fetchData, 10000); // 每 10 秒检查一次网络和刷新
     return () => clearInterval(interval);
   }, []);
 
-  const handleDeleteRecent = (bookId: string, title: string) => {
+  const handleDeleteRecent = async (bookId: string, title: string) => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (!user) return;
+    const userId = user.id;
+
     Alert.alert(
       'Delete Reading Record',
       `Are you sure you want to delete the reading record for "${title}"?`,
@@ -83,7 +107,7 @@ export default function LibraryScreen() {
           style: 'destructive',
           onPress: async () => {
             try {
-              await fetch(`${BACKEND_URL}/books/reading-log`, {
+              await fetch(`${BACKEND_URL}/books/reading-log?user_id=${userId}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ book_id: bookId, page_index: -1 }),
@@ -110,7 +134,6 @@ export default function LibraryScreen() {
       return;
     }
 
-    // 离线模式下检查文件是否存在
     const bookJsonPath = `${FileSystem.documentDirectory}offline/${bookId}/book.json`;
     const fileInfo = await FileSystem.getInfoAsync(bookJsonPath);
 
@@ -162,11 +185,6 @@ export default function LibraryScreen() {
           <TouchableOpacity
             key={index}
             style={styles.catItem}
-            // onPress={() =>
-            //   router.push({
-            //     pathname: '/(library)/category/[category]',
-            //     params: { category: cat.title.toLowerCase() },
-            //   })
             onPress={() =>
               router.push(`/(library)/category/${cat.title.toLowerCase()}`)
             }
@@ -228,7 +246,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#E5911B',
     textAlign: 'center',
-    fontFamily: Platform.select({ ios: 'ChalkboardSE-Regular', android: 'casual' }),
+    fontFamily: Platform.select({ ios: 'ChalkboardSE-Regular', android: 'monospace' }),
   },
   sectionTitle: {
     fontSize: 18,
@@ -236,7 +254,7 @@ const styles = StyleSheet.create({
     color: '#E5911B',
     marginBottom: 8,
     marginTop: 12,
-    fontFamily: Platform.select({ ios: 'ChalkboardSE-Regular', android: 'casual' }),
+    fontFamily: Platform.select({ ios: 'ChalkboardSE-Regular', android: 'monospace' }),
   },
   banner: {
     width: '100%',
@@ -277,7 +295,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     textAlign: 'center',
     color: '#E5911B',
-    fontFamily: Platform.select({ ios: 'ChalkboardSE-Regular', android: 'casual' }),
+    fontFamily: Platform.select({ ios: 'ChalkboardSE-Regular', android: 'monospace' }),
   },
   recentList: {
     paddingVertical: 8,
@@ -299,7 +317,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     textAlign: 'center',
     color: '#E5911B',
-    fontFamily: Platform.select({ ios: 'ChalkboardSE-Regular', android: 'casual' }),
+    fontFamily: Platform.select({ ios: 'ChalkboardSE-Regular', android: 'monospace' }),
   },
   progressText: {
     fontSize: 12,

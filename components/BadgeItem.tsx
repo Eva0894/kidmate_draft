@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     width: '100%',
     fontFamily: Platform.select({
       ios: 'Chalkboard SE',
-      android: 'casual',
+      android: 'monospace',
     })
   },
   progressIndicator: {

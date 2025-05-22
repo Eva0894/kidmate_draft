@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: Platform.select({
       ios: 'Chalkboard SE',
-      android: 'casual',
+      android: 'monospace',
   })
   },
   badgeDescription: {
@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     fontFamily: Platform.select({
       ios: 'Chalkboard SE',
-      android: 'casual',
+      android: 'monospace',
   })
   },
   progressContainer: {
@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     fontFamily: Platform.select({
       ios: 'Chalkboard SE',
-      android: 'casual',
+      android: 'monospace',
   })
   },
   unlockedText: {
@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
     fontFamily: Platform.select({
       ios: 'Chalkboard SE',
-      android: 'casual',
+      android: 'monospace',
     })
   }
 }); 

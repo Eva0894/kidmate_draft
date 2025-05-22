@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
     color: '#E5911B',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
   },
   banner: {
     width: '100%',
@@ -298,7 +298,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
   },
   resultItem: {
     paddingVertical: 8,
@@ -309,7 +309,7 @@ const styles = StyleSheet.create({
     color: '#333',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
   },
   bookItem: {
     width: 120,
@@ -328,7 +328,7 @@ const styles = StyleSheet.create({
     color: '#E5911B',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
   },
   progressBarContainer: {
     height: 6,

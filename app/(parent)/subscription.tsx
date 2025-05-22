@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',
+      android: 'monospace',
     }),
   },
   card: {
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',
+      android: 'monospace',
     }),
   },
   emptyText: {

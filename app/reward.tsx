@@ -434,7 +434,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: Platform.select({
         ios: 'Chalkboard SE',
-        android: 'casual',
+        android: 'monospace',
     }),
   },
   badgeCounter: {
@@ -481,7 +481,7 @@ const styles = StyleSheet.create({
     color: '#E5911B',
     fontFamily: Platform.select({
       ios: 'Chalkboard SE',
-      android: 'casual',
+      android: 'monospace',
   })
   },
   activeCategoryText: {
@@ -516,7 +516,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     fontFamily: Platform.select({
       ios: 'Chalkboard SE',
-      android: 'casual',
+      android: 'monospace',
   })
   },
   badgesGrid: {

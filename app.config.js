@@ -5,6 +5,8 @@ export default {
     name: 'kidmate',
     slug: 'kidmate',
     version: '1.0.0',
+    "scheme": "kidmate", 
+    "deepLinks": true,
     extra: {
         AUTH_BACKEND_URL: process.env.AUTH_BACKEND_URL,
         // AUTH_BACKEND_WS: process.env.AUTH_BACKEND_WS,

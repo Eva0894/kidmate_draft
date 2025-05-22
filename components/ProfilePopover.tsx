@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     color: '#4B3B2B',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',
+      android: 'monospace',
     }),
   },
   email: {
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',
+      android: 'monospace',
     }),
   },
 });

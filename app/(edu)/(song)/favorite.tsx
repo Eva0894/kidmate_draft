@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
   },
   item: {
     flexDirection: 'row',
@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
     color: '#E5911B',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
   },
   emptyText: {
     textAlign: 'center',

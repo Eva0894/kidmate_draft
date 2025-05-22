@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: Platform.select({
           ios: 'ChalkboardSE-Regular',
-          android: 'casual',
+          android: 'monospace',
         }),
   },
   card: {
@@ -173,7 +173,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',
+      android: 'monospace',
     }),
   },
   planPrice: {
@@ -188,7 +188,7 @@ const styles = StyleSheet.create({
     marginBottom: 4,
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',
+      android: 'monospace',
     }),
   },
   subscribeButton: {
@@ -203,7 +203,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',
+      android: 'monospace',
     }),
   },
 });

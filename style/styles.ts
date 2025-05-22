@@ -18,7 +18,7 @@ const meStyles = StyleSheet.create({
         textAlign: 'center',
         fontFamily: Platform.select({
             ios: 'Chalkboard SE',
-            android: 'casual',
+            android: 'monospace',
         })
     },
 
@@ -41,7 +41,7 @@ const meStyles = StyleSheet.create({
         fontSize: 16,
         fontFamily: Platform.select({
             ios: 'Chalkboard SE',
-            android: 'casual',
+            android: 'monospace',
         })
     },
 
@@ -51,7 +51,7 @@ const meStyles = StyleSheet.create({
         color: '#E5911B',
         fontFamily: Platform.select({
             ios: 'Chalkboard SE',
-            android: 'casual',
+            android: 'monospace',
         })
     },
 
@@ -60,7 +60,7 @@ const meStyles = StyleSheet.create({
         color: '#E5911B',
         fontFamily: Platform.select({
             ios: 'Chalkboard SE',
-            android: 'casual',
+            android: 'monospace',
         })
     },
 

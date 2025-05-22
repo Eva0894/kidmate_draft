@@ -8,11 +8,11 @@ import ProfilePopover from '@/components/ProfilePopover';
 import eduStyles from '../eduStyles';
 import dayjs from 'dayjs'; 
 const categories = [
-  { title: 'language', image: require('../../../assets/images/art.png') },
-  { title: 'math', image: require('../../../assets/images/sport.png') },
-  { title: 'science', image: require('../../../assets/images/art.png') },
-  { title: 'chess', image: require('../../../assets/images/art.png') },
-  { title: 'social studies', image: require('../../../assets/images/art.png') },
+  { title: 'language', image: require('../../../assets/images/language.jpg') },
+  { title: 'math', image: require('../../../assets/images/math.jpg') },
+  { title: 'science', image: require('../../../assets/images/science.jpg') },
+  { title: 'chess', image: require('../../../assets/images/chess.jpg') },
+  { title: 'social studies', image: require('../../../assets/images/social-studies.jpg') },
 ];
 
 export default function CoursePage() {
@@ -211,23 +211,23 @@ const styles = StyleSheet.create({
   timer: { fontSize: 16, fontWeight: 'bold', color: 'green' },
   sectionTitle: { fontSize: 18, fontWeight: 'bold', marginTop: 16, marginBottom: 8, color: '#E5911B', fontFamily: Platform.select({
     ios: 'ChalkboardSE-Regular',
-    android: 'casual',}), },
+    android: 'monospace',}), },
   banner: { width: '100%', height: 160, borderRadius: 10 },
   categoryItem: { alignItems: 'center', marginRight: 16 },
   categoryImage: { width: 80, height: 80, borderRadius: 12 },
   categoryTitle: { fontSize: 18, marginTop: 6, fontWeight: '600', color: '#E5911B', fontFamily: Platform.select({
     ios: 'ChalkboardSE-Regular',
-    android: 'casual',}),},
+    android: 'monospace',}),},
   searchInput: { borderWidth: 1, fontSize: 16, borderColor: '#ccc', borderRadius: 8, paddingHorizontal: 12, paddingVertical: 8, marginBottom: 12, fontFamily: Platform.select({
     ios: 'ChalkboardSE-Regular',
-    android: 'casual',}), },
+    android: 'monospace',}), },
   resultItem: { paddingVertical: 8, paddingHorizontal: 10, borderBottomWidth: 1, borderColor: '#eee', fontSize: 16, color: '#333', fontFamily: Platform.select({
     ios: 'ChalkboardSE-Regular',
-    android: 'casual',}), },
+    android: 'monospace',}), },
   bookItem: { width: 120, marginRight: 16, alignItems: 'center' },
   bookImage: { width: 120, height: 120, borderRadius: 12 },
   bookTitle: { marginTop: 4, fontWeight: '600',fontSize: 14, color: '#E5911B',fontFamily: Platform.select({
     ios: 'ChalkboardSE-Regular',
-    android: 'casual',}), },
+    android: 'monospace',}), },
   avatar: { width: 48, height: 48, borderRadius: 24, backgroundColor: '#ccc' },
 });

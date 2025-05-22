@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
     color: '#E5911B',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
   },
   banner: {
     width: '100%',
@@ -266,7 +266,7 @@ const styles = StyleSheet.create({
     color: '#E5911B',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
   },
   duration: {
     fontSize: 12,
@@ -285,7 +285,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
   },
   starIcon: {
     position: 'absolute',
@@ -301,7 +301,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
   },
   searchResultTitle: {
     padding: 8,
@@ -311,7 +311,7 @@ const styles = StyleSheet.create({
     color: '#E5911B',
     fontFamily: Platform.select({
       ios: 'ChalkboardSE-Regular',
-      android: 'casual',}),
+      android: 'monospace',}),
   },
   avatar: { 
     width: 48, 

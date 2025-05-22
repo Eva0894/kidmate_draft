@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     color: '#E5911B',
-    fontFamily: Platform.select({ ios: 'ChalkboardSE-Regular', android: 'casual' }),
+    fontFamily: Platform.select({ ios: 'ChalkboardSE-Regular', android: 'monospace' }),
     textAlign: 'center',
   },
   backButton: {
@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     textAlign: 'center',
-    fontFamily: Platform.select({ ios: 'ChalkboardSE-Regular', android: 'casual' }),
+    fontFamily: Platform.select({ ios: 'ChalkboardSE-Regular', android: 'monospace' }),
     color: '#E5911B',
   },
   emptyContainer: {

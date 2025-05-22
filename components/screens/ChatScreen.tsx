@@ -58,44 +58,50 @@ export default function Page() {
   }, []);
 
   useEffect(() => {
-    if (!user) return;
-
-    const ws = new WebSocket(BACKEND_WS);
-    wsRef.current = ws;
-
-    ws.onopen = () => console.log('WebSocket connected');
-
-    ws.onmessage = async (event) => {
-      try {
-        const payload = JSON.parse(event.data);
-        const text = payload.text;
-        const audio = payload.audio;
-
-        if (text) {
-          fullMessageRef.current += text;
-          setMessages((prev) => {
-            const updated = [...prev];
-            updated[updated.length - 1].content = fullMessageRef.current;
-            return updated;
-          });
-        }
-
-        if (audio) {
-          audioQueue.current.push(audio);
-          if (isFirstAudio.current) {
-            isFirstAudio.current = false;
-            playNext();
+    const connectWebSocket = async () => {
+      const { data } = await supabase.auth.getSession();
+      const token = data?.session?.access_token;
+      if (!token) return;
+  
+      const ws = new WebSocket(`ws://13.236.67.206:8000/api/chat/ws/chat?token=${token}`);
+      wsRef.current = ws;
+  
+      ws.onopen = () => console.log('WebSocket connected');
+  
+      ws.onmessage = async (event) => {
+        try {
+          const payload = JSON.parse(event.data);
+          const text = payload.text;
+          const audio = payload.audio;
+  
+          if (text) {
+            fullMessageRef.current += text;
+            setMessages((prev) => {
+              const updated = [...prev];
+              updated[updated.length - 1].content = fullMessageRef.current;
+              return updated;
+            });
           }
+  
+          if (audio) {
+            audioQueue.current.push(audio);
+            if (isFirstAudio.current) {
+              isFirstAudio.current = false;
+              playNext();
+            }
+          }
+        } catch (err) {
+          console.warn('JSON parse error:', err);
         }
-      } catch (err) {
-        console.warn('JSON parse error:', err);
-      }
+      };
+  
+      ws.onerror = (e) => console.warn('WebSocket error:', e);
+      ws.onclose = () => console.log('WebSocket closed');
     };
-
-    ws.onerror = (e) => console.warn('WebSocket error:', e);
-    ws.onclose = () => console.log('WebSocket closed');
-
-    return () => ws.close();
+  
+    if (user) connectWebSocket();
+  
+    return () => wsRef.current?.close();
   }, [user]);
 
   const waitForAudioFile = async (url: string, maxRetries = 20, interval = 300) => {
