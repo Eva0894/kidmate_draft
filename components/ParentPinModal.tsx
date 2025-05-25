@@ -1,3 +1,4 @@
+// ParentPinModal.tsx
 import React, { useState, useEffect } from 'react';
 import {
   Modal,
@@ -13,11 +14,13 @@ import { supabase } from '../utils/Supabase';
 interface ParentPinModalProps {
   visible: boolean;
   onClose: () => void;
+  isVerified: boolean; // 来自 App 的状态控制，是否通过邮箱验证
 }
 
-export default function ParentPinModal({ visible, onClose }: ParentPinModalProps) {
+export default function ParentPinModal({ visible, onClose, isVerified }: ParentPinModalProps) {
   const [newPin, setNewPin] = useState('');
   const [hasPin, setHasPin] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const checkPin = async () => {
@@ -40,28 +43,52 @@ export default function ParentPinModal({ visible, onClose }: ParentPinModalProps
     }
   }, [visible]);
 
+  const requestVerification = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user || !user.email) return;
+
+    const { error } = await supabase.auth.signInWithOtp({
+      email: user.email,
+      options: { emailRedirectTo: 'kidmate://verify-pin' },
+    });
+
+    if (error) {
+      Alert.alert('Verification failed', error.message);
+    } else {
+      Alert.alert('Verification email sent', 'Please check your email.');
+    }
+  };
+
   const handleSetPin = async () => {
     if (newPin.length !== 4 || !/^[0-9]{4}$/.test(newPin)) {
-      Alert.alert('PIN Muset be 4 digits');
+      Alert.alert('PIN must be 4 digits');
       return;
     }
+
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      Alert.alert('Error', 'Logged-in User Information Not Obtained.');
+      Alert.alert('User not logged in');
       return;
     }
-    
+
+    if (hasPin && !isVerified) {
+      Alert.alert('Please verify your email first');
+      return;
+    }
+
+    setLoading(true);
+
     const { error } = await supabase
       .from('users')
       .update({ pin_code: newPin })
       .eq('user_id', user.id);
 
+    setLoading(false);
 
     if (error) {
-      Alert.alert('Setting Failed', error.message);
+      Alert.alert('Update failed', error.message);
     } else {
-      Alert.alert('Setting Successfully');
-      setHasPin(true);
+      Alert.alert('PIN updated successfully');
       setNewPin('');
       onClose();
     }
@@ -76,16 +103,22 @@ export default function ParentPinModal({ visible, onClose }: ParentPinModalProps
           <TextInput
             value={newPin}
             onChangeText={setNewPin}
-            placeholder="Please enter 4-digit PIN"
+            placeholder="Enter 4-digit PIN"
             keyboardType="numeric"
             secureTextEntry
             maxLength={4}
             style={styles.modalInput}
           />
 
-          <TouchableOpacity style={styles.confirmButton} onPress={handleSetPin}>
-            <Text style={styles.confirmButtonText}>Comfirm</Text>
+          <TouchableOpacity style={styles.confirmButton} onPress={handleSetPin} disabled={loading}>
+            <Text style={styles.confirmButtonText}>{loading ? 'Updating...' : 'Confirm'}</Text>
           </TouchableOpacity>
+
+          {hasPin && !isVerified && (
+            <TouchableOpacity style={styles.verifyButton} onPress={requestVerification}>
+              <Text style={styles.verifyButtonText}>Verify Email to Change PIN</Text>
+            </TouchableOpacity>
+          )}
 
           <TouchableOpacity style={styles.cancelButton} onPress={onClose}>
             <Text style={styles.cancelButtonText}>Cancel</Text>
@@ -132,6 +165,16 @@ const styles = StyleSheet.create({
   confirmButtonText: {
     color: '#fff',
     fontSize: 16,
+  },
+  verifyButton: {
+    backgroundColor: '#007bff',
+    padding: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  verifyButtonText: {
+    color: '#fff',
   },
   cancelButton: {
     padding: 10,

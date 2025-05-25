@@ -43,12 +43,27 @@ export default function RegisterScreen() {
 
     setLoading(true);
     try {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
       });
-
+  
       if (error) throw error;
+
+          // ✅ 插入用户资料到 users 表
+    if (data.user) {
+      const insertRes = await supabase.from('users').insert({
+        user_id: data.user.id,
+        email,
+        first_name: firstName,
+        last_name: lastName,
+        date_of_birth: dob.toISOString(),
+      });
+
+      if (insertRes.error) {
+        console.warn('⚠️ 插入用户资料失败:', insertRes.error.message);
+      }
+    }
 
       // 注册成功后，跳到 confirm-email 页面，传递注册信息
       router.push({
