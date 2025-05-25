@@ -2,11 +2,18 @@ import 'dotenv/config';
 
 export default {
   expo: {
-    name: 'kidmate',
+    name: 'KidMate',
     slug: 'kidmate',
+    scheme: 'kidmate',
     version: '1.0.0',
-    "scheme": "kidmate", 
-    "deepLinks": true,
+    orientation: 'portrait',
+    icon: './assets/images/icon.png',
+    splash: {
+      image: './assets/images/splash.png',
+      resizeMode: 'contain',
+      backgroundColor: '#ffffff',
+    },
+    userInterfaceStyle: 'automatic',
     extra: {
         AUTH_BACKEND_URL: process.env.AUTH_BACKEND_URL,
         // AUTH_BACKEND_WS: process.env.AUTH_BACKEND_WS,

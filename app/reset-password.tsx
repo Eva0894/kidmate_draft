@@ -1,3 +1,4 @@
+// app/reset-password.tsx
 import React, { useState } from 'react';
 import {
   View,
@@ -31,7 +32,7 @@ export default function ResetPasswordPage() {
     setLoading(true);
 
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: 'kidmate://reset-password-confirm',
+      redirectTo: 'https://kidmate-resetpw.vercel.app/reset-password.html',
     });
 
     setLoading(false);

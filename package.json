@@ -80,6 +80,7 @@
     "react-native-modal": "^14.0.0-rc.1",
     "react-native-modal-datetime-picker": "^18.0.0",
     "react-native-openai": "^0.6.1",
+    "react-native-phone-number-input": "^2.1.0",
     "react-native-purchases": "^7.26.2",
     "react-native-reanimated": "~3.16.1",
     "react-native-redash": "^18.1.3",

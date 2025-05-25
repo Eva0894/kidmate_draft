@@ -6,7 +6,7 @@ import { supabase } from './Supabase';
  */
 export const sendPasswordResetEmail = async (email: string) => {
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: 'kidmate://reset-password-confirm'
+    redirectTo: 'https://kidmate-resetpw.vercel.app/reset-password.html',
   });
 
   if (error) {

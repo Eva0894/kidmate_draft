@@ -48,10 +48,11 @@ const signInWithGoogle = async () => {
 
   return (
     <View style={[styles.container, { paddingBottom: bottom }]}>
-      <TouchableOpacity style={[defaultStyles.btn, styles.btnLight]}>
+      {/* <TouchableOpacity style={[defaultStyles.btn, styles.btnLight]}>
         <Ionicons name="logo-apple" size={14} style={styles.btnIcon} />
         <Text style={styles.btnLightText}>Continue with Apple</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
+      
       <TouchableOpacity onPress={signInWithGoogle} style={[defaultStyles.btn, styles.btnDark]}>
         <Ionicons name="logo-google" size={16} style={styles.btnIcon} color={'#fff'} />
         <Text style={styles.btnDarkText}>Continue with Google</Text>
@@ -62,6 +63,9 @@ const signInWithGoogle = async () => {
         onPress={() => router.push('/register')}>
         <Ionicons name="mail" size={20} style={styles.btnIcon} color={'#fff'} />
         <Text style={styles.btnDarkText}>Sign up with email</Text>
+      </TouchableOpacity>
+      <TouchableOpacity>
+        <Text style={styles.subtext}>Already have an account? Log in below</Text>
       </TouchableOpacity>
       <Link
         href={{
@@ -109,6 +113,11 @@ const styles = StyleSheet.create({
   },
   btnIcon: {
     paddingRight: 6,
+  },
+  subtext: {
+    fontSize: 18,
+    color: '#666',
+    marginBottom: 5,
   },
 });
 export default BottomLoginSheet;

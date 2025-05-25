@@ -19,44 +19,67 @@ export default function ResetPasswordConfirmPage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(true);
   const [readyToReset, setReadyToReset] = useState(false);
+  const [latestURL, setLatestURL] = useState<string | null>(null);
 
   useEffect(() => {
-    const handleDeepLink = async () => {
+    const handleInitial = async () => {
       const url = await Linking.getInitialURL();
-      if (!url) return;
+      console.log('🔍 Initial URL:', url);
+      if (url) {
+        handleLink(url);
+      } else {
+        setLoading(false);
+      }
+    };
 
+    const subscription = Linking.addEventListener('url', ({ url }) => {
+      console.log('🔁 Received deep link (runtime):', url);
+      handleLink(url);
+    });
+
+    handleInitial();
+
+    return () => {
+      subscription.remove?.();
+    };
+  }, []);
+
+  const handleLink = async (url: string) => {
+    try {
+      setLatestURL(url);
       const parsed = Linking.parse(url);
+      console.log('📦 Parsed query params:', parsed.queryParams);
+
       const access_token = parsed.queryParams?.access_token as string;
       const refresh_token = parsed.queryParams?.refresh_token as string;
       const type = parsed.queryParams?.type;
 
       if (type === 'recovery' && access_token && refresh_token) {
-        const { data, error } = await supabase.auth.setSession({
+        console.log('🔑 Setting session with tokens...');
+        const { error } = await supabase.auth.setSession({
           access_token,
           refresh_token,
         });
+
         if (error) {
-          Alert.alert('Error', `Session restoration failed: ${error.message}`);
+          console.error('❌ Session set failed:', error.message);
+          Alert.alert('Session Error', error.message);
+          setReadyToReset(false);
         } else {
-          console.log('✅ Session restored:', data);
+          console.log('✅ Session restored');
           setReadyToReset(true);
         }
+      } else {
+        console.warn('⚠️ Invalid deep link or missing token');
+        setReadyToReset(false);
       }
-
+    } catch (err) {
+      console.error('💥 Deep link handling error:', err);
+      setReadyToReset(false);
+    } finally {
       setLoading(false);
-    };
-
-    handleDeepLink();
-  }, []);
-  useEffect(() => {
-    const checkURL = async () => {
-      const url = await Linking.getInitialURL();
-      console.log('📫 Deep Link URL:', url);
-      const parsed = Linking.parse(url || '');
-      console.log('🔍 Parsed:', parsed);
-    };
-    checkURL();
-  }, []);
+    }
+  };
 
   const handlePasswordUpdate = async () => {
     if (!newPassword || !confirmPassword) {
@@ -87,6 +110,11 @@ export default function ResetPasswordConfirmPage() {
       <View style={styles.centered}>
         <ActivityIndicator size="large" color="#E5911B" />
         <Text style={{ marginTop: 10 }}>Preparing...</Text>
+        {latestURL && (
+          <Text style={{ fontSize: 12, color: '#aaa', marginTop: 8 }} numberOfLines={2}>
+            Latest URL: {latestURL}
+          </Text>
+        )}
       </View>
     );
   }
@@ -97,6 +125,11 @@ export default function ResetPasswordConfirmPage() {
         <Text style={{ textAlign: 'center', color: '#555' }}>
           Invalid or expired recovery link.
         </Text>
+        {latestURL && (
+          <Text style={{ fontSize: 12, color: '#aaa', marginTop: 8 }} numberOfLines={2}>
+            Link tried: {latestURL}
+          </Text>
+        )}
       </View>
     );
   }
