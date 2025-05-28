@@ -14,6 +14,10 @@ export default {
       backgroundColor: '#ffffff',
     },
     userInterfaceStyle: 'automatic',
+    ios: {
+      bundleIdentifier: 'com.anonymous.kidmate', 
+    },
+
     extra: {
         AUTH_BACKEND_URL: process.env.AUTH_BACKEND_URL,
         // AUTH_BACKEND_WS: process.env.AUTH_BACKEND_WS,
