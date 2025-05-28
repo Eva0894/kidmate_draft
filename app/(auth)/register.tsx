@@ -46,6 +46,9 @@ export default function RegisterScreen() {
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          emailRedirectTo: 'https://kidmate-resetpw.vercel.app/signup-confirmed.html',
+        },
       });
   
       if (error) throw error;
