@@ -51,7 +51,7 @@ export default function ParentalControlPage() {
     if (!userId) return;
     const m = parseInt(minutes, 10);
     if (isNaN(m) || m < 0) {
-      Alert.alert('Error', '请输入有效的分钟数');
+      Alert.alert('Error', 'Please enter a valid number');
       return;
     }
 

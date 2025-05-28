@@ -22,7 +22,7 @@ export default function GameCenterPage() {
   }, []);
 
   const games = [
-    { title: 'Flappy Bird', path: '/(games)/flappy',image: require('@/assets/images/flappy.png'), }, 
+    
     { title: 'Railroad Repair Reboot', path: '/(games)/railroad', image: require('@/assets/images/railway.png'), },
     { title: 'guessFeeling', path: '/(games)/guessFeeling',image: require('@/assets/images/guessfeeling.png'), },
     { title: 'Bridge Builder', path: '/(games)/bridgebuilder',image: require('@/assets/images/bridgebuilder.png'), },
@@ -33,6 +33,7 @@ export default function GameCenterPage() {
     { title: 'Sorting Box', path: '/(games)/sortingBox',image: require('@/assets/images/sort.png'),},
     { title: '3 2 1 Snack', path: '/(games)/321snack',image: require('@/assets/images/321snack.png'), },
     { title: 'Track Stars', path: '/(games)/trackStars',image: require('@/assets/images/trackstar.png'),},
+    { title: 'marble-run', path: '/(games)/marble-run',image: require('@/assets/images/marble-run.png'),},
   ];
  
    useEffect(() => {

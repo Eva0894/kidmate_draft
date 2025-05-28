@@ -43,7 +43,7 @@ export default function SubscriptionPlansPage() {
 
   const handleSubscribe = (plan: string) => {
     const stripeLinks: Record<string, string> = {
-      'Standard Plan': 'https://buy.stripe.com/6oE4hn0ly4HMeCQ8ww',
+      'Standard Plan': 'https://buy.stripe.com/test_14AbJ184ig8U1Idbgy6J200',
       'Premium Plan (Yearly)': 'https://buy.stripe.com/eVa29fgkw1vAfGU9AC',
       'Premium Plan (Quarterly)': 'https://buy.stripe.com/dR63djfgs8Y266k5kn',
     };
