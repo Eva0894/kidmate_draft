@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { supabase } from '@/utils/Supabase';
 import { Alert } from 'react-native';
 
-export const API = 'http://192.168.0.94:3010/api/parental-control';
+export const API = 'http://13.236.67.206:8000/api/parental-control';
 
 
 export function useUsage() {

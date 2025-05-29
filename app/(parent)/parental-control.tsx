@@ -13,7 +13,7 @@ import { supabase } from '@/utils/Supabase';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
-const API = 'http://192.168.0.94:3010/api/parental-control';
+const API = 'http://13.236.67.206:8000/api/parental-control';
 
 export default function ParentalControlPage() {
   const [minutes, setMinutes] = useState<string>('');
