@@ -11,18 +11,18 @@ export default function HelpFeedbackPage() {
   
   const handleNavigateBack = () => {
     try {
-      console.log('[help] 尝试返回');
-      // 先尝试使用router.replace
-      console.log('[help] 使用router.replace()');
+      console.log('[help] Attempting to return');
+      // First try using router.replace
+      console.log('[help] Using router.replace()');
       router.replace('/(tabs)/me');
     } catch (error) {
-      console.error('[help] 导航错误:', error);
-      // 如果失败，尝试使用navigation.goBack()
+      console.error('[help] Navigation error:', error);
+      // If that fails, try using navigation.goBack()
       if (navigation && navigation.canGoBack()) {
-        console.log('[help] 降级到navigation.goBack()');
+        console.log('[help] Falling back to navigation.goBack()');
         navigation.goBack();
       } else {
-        console.log('[help] 使用router.back()');
+        console.log('[help] Using router.back()');
         router.back();
       }
     }

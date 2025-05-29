@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     borderRadius: 18,
   },
 
-  // ✅ 用户：奶油白气泡 + 棕色字体 + 左上角方形
+  // ✅ User: Cream white bubble + brown text + square top-left corner
   userBubble: {
     backgroundColor: '#fffbea',
     borderTopRightRadius: 4,
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 18,
   },
 
-  // ✅ AI：鸭蛋黄气泡 + 黑灰字体 + 右上角方形
+  // ✅ AI: Duck-egg yellow bubble + dark gray text + square top-right corner
   botBubble: {
     backgroundColor: '#fff0b3',
     borderTopLeftRadius: 4,

@@ -32,7 +32,7 @@ export default function SessionDetailPage() {
   const [error, setError] = useState(false);
   const router = useRouter();
 
-  // 映射本地图像路径
+  // Map local image paths
   const resolveImagePath = (path?: string) => {
     if (!path) return undefined;
     if (path.startsWith('./images/')) {
@@ -61,17 +61,17 @@ export default function SessionDetailPage() {
 
   const handleGoBack = () => {
     try {
-      console.log('[SessionDetail] 尝试返回');
+      console.log('[SessionDetail] Attempting to return');
       router.back();
     } catch (error) {
-      console.error('[SessionDetail] 导航错误:', error);
+      console.error('[SessionDetail] Navigation error:', error);
       router.replace('/chat_history');
     }
   };
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* 自定义header，取代Stack.Screen */}
+      {/* Custom header, replacing Stack.Screen */}
       <View style={styles.header}>
         <Pressable onPress={handleGoBack} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color="black" />

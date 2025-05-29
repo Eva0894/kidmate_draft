@@ -12,18 +12,18 @@ export default function PrivacyPolicy() {
   
   const handleNavigateBack = () => {
     try {
-      console.log('[privacy] 尝试返回');
-      // 先尝试使用router.replace
-      console.log('[privacy] 使用router.replace()');
+      console.log('[privacy] Attempting to return');
+      // First try using router.replace
+      console.log('[privacy] Using router.replace()');
       router.replace('/(tabs)/me');
     } catch (error) {
-      console.error('[privacy] 导航错误:', error);
-      // 如果失败，尝试使用navigation.goBack()
+      console.error('[privacy] Navigation error:', error);
+      // If that fails, try using navigation.goBack()
       if (navigation && navigation.canGoBack()) {
-        console.log('[privacy] 降级到navigation.goBack()');
+        console.log('[privacy] Falling back to navigation.goBack()');
         navigation.goBack();
       } else {
-        console.log('[privacy] 使用router.back()');
+        console.log('[privacy] Using router.back()');
         router.back();
       }
     }

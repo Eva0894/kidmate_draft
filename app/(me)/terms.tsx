@@ -20,18 +20,18 @@ export default function TermsOfServicePage() {
   
   const handleNavigateBack = () => {
     try {
-      console.log('[terms] 尝试返回');
-      // 先尝试使用router.replace
-      console.log('[terms] 使用router.replace()');
+      console.log('[terms] Attempting to return');
+      // First try using router.replace
+      console.log('[terms] Using router.replace()');
       router.replace('/(tabs)/me');
     } catch (error) {
-      console.error('[terms] 导航错误:', error);
-      // 如果失败，尝试使用navigation.goBack()
+      console.error('[terms] Navigation error:', error);
+      // If that fails, try using navigation.goBack()
       if (navigation && navigation.canGoBack()) {
-        console.log('[terms] 降级到navigation.goBack()');
+        console.log('[terms] Falling back to navigation.goBack()');
         navigation.goBack();
       } else {
-        console.log('[terms] 使用router.back()');
+        console.log('[terms] Using router.back()');
         router.back();
       }
     }

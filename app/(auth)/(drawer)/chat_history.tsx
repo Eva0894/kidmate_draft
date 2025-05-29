@@ -77,7 +77,7 @@ export default function ChatHistoryPage() {
       onPress={() => router.push(`/(auth)/(chat)/${item.session_id}`)}
       onLongPress={() => deleteHistory(item.session_id)}
     >
-      <Text style={styles.preview}>{item.preview || '（无内容）'}</Text>
+      <Text style={styles.preview}>{item.preview || '(No content)'}</Text>
       <Text style={styles.timestamp}>
         {item.timestamp?.replace('T', ' ').slice(0, 19)}
       </Text>

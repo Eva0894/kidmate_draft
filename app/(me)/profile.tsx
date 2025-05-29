@@ -34,14 +34,14 @@ export default function ProfilePage() {
 
   const t = (key: string) => {
     const dict: any = {
-      username: { en: 'Nick Name', zh: '用户名' },
-      first_name: { en: 'First Name', zh: '名字' },
-      last_name: { en: 'Last Name', zh: '姓氏' },
-      email: { en: 'Email / Phone', zh: '邮箱 / 手机' },
-      password: { en: 'Password', zh: '密码' },
-      birthday: { en: 'Birthday', zh: '生日' },
-      save: { en: 'Save', zh: '保存' },
-      edit: { en: 'Edit', zh: '编辑' },
+      username: { en: 'Nick Name', zh: 'Username' },
+      first_name: { en: 'First Name', zh: 'First Name' },
+      last_name: { en: 'Last Name', zh: 'Last Name' },
+      email: { en: 'Email / Phone', zh: 'Email / Phone' },
+      password: { en: 'Password', zh: 'Password' },
+      birthday: { en: 'Birthday', zh: 'Birthday' },
+      save: { en: 'Save', zh: 'Save' },
+      edit: { en: 'Edit', zh: 'Edit' },
     };
     return dict[key]?.[language] || key;
   };
@@ -53,7 +53,7 @@ export default function ProfilePage() {
         error,
       } = await supabase.auth.getSession();
       if (error || !session) {
-        Alert.alert('❌ 无法获取用户 Session');
+        Alert.alert('❌ Unable to retrieve user session');
         return;
       }
       setUserId(session.user.id);
@@ -73,7 +73,7 @@ export default function ProfilePage() {
       .single();
 
     if (error) {
-      Alert.alert('读取用户资料失败', error.message);
+      Alert.alert('Failed to read user profile', error.message);
     } else {
       setUserName(data.username || '');
       setFirstName(data.first_name || '');
@@ -172,7 +172,7 @@ export default function ProfilePage() {
             </TouchableOpacity>
             <TouchableOpacity onPress={() => setLanguage('zh')}>
               <Text style={{ color: language === 'zh' ? '#cc8400' : '#999',fontFamily: 'ChalkboardSE-Regular',
-          fontSize: 14 }}>中文</Text>
+          fontSize: 14 }}>Chinese</Text>
             </TouchableOpacity>
           </View>
 

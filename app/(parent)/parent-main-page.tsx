@@ -24,10 +24,10 @@ export default function ParentMainPage() {
           <Ionicons name="arrow-back" size={28} color="#E5911B" />
         </TouchableOpacity>
 
-        {/* 标题 */}
+        {/* Title */}
         <Text style={styles.header}>👪 Parent Dashboard</Text>
 
-        {/* 家长控制 */}
+        {/* Parental Control */}
         <TouchableOpacity
           onPress={() => router.push('/(parent)/parental-control')}
           style={styles.imageCard}
@@ -40,7 +40,7 @@ export default function ParentMainPage() {
           <Text style={styles.imageLabel}>Parental Control</Text>
         </TouchableOpacity>
 
-        {/* 周报 */}
+        {/* Weekly Report */}
         <TouchableOpacity
           onPress={() => router.push('/(parent)/weekly-report')}
           style={styles.imageCard}
@@ -53,7 +53,7 @@ export default function ParentMainPage() {
           <Text style={styles.imageLabel}>Weekly Report</Text>
         </TouchableOpacity>
 
-        {/* 订阅 */}
+        {/* Subscription */}
         <TouchableOpacity
           onPress={() => router.push('/(parent)/subscription')}
           style={styles.imageCard}

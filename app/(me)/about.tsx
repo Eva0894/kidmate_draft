@@ -6,7 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import meStyles from './meStyles';
 
-// 忽略特定警告
+// Ignore specific warnings
 LogBox.ignoreLogs([
   'Non-serializable values were found in the navigation state',
 ]);
@@ -16,8 +16,8 @@ export default function AboutPage() {
   const router = useRouter();
 
   useEffect(() => {
-    // 记录组件加载
-    console.log('[About] 组件挂载');
+    // Log component loading
+    console.log('[About] Component mounted');
     
     navigation.setOptions({
       headerShown: true,
@@ -25,25 +25,25 @@ export default function AboutPage() {
     });
     
     return () => {
-      // 记录组件卸载
-      console.log('[About] 组件卸载');
+      // Log component unloading
+      console.log('[About] Component unmounted');
     };
   }, [navigation]);
 
   const handleNavigateBack = () => {
     try {
-      console.log('[about] 尝试返回');
-      // 先尝试使用router.replace
-      console.log('[about] 使用router.replace()');
+      console.log('[about] Attempting to return');
+      // First try using router.replace
+      console.log('[about] Using router.replace()');
       router.replace('/(tabs)/me');
     } catch (error) {
-      console.error('[about] 导航错误:', error);
-      // 如果失败，尝试使用navigation.goBack()
+      console.error('[about] Navigation error:', error);
+      // If that fails, try using navigation.goBack()
       if (navigation && navigation.canGoBack()) {
-        console.log('[about] 降级到navigation.goBack()');
+        console.log('[about] Falling back to navigation.goBack()');
         navigation.goBack();
       } else {
-        console.log('[about] 使用router.back()');
+        console.log('[about] Using router.back()');
         router.back();
       }
     }

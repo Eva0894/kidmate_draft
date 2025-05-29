@@ -9,11 +9,11 @@ interface CategoryTab {
 }
 
 const CATEGORIES: CategoryTab[] = [
-  { id: 'all', label: '全部' },
-  { id: 'drawing', label: '绘画' },
-  { id: 'cartoon', label: '动画' },
-  { id: 'course', label: '课程' },
-  { id: 'reading', label: '阅读' },
+  { id: 'all', label: 'All' },
+  { id: 'drawing', label: 'Drawing' },
+  { id: 'cartoon', label: 'Cartoon' },
+  { id: 'course', label: 'Courses' },
+  { id: 'reading', label: 'Reading' },
 ];
 
 interface CategoryTabsProps {

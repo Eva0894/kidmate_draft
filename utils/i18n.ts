@@ -20,7 +20,7 @@ const i18n = new I18n({
   },
 });
 
-// 默认根据设备语言设置
+// Default language based on device settings
 i18n.locale = Localization.locale;
 i18n.enableFallback = true;
 

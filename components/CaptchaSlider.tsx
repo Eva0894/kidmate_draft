@@ -13,7 +13,7 @@ const puzzleSize = 50;
 const tolerance = 10;
 
 const CaptchaSlider = ({ onSuccess }: { onSuccess: () => void }) => {
-  const [targetX] = useState(Math.floor(Math.random() * 100) + 100); // 缺口位置
+  const [targetX] = useState(Math.floor(Math.random() * 100) + 100); // Gap position
   const pan = useRef(new Animated.ValueXY()).current;
 
   const panResponder = useRef(
@@ -25,10 +25,10 @@ const CaptchaSlider = ({ onSuccess }: { onSuccess: () => void }) => {
       onPanResponderRelease: (_, gesture) => {
         const distance = Math.abs(gesture.dx - targetX);
         if (distance < tolerance) {
-          Alert.alert('验证成功', '您通过了人机验证');
+          Alert.alert('Verification Successful', 'You passed the human verification');
           onSuccess();
         } else {
-          Alert.alert('验证失败', '请再试一次');
+          Alert.alert('Verification Failed', 'Please try again');
           pan.setValue({ x: 0, y: 0 });
         }
       },
@@ -37,15 +37,15 @@ const CaptchaSlider = ({ onSuccess }: { onSuccess: () => void }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.tip}>请拖动拼图滑块完成验证</Text>
+      <Text style={styles.tip}>Please drag the puzzle piece to complete verification</Text>
       <View style={styles.imageContainer}>
-        {/* 背景图 */}
+        {/* Background image */}
         <Image
           source={require('@/assets/slider_bg.jpg')}
           style={styles.image}
         />
 
-        {/* 缺口遮罩 */}
+        {/* Gap mask */}
         <View
           style={[
             styles.cutout,
@@ -55,7 +55,7 @@ const CaptchaSlider = ({ onSuccess }: { onSuccess: () => void }) => {
           ]}
         />
 
-        {/* 拼图块 */}
+        {/* Puzzle piece */}
         <Animated.Image
           source={require('@/assets/puzzle_piece.png')}
           style={[

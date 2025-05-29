@@ -49,10 +49,10 @@ export default function ChatHistoryPage() {
   };
 
   useEffect(() => {
-    console.log('[ChatHistory] 组件挂载');
+    console.log('[ChatHistory] Component mounted');
     fetchHistory();
     return () => {
-      console.log('[ChatHistory] 组件卸载');
+      console.log('[ChatHistory] Component unmounted');
     };
   }, []);
 
@@ -82,7 +82,7 @@ export default function ChatHistoryPage() {
       onPress={() => router.push(`/${item.session_id}`)}
       onLongPress={() => deleteHistory(item.session_id)}
     >
-      <Text style={styles.preview}>{item.preview || '（无内容）'}</Text>
+      <Text style={styles.preview}>{item.preview || '(No content)'}</Text>
       <Text style={styles.timestamp}>
         {item.timestamp?.replace('T', ' ').slice(0, 19)}
       </Text>
@@ -91,23 +91,23 @@ export default function ChatHistoryPage() {
 
   const handleGoBack = () => {
     try {
-      console.log('[ChatHistory] 尝试返回');
+      console.log('[ChatHistory] Attempting to go back');
       if (navigation && navigation.canGoBack()) {
-        console.log('[ChatHistory] 使用navigation.goBack()');
+        console.log('[ChatHistory] Using navigation.goBack()');
         router.push('/(tabs)/chat');
       } else {
-        console.log('[ChatHistory] 使用router.back()');
+        console.log('[ChatHistory] Using router.back()');
         router.back();
       }
     } catch (error) {
-      console.error('[ChatHistory] 导航错误:', error);
+      console.error('[ChatHistory] Navigation error:', error);
      router.replace('/');
     }
   };
 
   return (
     <View style={styles.container}>
-      {/* 手动实现header，由于Stack.Screen不工作 */}
+      {/* Manually implementing header, since Stack.Screen doesn't work */}
       <View style={styles.header}>
         <Pressable onPress={handleGoBack} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color="black" />

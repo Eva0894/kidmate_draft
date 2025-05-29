@@ -105,7 +105,7 @@ export default function SubscriptionPlansPage() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {/* 返回按钮（统一风格） */}
+      {/* Back button (unified style) */}
       <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
         <Ionicons name="arrow-back" size={28} color="#E5911B" />
       </TouchableOpacity>

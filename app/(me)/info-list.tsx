@@ -11,18 +11,18 @@ export default function InfoListPage() {
 
   const handleNavigateBack = () => {
     try {
-      console.log('[info] 尝试返回');
-      // 先尝试使用router.replace
-      console.log('[info] 使用router.replace()');
+      console.log('[info] Attempting to return');
+      // First try using router.replace
+      console.log('[info] Using router.replace()');
       router.replace('/(tabs)/me');
     } catch (error) {
-      console.error('[info] 导航错误:', error);
-      // 如果失败，尝试使用navigation.goBack()
+      console.error('[info] Navigation error:', error);
+      // If that fails, try using navigation.goBack()
       if (navigation && navigation.canGoBack()) {
-        console.log('[info] 降级到navigation.goBack()');
+        console.log('[info] Falling back to navigation.goBack()');
         navigation.goBack();
       } else {
-        console.log('[info] 使用router.back()');
+        console.log('[info] Using router.back()');
         router.back();
       }
     }

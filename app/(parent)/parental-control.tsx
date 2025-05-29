@@ -51,7 +51,7 @@ export default function ParentalControlPage() {
     if (!userId) return;
     const m = parseInt(minutes, 10);
     if (isNaN(m) || m < 0) {
-      Alert.alert('Error', '请输入有效的分钟数');
+      Alert.alert('Error', 'Please enter a valid number of minutes');
       return;
     }
 
@@ -79,7 +79,7 @@ export default function ParentalControlPage() {
 
   return (
     <View style={styles.container}>
-      {/* 返回按钮（统一风格） */}
+      {/* Back button (unified style) */}
       <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
         <Ionicons name="arrow-back" size={28} color="#E5911B" />
       </TouchableOpacity>

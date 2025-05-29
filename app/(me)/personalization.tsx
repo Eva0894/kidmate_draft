@@ -71,7 +71,7 @@ export default function PersonalizationPage() {
       .single();
 
     if (fetchError || !userProfile?.date_of_birth) {
-      Alert.alert('Error', '无法获取出生日期');
+      Alert.alert('Error', 'Unable to retrieve birth date');
       return;
     }
 
