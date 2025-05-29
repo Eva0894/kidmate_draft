@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 
-export type CategoryType = 'all' | 'game' | 'drawing' | 'cartoon' | 'course' | 'reading';
+export type CategoryType = 'all' | 'drawing' | 'cartoon' | 'course' | 'reading';
 
 interface CategoryTab {
   id: CategoryType;
@@ -10,7 +10,6 @@ interface CategoryTab {
 
 const CATEGORIES: CategoryTab[] = [
   { id: 'all', label: '全部' },
-  { id: 'game', label: '游戏' },
   { id: 'drawing', label: '绘画' },
   { id: 'cartoon', label: '动画' },
   { id: 'course', label: '课程' },
