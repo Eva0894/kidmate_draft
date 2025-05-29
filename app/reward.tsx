@@ -21,7 +21,7 @@ import BadgeDetailModal from '../components/BadgeDetailModal';
 const { width } = Dimensions.get('window');
 
 // 类型定义
-export type CategoryType = 'all' | 'game' | 'drawing' | 'cartoon' | 'course' | 'reading';
+export type CategoryType = 'all' | 'drawing' | 'cartoon' | 'course' | 'reading';
 
 // 更新徽章数据接口
 interface BadgeData {
@@ -208,8 +208,6 @@ export default function RewardPage() {
 
   const getIconBackgroundColor = (type: CategoryType): string => {
     switch (type) {
-      case 'game':
-        return '#4ECDC4'; // 青色
       case 'drawing':
         return '#FFD166'; // 黄色
       case 'cartoon':
@@ -277,19 +275,6 @@ export default function RewardPage() {
                   styles.categoryText, 
                   activeCategory === 'all' && styles.activeCategoryText
                 ]}>All</Text>
-              </TouchableOpacity>
-              
-              <TouchableOpacity 
-                style={[
-                  styles.categoryTab, 
-                  activeCategory === 'game' && styles.activeCategoryTab
-                ]}
-                onPress={() => setActiveCategory('game')}
-              >
-                <Text style={[
-                  styles.categoryText, 
-                  activeCategory === 'game' && styles.activeCategoryText
-                ]}>Game</Text>
               </TouchableOpacity>
               
               <TouchableOpacity 
@@ -364,7 +349,6 @@ export default function RewardPage() {
               contentContainerStyle={styles.contentContainer}
             >
               <View style={styles.badgeSectionsWrapper}>
-                {renderBadgeGroup('game', 'Game', 'gamepad')}
                 {renderBadgeGroup('drawing', 'Drawing', 'paint-brush')}
                 {renderBadgeGroup('cartoon', 'Cartoon', 'film')}
                 {renderBadgeGroup('course', 'Course', 'book')}
