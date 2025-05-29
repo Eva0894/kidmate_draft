@@ -41,24 +41,33 @@ export default function SubscriptionPlansPage() {
     fetchSubStatus();
   }, []);
 
-  const handleSubscribe = (plan: string) => {
-    const stripeLinks: Record<string, string> = {
-      'Standard Plan': 'https://buy.stripe.com/test_14AbJ184ig8U1Idbgy6J200',
-      'Premium Plan (Yearly)': 'https://buy.stripe.com/eVa29fgkw1vAfGU9AC',
-      'Premium Plan (Quarterly)': 'https://buy.stripe.com/dR63djfgs8Y266k5kn',
-    };
+  const handleSubscribe = async (plan: string) => {
+    const { data: { user }, error } = await supabase.auth.getUser();
 
-    let selectedLink = '';
-    if (plan === 'Premium Plan') {
-      selectedLink = stripeLinks['Premium Plan (Yearly)'];
-    } else {
-      selectedLink = stripeLinks[plan];
+    if (error || !user?.id) {
+      Alert.alert('Login required', 'Please log in to subscribe.');
+      return;
     }
 
-    if (selectedLink) {
-      Linking.openURL(selectedLink);
-    } else {
-      Alert.alert('Payment link not found for selected plan.');
+    try {
+      const res = await fetch('https://stripe-checkout-vercel-9vpak8yca-songs-projects-44ad46d2.vercel.app/api/create-checkout-session', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user.id,
+          plan: plan
+        }),
+      });
+
+      const data = await res.json();
+      if (data?.url) {
+        Linking.openURL(data.url); // 跳转 Stripe 支付页面
+      } else {
+        Alert.alert('Error', 'Could not create Stripe checkout session.');
+      }
+    } catch (err) {
+      console.error('❌ Error:', err);
+      Alert.alert('Error', 'Something went wrong while subscribing.');
     }
   };
 
@@ -105,7 +114,6 @@ export default function SubscriptionPlansPage() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      {/* 返回按钮（统一风格） */}
       <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
         <Ionicons name="arrow-back" size={28} color="#E5911B" />
       </TouchableOpacity>
@@ -152,9 +160,9 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     textAlign: 'center',
     fontFamily: Platform.select({
-          ios: 'ChalkboardSE-Regular',
-          android: 'monospace',
-        }),
+      ios: 'ChalkboardSE-Regular',
+      android: 'monospace',
+    }),
   },
   card: {
     borderWidth: 2,
@@ -180,7 +188,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 12,
     color: '#666',
-    
   },
   feature: {
     fontSize: 14,
@@ -207,5 +214,3 @@ const styles = StyleSheet.create({
     }),
   },
 });
-
-

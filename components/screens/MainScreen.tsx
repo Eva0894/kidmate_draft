@@ -78,6 +78,9 @@ export default function MainScreen() {
         .select('date_of_birth')
         .eq('user_id', userId)
         .single();
+
+      console.log('📌 profile:', profile);
+      console.log('❗error:', error);
   
       const res = await fetch(`${BACKEND_URL}/books`);
       const allBooks: Book[] = await res.json();

@@ -21,7 +21,7 @@ export default function WeeklyReportPage() {
         return;
       }
 
-      // ✅ 检查订阅状态（修复时间戳判断）
+      // ✅ 可选：检查是否存在订阅记录（不再区分 plan 类型）
       const { data: sub, error: subErr } = await supabase
         .from('sub')
         .select('sub_ends_at')
@@ -35,7 +35,7 @@ export default function WeeklyReportPage() {
       if (!isSubscribed) {
         Alert.alert(
           'Subscription Required',
-          'This feature is only available to Premium users. Please subscribe to unlock full access.',
+          'Please subscribe to access usage records.',
           [
             {
               text: 'Go to Subscribe',
@@ -47,7 +47,7 @@ export default function WeeklyReportPage() {
         return;
       }
 
-      // ✅ 计算本周一
+      // ✅ 计算本周周一
       const today = new Date();
       const day = today.getDay(); // 周日为 0，周一为 1
       const diff = day === 0 ? -6 : 1 - day;
@@ -58,18 +58,21 @@ export default function WeeklyReportPage() {
       console.log('🟡 当前用户 ID:', user.id);
       console.log('📅 本周周一为:', mondayISO);
 
-      const { data, error } = await supabase
-        .from('usage_records')
-        .select('usage_date, used_seconds')
-        .eq('user_id', user.id)
-        .gte('usage_date', mondayISO)
-        .order('usage_date', { ascending: true });
+      try {
+        const res = await fetch(`https://weekly-report-server-2aw8trm90-songs-projects-44ad46d2.vercel.app/api/time-report?userId=${user.id}`);
+        const allRecords = await res.json();
 
-      if (error) {
-        console.error('❌ 获取 usage_records 出错:', error);
-      } else {
-        console.log('✅ 本周记录:', data);
-        setRecords(data);
+        const filtered = allRecords
+          .filter((r: any) => r.date >= mondayISO)
+          .map((r: any) => ({
+            usage_date: r.date,
+            used_seconds: r.duration_minutes * 60,
+          }));
+
+        console.log('✅ 本周记录:', filtered);
+        setRecords(filtered);
+      } catch (error) {
+        console.error('❌ 获取 usageRecords 出错:', error);
       }
     };
 

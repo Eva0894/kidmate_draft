@@ -43,7 +43,7 @@ export default function NotificationToggle() {
       const { error } = await supabase
         .from('users')
         .update({ expo_push_token: null })
-        .eq('id', userId);
+        .eq('user_id', userId);
       if (!error) {
         setEnabled(false);
         Alert.alert('🔕 Notifications turned off');
@@ -71,7 +71,7 @@ export default function NotificationToggle() {
       const { error } = await supabase
         .from('users')
         .update({ expo_push_token: token })
-        .eq('id', userId);
+        .eq('user_id', userId);
 
       if (!error) {
         setEnabled(true);
