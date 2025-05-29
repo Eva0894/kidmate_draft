@@ -50,24 +50,16 @@ export default function SubscriptionPlansPage() {
     }
 
     try {
-      const res = await fetch('https://stripe-checkout-vercel-9vpak8yca-songs-projects-44ad46d2.vercel.app/api/create-checkout-session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: user.id,
-          plan: plan
-        }),
-      });
-
-      const data = await res.json();
-      if (data?.url) {
-        Linking.openURL(data.url); // 跳转 Stripe 支付页面
+      if (plan === 'Standard Plan') {
+        Linking.openURL('https://buy.stripe.com/test_14AbJ184ig8U1Idbgy6J200');
+      } else if (plan === 'Premium Plan') {
+        Linking.openURL('https://buy.stripe.com/test_14AbJ184ig8U1Idbgy6J200');
       } else {
-        Alert.alert('Error', 'Could not create Stripe checkout session.');
+        Alert.alert('Error', 'Invalid subscription plan selected.');
       }
     } catch (err) {
       console.error('❌ Error:', err);
-      Alert.alert('Error', 'Something went wrong while subscribing.');
+      Alert.alert('Error', 'Something went wrong while opening the payment page.');
     }
   };
 
