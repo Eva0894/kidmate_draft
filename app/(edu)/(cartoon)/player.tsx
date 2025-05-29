@@ -6,7 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '@/utils/Supabase';
 import { v4 as uuidv4 } from 'uuid';
 
-// 定义类型接口
+// Define type interfaces
 interface CartoonType {
   id: number;
   title: string;
@@ -44,22 +44,22 @@ export default function CartoonPlayerPage() {
       if (!error && data) {
         setCartoon(data);
       
-        // 更新最近播放时间
+        // Update recent play time
         const { error: updateError } = await supabase
           .from('cartoon')
           .update({ recent_played_at: new Date().toISOString() })
           .eq('id', id);
       
         if (updateError) {
-          console.error('❌ recent_played_at 更新失败:', updateError.message);
+          console.error('❌ Failed to update recent_played_at:', updateError.message);
         } else {
-          console.log('✅ recent_played_at 更新成功');
+          console.log('✅ Successfully updated recent_played_at');
           
-          // 获取当前用户
+          // Get current user
           const { data: { user } } = await supabase.auth.getUser();
           
           if (user) {
-            // 记录用户观看动画
+            // Record user watching cartoon
             recordUserWatched(user.id, id as string);
           }
         }
@@ -71,10 +71,10 @@ export default function CartoonPlayerPage() {
     if (id) fetchCartoon();
   }, [id]);
 
-  // 记录用户观看的动画并更新成就
+  // Record user watched cartoons and update achievements
   const recordUserWatched = async (userId: string, cartoonId: string | number) => {
     try {
-      // 先检查该观看记录是否已存在
+      // First check if the watch record already exists
       const { data: existingRecord, error: checkError } = await supabase
         .from('user_watched_cartoons')
         .select('*')
@@ -83,13 +83,13 @@ export default function CartoonPlayerPage() {
         .maybeSingle();
       
       if (checkError) {
-        console.error('❌ 检查观看记录失败:', checkError.message);
+        console.error('❌ Failed to check watch record:', checkError.message);
         return;
       }
       
       let watchError = null;
       
-      // 如果记录已存在，则更新observed_at时间
+      // If record already exists, update observed_at time
       if (existingRecord) {
         const { error } = await supabase
           .from('user_watched_cartoons')
@@ -101,7 +101,7 @@ export default function CartoonPlayerPage() {
         
         watchError = error;
       } else {
-        // 如果记录不存在，则创建新记录
+        // If record doesn't exist, create new record
         const { error } = await supabase
           .from('user_watched_cartoons')
           .insert({
@@ -114,69 +114,69 @@ export default function CartoonPlayerPage() {
       }
       
       if (watchError) {
-        console.error('❌ 记录用户观看失败:', watchError.message);
+        console.error('❌ Failed to record user watch:', watchError.message);
         return;
       }
       
-      console.log('✅ 记录用户观看成功');
+      console.log('✅ Successfully recorded user watch');
       
-      // 更新动画成就
+      // Update cartoon achievements
       updateCartoonAchievements(userId);
     } catch (error) {
-      console.error('记录观看历史出错:', error);
+      console.error('Error recording watch history:', error);
     }
   };
 
-  // 更新动画相关成就
+  // Update cartoon related achievements
   const updateCartoonAchievements = async (userId: string) => {
     try {
-      // 1. 获取用户观看的动画总数
+      // 1. Get total number of user watched cartoons
       const { data: watchedData, error: watchedError } = await supabase
         .from('user_watched_cartoons')
         .select('cartoon_id')
         .eq('user_id', userId);
         
       if (watchedError) {
-        console.error('❌ 获取用户观看历史失败:', watchedError.message);
+        console.error('❌ Failed to get user watch history:', watchedError.message);
         return;
       }
       
-      // 去重计算观看的不同动画数量
+      // Calculate unique watched cartoon count
       const watchedCartoonIds = watchedData.map(item => item.cartoon_id);
       const uniqueWatchedCount = new Set(watchedCartoonIds).size;
       
-      console.log(`👀 用户已观看${uniqueWatchedCount}部不同的动画`);
+      console.log(`👀 User has watched ${uniqueWatchedCount} different cartoons`);
       
-      // 2. 获取所有卡通类型的成就
+      // 2. Get all cartoon type achievements
       const { data: badges, error: badgeError } = await supabase
         .from('badges')
         .select('*')
         .eq('category', 'cartoon');
         
       if (badgeError) {
-        console.error('❌ 获取成就列表失败:', badgeError.message);
+        console.error('❌ Failed to get achievement list:', badgeError.message);
         return;
       }
 
-      // 新解锁的徽章列表
+      // List of newly unlocked badges
       const newUnlockedBadges: string[] = [];
       
-      // 3. 更新每个成就的进度
+      // 3. Update progress for each achievement
       for (const badge of badges as BadgeType[]) {
-        // 解析徽章描述中的数字要求
-        let requirement = 1; // 默认值
+        // Parse the number requirement from badge description
+        let requirement = 1; // Default value
         const description = badge.description || '';
-        const match = description.match(/观看(\d+)部/);
+        const match = description.match(/Watch (\d+) cartoons/);
         
         if (match && match[1]) {
           requirement = parseInt(match[1]);
         }
         
-        // 计算进度百分比 (上限100%)
+        // Calculate progress percentage (max 100%)
         const progress = Math.min(Math.floor((uniqueWatchedCount / requirement) * 100), 100);
         const isEarned = progress >= 100;
         
-        // 检查用户是否已有该徽章记录
+        // Check if user already has this badge record
         const { data: userBadge, error: userBadgeError } = await supabase
           .from('user_badges')
           .select('*')
@@ -184,22 +184,22 @@ export default function CartoonPlayerPage() {
           .eq('badge_id', badge.id)
           .maybeSingle();
         
-        // 如果查询出错(非未找到的错误)，则跳过此徽章
+        // If query error (not "not found" error), skip this badge
         if (userBadgeError && userBadgeError.code !== 'PGRST116') {
-          console.error(`❌ 查询用户徽章失败 (${badge.name}):`, userBadgeError.message);
+          console.error(`❌ Failed to query user badge (${badge.name}):`, userBadgeError.message);
           continue;
         }
         
-        // 如果徽章已获得，则跳过
+        // If badge already earned, skip
         if (userBadge && userBadge.awarded_at !== null) {
           continue;
         }
         
         let badgeUpdateError = null;
         
-        // 根据是否已有记录决定更新还是插入
+        // Update or insert based on whether record already exists
         if (userBadge) {
-          // 更新现有记录
+          // Update existing record
           const { error } = await supabase
             .from('user_badges')
             .update({
@@ -210,7 +210,7 @@ export default function CartoonPlayerPage() {
           
           badgeUpdateError = error;
         } else {
-          // 插入新记录
+          // Insert new record
           const { error } = await supabase
             .from('user_badges')
             .insert({
@@ -225,28 +225,28 @@ export default function CartoonPlayerPage() {
         }
           
         if (badgeUpdateError) {
-          console.error(`❌ 更新徽章进度失败 (${badge.name}):`, badgeUpdateError.message);
+          console.error(`❌ Failed to update badge progress (${badge.name}):`, badgeUpdateError.message);
         } else {
-          console.log(`✅ 徽章 "${badge.name}" 进度更新为 ${progress}%`);
+          console.log(`✅ Badge "${badge.name}" progress updated to ${progress}%`);
           
-          // 如果是新解锁的徽章，添加到列表
+          // If newly unlocked badge, add to list
           if (isEarned && (!userBadge || userBadge.awarded_at === null)) {
             newUnlockedBadges.push(badge.name);
           }
         }
       }
       
-      // 如果有新解锁的徽章，显示通知
+      // If there are newly unlocked badges, show notification
       if (newUnlockedBadges.length > 0) {
-        const badgeNames = newUnlockedBadges.join('、');
+        const badgeNames = newUnlockedBadges.join(', ');
         Alert.alert(
-          '🎉 恭喜解锁新成就！',
-          `你已解锁以下成就：${badgeNames}`,
-          [{ text: '好的', style: 'default' }]
+          '🎉 Congratulations on unlocking new achievements!',
+          `You have unlocked the following achievements: ${badgeNames}`,
+          [{ text: 'OK', style: 'default' }]
         );
       }
     } catch (error) {
-      console.error('更新动画成就时出错:', error);
+      console.error('Error updating cartoon achievements:', error);
     }
   };
 

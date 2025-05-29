@@ -45,7 +45,7 @@ export default function BadgeItem({
           )}
         </View>
         
-        {/* 未解锁时显示锁图标 - 放在外层确保显示在最上方 */}
+        {/* Show lock icon when badge is not unlocked - placed in outer layer to ensure it displays on top */}
         {!unlocked && (
           <View style={styles.lockIconContainer}>
             <View style={styles.lockIconBackground}>

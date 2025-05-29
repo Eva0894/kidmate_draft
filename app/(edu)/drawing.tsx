@@ -8,7 +8,7 @@ import { supabase } from '@/utils/Supabase';
 import { v4 as uuidv4 } from 'uuid';
 import { Ionicons } from '@expo/vector-icons';
 
-// Badge数据类型定义
+// Badge data type definition
 interface BadgeType {
   id: string;
   name: string;
@@ -21,46 +21,46 @@ const DrawingPage = () => {
   const ref = useRef<any>();
   const router = useRouter();
 
-  // 更新绘画成就
+  // Update drawing achievements
   const updateDrawingAchievements = async (userId: string) => {
     try {
-      // 1. 获取用户保存的绘画总数
+      // 1. Get total number of user's saved drawings
       const { data: drawingsData, error: drawingsError } = await supabase
         .from('user_drawings')
         .select('id')
         .eq('user_id', userId);
         
       if (drawingsError) {
-        console.error('❌ 获取用户绘画历史失败:', drawingsError.message);
+        console.error('❌ Failed to get user drawing history:', drawingsError.message);
         return;
       }
       
-      // 计算用户绘画数量
+      // Calculate number of user drawings
       const drawingsCount = drawingsData ? drawingsData.length : 0;
       
-      console.log(`👀 用户已保存${drawingsCount}幅绘画作品`);
+      console.log(`👀 User has saved ${drawingsCount} drawings`);
       
-      // 2. 获取所有绘画类型的成就
+      // 2. Get all drawing type achievements
       const { data: badges, error: badgeError } = await supabase
         .from('badges')
         .select('*')
         .eq('category', 'drawing');
         
       if (badgeError) {
-        console.error('❌ 获取绘画成就列表失败:', badgeError.message);
+        console.error('❌ Failed to get drawing achievement list:', badgeError.message);
         return;
       }
 
-      // 新解锁的徽章列表
+      // List of newly unlocked badges
       const newUnlockedBadges: string[] = [];
       
-      // 3. 更新每个成就的进度
+      // 3. Update the progress of each achievement
       for (const badge of badges as BadgeType[]) {
-        // 解析徽章描述中的数字要求
-        let requirement = 1; // 默认值
+        // Parse the number requirement from badge description
+        let requirement = 1; // Default value
         const description = badge.description || '';
         
-        // 同时支持中文和英文描述格式
+        // Support both Chinese and English description formats
         let chineseMatch = description.match(/完成(\d+)幅/);
         let englishMatch = description.match(/Complete (\d+) drawing/i);
         
@@ -72,11 +72,11 @@ const DrawingPage = () => {
           requirement = 1;
         }
         
-        // 计算进度百分比 (上限100%)
+        // Calculate progress percentage (max 100%)
         const progress = Math.min(Math.floor((drawingsCount / requirement) * 100), 100);
         const isEarned = drawingsCount >= requirement;
         
-        // 检查用户是否已有该徽章记录
+        // Check if user already has this badge record
         const { data: userBadge, error: userBadgeError } = await supabase
           .from('user_badges')
           .select('*')
@@ -84,22 +84,22 @@ const DrawingPage = () => {
           .eq('badge_id', badge.id)
           .maybeSingle();
         
-        // 如果查询出错(非未找到的错误)，则跳过此徽章
+        // If query error (not "not found" error), skip this badge
         if (userBadgeError && userBadgeError.code !== 'PGRST116') {
-          console.error(`❌ 查询用户徽章失败 (${badge.name}):`, userBadgeError.message);
+          console.error(`❌ Failed to query user badge (${badge.name}):`, userBadgeError.message);
           continue;
         }
         
-        // 如果徽章已获得，则跳过
+        // If badge already earned, skip
         if (userBadge && userBadge.awarded_at !== null) {
           continue;
         }
         
         let badgeUpdateError = null;
         
-        // 根据是否已有记录决定更新还是插入
+        // Update or insert based on whether record already exists
         if (userBadge) {
-          // 更新现有记录
+          // Update existing record
           const { error } = await supabase
             .from('user_badges')
             .update({
@@ -110,7 +110,7 @@ const DrawingPage = () => {
           
           badgeUpdateError = error;
         } else {
-          // 插入新记录
+          // Insert new record
           const { error } = await supabase
             .from('user_badges')
             .insert({
@@ -125,32 +125,32 @@ const DrawingPage = () => {
         }
           
         if (badgeUpdateError) {
-          console.error(`❌ 更新徽章进度失败 (${badge.name}):`, badgeUpdateError.message);
+          console.error(`❌ Failed to update badge progress (${badge.name}):`, badgeUpdateError.message);
         } else {
-          console.log(`✅ 徽章 "${badge.name}" 进度更新为 ${progress}%，要求：${requirement}幅，当前：${drawingsCount}幅`);
+          console.log(`✅ Badge "${badge.name}" progress updated to ${progress}%, requirement: ${requirement} drawings, current: ${drawingsCount} drawings`);
           
-          // 如果是新解锁的徽章，添加到列表
+          // If this is a newly unlocked badge, add to list
           if (isEarned && (!userBadge || userBadge.awarded_at === null)) {
             newUnlockedBadges.push(badge.name);
           }
         }
       }
       
-      // 如果有新解锁的徽章，显示通知
+      // If there are newly unlocked badges, show notification
       if (newUnlockedBadges.length > 0) {
-        const badgeNames = newUnlockedBadges.join('、');
+        const badgeNames = newUnlockedBadges.join(', ');
         Alert.alert(
-          '🎉 恭喜解锁新成就！',
-          `你已解锁以下成就：${badgeNames}`,
-          [{ text: '好的', style: 'default' }]
+          '🎉 Congratulations on unlocking new achievements!',
+          `You have unlocked the following achievements: ${badgeNames}`,
+          [{ text: 'OK', style: 'default' }]
         );
       }
     } catch (error) {
-      console.error('更新绘画成就时出错:', error);
+      console.error('Error updating drawing achievements:', error);
     }
   };
 
-  // 打开应用设置
+  // Open app settings
   const openSettings = () => {
     if (Platform.OS === 'ios') {
       Linking.openURL('app-settings:');
@@ -159,28 +159,28 @@ const DrawingPage = () => {
     }
   };
 
-  // 请求相册权限
+  // Request media library permission
   const requestMediaLibraryPermission = async () => {
-    // 先检查当前权限状态
+    // First check current permission status
     const { status: currentStatus } = await MediaLibrary.getPermissionsAsync();
     
     if (currentStatus === 'granted') {
       return true;
     }
     
-    // 如果之前未请求过权限，或为"undetermined"状态，尝试请求新权限
+    // If permission not requested before, or is "undetermined", try to request new permission
     if (currentStatus === 'undetermined') {
       const { status: newStatus } = await MediaLibrary.requestPermissionsAsync();
       return newStatus === 'granted';
     }
     
-    // 如果权限被拒绝，显示提示引导用户去设置中开启
+    // If permission denied, show prompt to guide user to settings
     Alert.alert(
-      '需要相册权限',
-      '保存绘画需要访问您的相册。请在设置中允许此应用访问您的相册。',
+      'Photo Library Permission Required',
+      'Saving drawings requires access to your photo library. Please allow this app to access your photo library in Settings.',
       [
-        { text: '取消', style: 'cancel' },
-        { text: '去设置', onPress: openSettings }
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Open Settings', onPress: openSettings }
       ]
     );
     
@@ -189,10 +189,10 @@ const DrawingPage = () => {
 
   const handleOK = async (signature: string) => {
     try {
-      // 请求相册权限
+      // Request photo library permission
       const hasPermission = await requestMediaLibraryPermission();
       if (!hasPermission) {
-        return; // 如果没有权限，直接返回
+        return; // If no permission, return directly
       }
 
       const base64Data = signature.replace('data:image/png;base64,', '');
@@ -211,11 +211,11 @@ const DrawingPage = () => {
         await MediaLibrary.createAlbumAsync('MyDrawings', asset, false);
       }
 
-      // 获取当前用户
+      // Get current user
       const { data: { user } } = await supabase.auth.getUser();
       
       if (user) {
-        // 记录用户绘画
+        // Record user drawing
         const { error: drawingError } = await supabase
           .from('user_drawings')
           .insert({
@@ -226,11 +226,11 @@ const DrawingPage = () => {
           });
           
         if (drawingError) {
-          console.error('❌ 记录绘画失败:', drawingError.message);
+          console.error('❌ Failed to record drawing:', drawingError.message);
         } else {
-          console.log('✅ 成功记录用户绘画');
+          console.log('✅ Successfully recorded user drawing');
           
-          // 更新绘画相关成就
+          // Update drawing-related achievements
           await updateDrawingAchievements(user.id);
         }
       }

@@ -20,10 +20,10 @@ import BadgeDetailModal from '../components/BadgeDetailModal';
 
 const { width } = Dimensions.get('window');
 
-// 类型定义
+// Type definitions
 export type CategoryType = 'all' | 'drawing' | 'cartoon' | 'course' | 'reading';
 
-// 更新徽章数据接口
+// Badge data interface
 interface BadgeData {
   id: string;
   name: string;
@@ -46,45 +46,45 @@ export default function RewardPage() {
   useEffect(() => {
     async function fetchBadges() {
       try {
-        // 获取当前用户
+        // Get current user
         const { data: { user } } = await supabase.auth.getUser();
 
         if (!user) {
-          console.error('用户未登录');
+          console.error('User not logged in');
           setIsLoading(false);
           return;
         }
 
-        // 从 supabase 获取所有徽章
+        // Get all badges from supabase
         const { data: allBadges, error: badgeError } = await supabase
           .from('badges')
           .select('*');
 
         if (badgeError) {
-          console.error('获取徽章错误:', badgeError);
+          console.error('Error fetching badges:', badgeError);
           setIsLoading(false);
           return;
         }
 
-        // 获取用户已获得的徽章
+        // Get user's earned badges
         const { data: userBadges, error: userBadgeError } = await supabase
           .from('user_badges')
           .select('badge_id, awarded_at, progress')
           .eq('user_id', user.id);
 
         if (userBadgeError) {
-          console.error('获取用户徽章错误:', userBadgeError);
+          console.error('Error fetching user badges:', userBadgeError);
           setIsLoading(false);
           return;
         }
 
-        // 创建徽章数组，标记哪些已获取及进度
+        // Create badge array, marking which ones are earned and their progress
         const userBadgeMap = (userBadges || []).reduce((acc, ub) => {
-          // 确认徽章是否已获得，以及进度
+          // Check if badge is earned and its progress
           const isEarned = ub.awarded_at !== null;
           const progress = ub.progress !== null ? ub.progress : (isEarned ? 100 : 0);
           
-          // 格式化授予时间为YYYY-MM-DD格式
+          // Format awarded time to YYYY-MM-DD format
           let formattedAwardedAt: string | undefined = undefined;
           if (ub.awarded_at) {
             formattedAwardedAt = new Date(ub.awarded_at).toISOString().split('T')[0];
@@ -98,7 +98,7 @@ export default function RewardPage() {
           return acc;
         }, {} as Record<string, { earned: boolean; progress: number; awardedAt: string | undefined }>);
         
-        // 如果没有任何徽章数据，显示空状态
+        // If no badge data, show empty state
         if (!allBadges || allBadges.length === 0) {
           setBadges([]);
           setUserTotalBadges({
@@ -112,7 +112,7 @@ export default function RewardPage() {
               id: badge.id,
               name: badge.name,
               type: badge.category as CategoryType,
-              description: badge.description || '完成特定挑战解锁此成就！',
+              description: badge.description || 'Complete specific challenges to unlock this achievement!',
               imageUrl: badge.icon_url,
               progress: userBadgeInfo.progress,
               earned: userBadgeInfo.earned,
@@ -128,7 +128,7 @@ export default function RewardPage() {
           setBadges(formattedBadges);
         }
       } catch (error) {
-        console.error('获取徽章数据出错:', error);
+        console.error('Error fetching badge data:', error);
         setBadges([]);
         setUserTotalBadges({
           earned: 0,
@@ -142,9 +142,9 @@ export default function RewardPage() {
     fetchBadges();
   }, []);
 
-  // 渲染具有相同类型的徽章分组
+  // Render badge group of the same type
   const renderBadgeGroup = (type: CategoryType, title: string, icon: string) => {
-    // 根据当前活动分类过滤徽章
+    // Filter badges by current active category
     const filteredBadges = activeCategory === 'all'
       ? badges.filter(badge => badge.type === type)
       : badges.filter(badge => badge.type === activeCategory && badge.type === type);
@@ -153,7 +153,7 @@ export default function RewardPage() {
       return null;
     }
 
-    // 如果当前没有徽章数据，不显示该分组
+    // If no badge data, don't show this group
     if (badges.length === 0) {
       return null;
     }
@@ -185,8 +185,8 @@ export default function RewardPage() {
               />
             ))
           ) : (
-            // 如果该类别没有徽章，显示空状态
-            <Text style={styles.emptyStateText}>暂无{title}类成就徽章</Text>
+            // If no badges in this category, show empty state
+            <Text style={styles.emptyStateText}>No {title} achievement badges yet</Text>
           )}
         </View>
       </View>
@@ -209,15 +209,15 @@ export default function RewardPage() {
   const getIconBackgroundColor = (type: CategoryType): string => {
     switch (type) {
       case 'drawing':
-        return '#FFD166'; // 黄色
+        return '#FFD166'; // Yellow
       case 'cartoon':
-        return '#FF6B6B'; // 红色
+        return '#FF6B6B'; // Red
       case 'course':
-        return '#4ECDC4'; // 青色
+        return '#4ECDC4'; // Cyan
       case 'reading':
-        return '#FF6B6B'; // 红色
+        return '#FF6B6B'; // Red
       default:
-        return '#718096'; // 灰色
+        return '#718096'; // Gray
     }
   };
 
@@ -238,7 +238,7 @@ export default function RewardPage() {
         imageStyle={{ opacity: 0.5 }}
       >
         <SafeAreaView style={styles.safeArea}>
-          {/* 头部 */}
+          {/* Header */}
           <View style={styles.header}>
             <View style={styles.headerLeft}>
               <TouchableOpacity 
@@ -257,7 +257,7 @@ export default function RewardPage() {
             </View>
           </View>
           
-          {/* 分类标签 */}
+          {/* Category tabs */}
           <ScrollView 
             horizontal 
             showsHorizontalScrollIndicator={false}
@@ -333,16 +333,16 @@ export default function RewardPage() {
           </ScrollView>
           
           {badges.length === 0 ? (
-            // 空状态内容
+            // Empty state content
             <View style={styles.emptyStateContainer}>
               <FontAwesome5 name="trophy" size={50} color="#E2E8F0" />
-              <Text style={styles.emptyStateTitle}>暂无成就徽章</Text>
+              <Text style={styles.emptyStateTitle}>No Achievement Badges</Text>
               <Text style={styles.emptyStateDescription}>
-                当前数据库中没有任何徽章数据。请先添加徽章数据！
+                There are no badge data in the database. Please add badge data first!
               </Text>
             </View>
           ) : (
-            // 徽章内容
+            // Badge content
             <ScrollView 
               style={styles.content} 
               showsHorizontalScrollIndicator={false}
@@ -359,7 +359,7 @@ export default function RewardPage() {
             </ScrollView>
           )}
           
-          {/* 徽章详情模态框 */}
+          {/* Badge detail modal */}
           {selectedBadge && (
             <BadgeDetailModal
               visible={modalVisible}
