@@ -8,6 +8,8 @@ import { UserProvider } from './UserContext';
 // import { initLocalDB } from '../utils/localDB';
 import { SQLiteProvider } from './SQLiteContext';
 import React, { useEffect, useState } from 'react';
+import { SessionContextProvider } from '@supabase/auth-helpers-react';
+import { supabase } from '@/utils/Supabase';
 
 
 
@@ -19,11 +21,13 @@ export default function AppProviders({ children }: { children: React.ReactNode }
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
+       <SessionContextProvider supabaseClient={supabase}>
         <ThemeProvider>
           <UserProvider>
             {children}  
           </UserProvider>
         </ThemeProvider>
+       </SessionContextProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );

@@ -21,7 +21,7 @@ export default function WeeklyReportPage() {
         return;
       }
 
-      // ✅ 检查订阅状态（修复时间戳判断）
+      // ✅ 订阅有效性检查（不区分 plan 类型）
       const { data: sub, error: subErr } = await supabase
         .from('sub')
         .select('sub_ends_at')
@@ -35,7 +35,7 @@ export default function WeeklyReportPage() {
       if (!isSubscribed) {
         Alert.alert(
           'Subscription Required',
-          'This feature is only available to Premium users. Please subscribe to unlock full access.',
+          'Please subscribe to access usage records.',
           [
             {
               text: 'Go to Subscribe',
@@ -47,9 +47,9 @@ export default function WeeklyReportPage() {
         return;
       }
 
-      // ✅ 计算本周一
+      // ✅ 获取本周周一日期
       const today = new Date();
-      const day = today.getDay(); // 周日为 0，周一为 1
+      const day = today.getDay();
       const diff = day === 0 ? -6 : 1 - day;
       const monday = new Date(today.getFullYear(), today.getMonth(), today.getDate() + diff);
       monday.setHours(0, 0, 0, 0);
@@ -58,6 +58,7 @@ export default function WeeklyReportPage() {
       console.log('🟡 当前用户 ID:', user.id);
       console.log('📅 本周周一为:', mondayISO);
 
+      // ✅ 从 Supabase 获取记录
       const { data, error } = await supabase
         .from('usage_records')
         .select('usage_date, used_seconds')
