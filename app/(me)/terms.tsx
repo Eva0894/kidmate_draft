@@ -1,24 +1,45 @@
 import React from 'react';
-import { View, Text, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import meStyles from './meStyles';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { useTranslation } from 'react-i18next';
 import { useLanguage } from '@/components/LanguageProvider';
 import { useT } from '@/utils/useT';
+import { useNavigation } from '@react-navigation/native';
 
 export default function TermsOfServicePage() {
   const router = useRouter();
+  const navigation = useNavigation();
   const { t, i18n } = useTranslation();
   const { lang, setLang } = useLanguage();
   const changeLanguage = async (newLang: string) => {
     await i18n.changeLanguage(newLang);
     setLang(newLang);
   }
+  
+  const handleNavigateBack = () => {
+    try {
+      console.log('[terms] 尝试返回');
+      // 先尝试使用router.replace
+      console.log('[terms] 使用router.replace()');
+      router.replace('/(tabs)/me');
+    } catch (error) {
+      console.error('[terms] 导航错误:', error);
+      // 如果失败，尝试使用navigation.goBack()
+      if (navigation && navigation.canGoBack()) {
+        console.log('[terms] 降级到navigation.goBack()');
+        navigation.goBack();
+      } else {
+        console.log('[terms] 使用router.back()');
+        router.back();
+      }
+    }
+  };
+  
   return (
     <View style={{ flex: 1, backgroundColor: '#fff8ee' }}>
-        <TouchableOpacity style={meStyles.backButton} onPress={() => router.replace('/(tabs)/me')}>
+        <TouchableOpacity style={meStyles.backButton} onPress={handleNavigateBack}>
             <Ionicons name="arrow-back" size={32} color="#E5911B" />
         </TouchableOpacity>
         <ScrollView style={meStyles.container}>

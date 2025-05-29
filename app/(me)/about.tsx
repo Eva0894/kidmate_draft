@@ -1,25 +1,57 @@
 import { Stack } from 'expo-router';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Alert, LogBox } from 'react-native';
 import { useEffect } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import meStyles from './meStyles';
 
+// 忽略特定警告
+LogBox.ignoreLogs([
+  'Non-serializable values were found in the navigation state',
+]);
+
 export default function AboutPage() {
   const navigation = useNavigation();
   const router = useRouter();
 
   useEffect(() => {
+    // 记录组件加载
+    console.log('[About] 组件挂载');
+    
     navigation.setOptions({
       headerShown: true,
       title: 'About',
     });
+    
+    return () => {
+      // 记录组件卸载
+      console.log('[About] 组件卸载');
+    };
   }, [navigation]);
+
+  const handleNavigateBack = () => {
+    try {
+      console.log('[about] 尝试返回');
+      // 先尝试使用router.replace
+      console.log('[about] 使用router.replace()');
+      router.replace('/(tabs)/me');
+    } catch (error) {
+      console.error('[about] 导航错误:', error);
+      // 如果失败，尝试使用navigation.goBack()
+      if (navigation && navigation.canGoBack()) {
+        console.log('[about] 降级到navigation.goBack()');
+        navigation.goBack();
+      } else {
+        console.log('[about] 使用router.back()');
+        router.back();
+      }
+    }
+  };
 
   return (
     <View style={{ flex: 1, backgroundColor: '#fff8ee' }}>
-      <TouchableOpacity onPress={() => router.replace('/(tabs)/me')} style={meStyles.backButton}>
+      <TouchableOpacity onPress={handleNavigateBack} style={meStyles.backButton}>
         <Ionicons name="arrow-back" size={32} color="#E5911B" />
       </TouchableOpacity>
 

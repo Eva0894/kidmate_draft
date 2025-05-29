@@ -19,7 +19,7 @@ const screenWidth = Dimensions.get('window').width;
 const options = [
   {
     title: 'Game',
-    image: require('../../assets/images/Game.png'),
+    image: require('../../assets/images/Game1.png'),
     route: '/game',
   },
   {

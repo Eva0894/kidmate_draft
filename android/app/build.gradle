@@ -86,9 +86,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.eva0894.kidmate'
+    namespace 'com.anonymous.kidmate'
     defaultConfig {
-        applicationId 'com.eva0894.kidmate'
+        applicationId 'com.anonymous.kidmate'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

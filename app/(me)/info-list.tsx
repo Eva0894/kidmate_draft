@@ -1,15 +1,36 @@
 import { Stack } from 'expo-router';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import meStyles from './meStyles';
+import { useNavigation } from '@react-navigation/native';
 
 export default function InfoListPage() {
   const router = useRouter();
+  const navigation = useNavigation();
+
+  const handleNavigateBack = () => {
+    try {
+      console.log('[info] 尝试返回');
+      // 先尝试使用router.replace
+      console.log('[info] 使用router.replace()');
+      router.replace('/(tabs)/me');
+    } catch (error) {
+      console.error('[info] 导航错误:', error);
+      // 如果失败，尝试使用navigation.goBack()
+      if (navigation && navigation.canGoBack()) {
+        console.log('[info] 降级到navigation.goBack()');
+        navigation.goBack();
+      } else {
+        console.log('[info] 使用router.back()');
+        router.back();
+      }
+    }
+  };
 
   return (
     <View style={{ flex: 1, backgroundColor: '#fff8ee' }}>
-      <TouchableOpacity style={meStyles.backButton} onPress={() => router.replace('/(tabs)/me')}>
+      <TouchableOpacity style={meStyles.backButton} onPress={handleNavigateBack}>
         <Ionicons name="arrow-back" size={32} color="#E5911B" />
       </TouchableOpacity>
 

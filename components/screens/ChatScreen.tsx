@@ -247,7 +247,7 @@ const getCompletion = async (message: string) => {
 
   return (
     <ImageBackground
-      source={require('@/assets/images/background.png')}
+      source={require('@/assets/images/background.jpg')}
       style={styles.fullScreenBackground}
       imageStyle={{ resizeMode: 'cover' }}
     >
@@ -264,13 +264,13 @@ const getCompletion = async (message: string) => {
           <View style={styles.logoContainer}>
             {isDuckTalking ? (
               <Image
-                source={require('@/assets/images/duck_open.png')}
+                source={require('@/assets/images/duck_open.jpg')}
                 style={styles.image}
               />
             ) : (
               <TouchableOpacity onPress={() => router.push('/chat_history')}>
                 <Image
-                  source={require('@/assets/images/duck_closed.png')}
+                  source={require('@/assets/images/duck_closed.jpg')}
                   style={styles.image}
                 />
               </TouchableOpacity>

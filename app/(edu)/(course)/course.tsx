@@ -10,7 +10,7 @@ import dayjs from 'dayjs';
 const categories = [
   { title: 'language', image: require('../../../assets/images/language.jpg') },
   { title: 'math', image: require('../../../assets/images/math.jpg') },
-  { title: 'science', image: require('../../../assets/images/science.jpg') },
+  { title: 'science', image: require('../../../assets/images/science1.jpg') },
   { title: 'chess', image: require('../../../assets/images/chess.jpg') },
   { title: 'social studies', image: require('../../../assets/images/social-studies.jpg') },
 ];

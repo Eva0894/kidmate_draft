@@ -1,4 +1,4 @@
-package com.eva0894.kidmate
+package com.anonymous.kidmate
 import expo.modules.splashscreen.SplashScreenManager
 
 import android.os.Build

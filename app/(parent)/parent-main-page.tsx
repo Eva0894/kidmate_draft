@@ -33,7 +33,7 @@ export default function ParentMainPage() {
           style={styles.imageCard}
         >
           <Image
-            source={require('@/assets/images/time-control.png')}
+            source={require('@/assets/images/time-control.jpg')}
             style={styles.iconImage}
             resizeMode="contain"
           />

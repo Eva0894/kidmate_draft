@@ -24,7 +24,7 @@ export default function RegisterScreen() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [dob, setDob] = useState(new Date('2015-01-01'));
+  const [dob, setDob] = useState(new Date('2020-01-01'));
   const [showPicker, setShowPicker] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -46,6 +46,9 @@ export default function RegisterScreen() {
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          emailRedirectTo: 'https://kidmate-resetpw.vercel.app/signup-confirmed.html',
+        },
       });
   
       if (error) throw error;
