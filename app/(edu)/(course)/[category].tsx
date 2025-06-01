@@ -100,7 +100,7 @@ export default function CourseCategoryScreen() {
         <TouchableOpacity onPress={() => router.back()}>
           <Ionicons name="arrow-back" size={28} color="#E5911B" />
         </TouchableOpacity>
-        <Text style={styles.title}>课程</Text>
+        <Text style={styles.title}>Course</Text>
         <View style={{ width: 24 }} />
       </View>
 
